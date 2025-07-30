@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.domain.entity;
 
-import org.apache.commons.validator.routines.EmailValidator;
+import com.rafaelsousa.algashop.ordering.domain.exception.ErrorMessages;
+import com.rafaelsousa.algashop.ordering.domain.validator.FieldValidations;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -126,10 +127,10 @@ public class Customer {
     }
 
     private void setFullName(String fullName) {
-        Objects.requireNonNull(fullName);
+        Objects.requireNonNull(fullName, ErrorMessages.VALIDATION_ERROR_FULL_NAME_IS_NULL);
 
         if (fullName.isBlank()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(ErrorMessages.VALIDATION_ERROR_FULL_NAME_IS_BLANK);
         }
 
         this.fullName = fullName;
@@ -143,22 +144,14 @@ public class Customer {
         }
 
         if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(ErrorMessages.VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
         }
 
         this.birthDate = birthDate;
     }
 
     private void setEmail(String email) {
-        Objects.requireNonNull(email);
-
-        if (email.isBlank()) {
-            throw new IllegalArgumentException();
-        }
-
-        if (EmailValidator.getInstance().isValid(email)) {
-            throw new IllegalArgumentException();
-        }
+        FieldValidations.requiredValidEmail(email, ErrorMessages.VALIDATION_ERROR_EMAIL_IS_INVALID);
 
         this.email = email;
     }
