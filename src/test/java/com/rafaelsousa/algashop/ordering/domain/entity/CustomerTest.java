@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class CustomerTest {
 
     @Test
@@ -46,5 +48,30 @@ class CustomerTest {
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> customer.changeEmail("invalid_email"));
+    }
+
+    @Test
+    void given_unarchivedCustomer_whenArchive_shouldAnonymize() {
+        Customer customer = new Customer(
+                IdGenerator.generateTimeBasedUUID(),
+                "John Doe",
+                LocalDate.of(1990, 9, 18),
+                "john.doe@email.com",
+                "123-456-7890",
+                "123-45-6789",
+                false,
+                OffsetDateTime.now()
+        );
+
+        customer.archive();
+
+        Assertions.assertWith(customer,
+                c -> assertThat(c.fullName()).isEqualTo("Anonymous"),
+                c -> assertThat(c.birthDate()).isNull(),
+                c -> assertThat(c.email()).isNotEqualTo("john.doe@email.com"),
+                c -> assertThat(c.phone()).isEqualTo("000-000-0000"),
+                c -> assertThat(c.document()).isEqualTo("000-00-0000"),
+                c -> assertThat(c.archivedAt()).isNotNull()
+        );
     }
 }
