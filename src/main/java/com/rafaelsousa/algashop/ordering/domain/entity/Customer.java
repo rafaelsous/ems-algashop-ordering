@@ -52,7 +52,14 @@ public class Customer {
         this.setLoyaltyPoints(loyaltyPoints);
     }
 
-    public void addLoyaltyPoints(Integer points) {
+    public void addLoyaltyPoints(Integer loyaltyPointsAdded) {
+        verifyIfChangeable();
+
+        if (loyaltyPointsAdded <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        this.setLoyaltyPoints(this.loyaltyPoints + loyaltyPointsAdded);
     }
 
     public void archive() {
