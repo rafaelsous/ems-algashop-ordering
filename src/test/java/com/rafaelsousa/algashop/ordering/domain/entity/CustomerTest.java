@@ -15,12 +15,10 @@ class CustomerTest {
 
     @Test
     void given_invalidEmail_whenTryCreateCustomer_shouldGenerateException() {
-        CustomerId id = new CustomerId();
         FullName fullName = new FullName("John", "Doe");
         BirthDate birthDate = new BirthDate(LocalDate.of(1990, 9, 18));
         Phone phone = new Phone("123-456-7890");
         Document document = new Document("123-45-6789");
-        OffsetDateTime now = OffsetDateTime.now();
         Address address = Address.builder()
                 .street("Bourbon Street")
                 .complement("Apt. 114")
@@ -33,15 +31,13 @@ class CustomerTest {
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() ->
-                        new Customer(
-                                id,
+                        Customer.brandNew(
                                 fullName,
                                 birthDate,
                                 new Email("invalid_email"),
                                 phone,
                                 document,
                                 false,
-                                now,
                                 address
                         )
                 );
@@ -49,15 +45,13 @@ class CustomerTest {
 
     @Test
     void given_invalidEmail_whenTryUpdateCustomerEmail_shouldGenerateException() {
-        Customer customer = new Customer(
-                new CustomerId(),
+        Customer customer = Customer.brandNew(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1990, 9, 18)),
                 new Email("john.doe@value.com"),
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now(),
                 Address.builder()
                         .street("Bourbon Street")
                         .complement("Apt. 114")
@@ -75,15 +69,13 @@ class CustomerTest {
 
     @Test
     void given_unarchivedCustomer_whenArchive_shouldAnonymize() {
-        Customer customer = new Customer(
-                new CustomerId(),
+        Customer customer = Customer.brandNew(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1990, 9, 18)),
                 new Email("john.doe@value.com"),
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now(),
                 Address.builder()
                         .street("Bourbon Street")
                         .complement("Apt. 114")
@@ -121,7 +113,7 @@ class CustomerTest {
 
     @Test
     void given_archivedCustomer_whenTryUpdate_shouldGenerateException() {
-        Customer customer = new Customer(
+        Customer customer = Customer.existing(
                 new CustomerId(),
                 new FullName("Anonymous", "Anonymous"),
                 null,
@@ -166,15 +158,13 @@ class CustomerTest {
 
     @Test
     void given_brandNewCustomer_whenAddLoyaltyPoints_shouldSumPoints() {
-        Customer customer = new Customer(
-                new CustomerId(),
+        Customer customer = Customer.brandNew(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1990, 9, 18)),
                 new Email("john.doe@value.com"),
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now(),
                 Address.builder()
                         .street("Bourbon Street")
                         .complement("Apt. 114")
@@ -196,15 +186,13 @@ class CustomerTest {
 
     @Test
     void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldGenerateException() {
-        Customer customer = new Customer(
-                new CustomerId(),
+        Customer customer = Customer.brandNew(
                 new FullName("John", "Doe"),
                 new BirthDate(LocalDate.of(1990, 9, 18)),
                 new Email("john.doe@value.com"),
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now(),
                 Address.builder()
                         .street("Bourbon Street")
                         .complement("Apt. 114")
