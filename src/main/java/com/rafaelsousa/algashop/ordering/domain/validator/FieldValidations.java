@@ -11,6 +11,18 @@ public class FieldValidations {
         requiredValidEmail(email, null);
     }
 
+    public static void requiredNotBlank(String value) {
+        requiredNotBlank(value, null);
+    }
+
+    public static void requiredNotBlank(String value, String errorMessage) {
+        Objects.requireNonNull(value);
+
+        if (value.isBlank()) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     public static void requiredValidEmail(String email, String errorMessage) {
         Objects.requireNonNull(email, errorMessage);
 

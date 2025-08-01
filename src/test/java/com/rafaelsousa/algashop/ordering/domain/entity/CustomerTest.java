@@ -21,6 +21,15 @@ class CustomerTest {
         Phone phone = new Phone("123-456-7890");
         Document document = new Document("123-45-6789");
         OffsetDateTime now = OffsetDateTime.now();
+        Address address = Address.builder()
+                .street("Bourbon Street")
+                .complement("Apt. 114")
+                .neighborhood("North Ville")
+                .number("1133")
+                .city("York")
+                .state("South California")
+                .zipCode(new ZipCode("12345"))
+                .build();
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() ->
@@ -32,7 +41,8 @@ class CustomerTest {
                                 phone,
                                 document,
                                 false,
-                                now
+                                now,
+                                address
                         )
                 );
     }
@@ -47,7 +57,16 @@ class CustomerTest {
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .complement("Apt. 114")
+                        .neighborhood("North Ville")
+                        .number("1133")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build()
         );
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
@@ -64,7 +83,16 @@ class CustomerTest {
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .complement("Apt. 114")
+                        .neighborhood("North Ville")
+                        .number("1133")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build()
         );
 
         customer.archive();
@@ -78,7 +106,16 @@ class CustomerTest {
                 c -> assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
                 c -> assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
                 c -> assertThat(c.archivedAt()).isNotNull(),
-                c -> assertThat(c.isPromotionNotificationsAllowed()).isFalse()
+                c -> assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
+                c -> assertThat(c.address()).isEqualTo(Address.builder()
+                        .street("Bourbon Street")
+                        .complement(null)
+                        .neighborhood("North Ville")
+                        .number("Anonymized")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build())
         );
     }
 
@@ -95,7 +132,16 @@ class CustomerTest {
                 true,
                 OffsetDateTime.now(),
                 OffsetDateTime.now(),
-                new LoyaltyPoints(10)
+                new LoyaltyPoints(10),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .complement("Apt. 114")
+                        .neighborhood("North Ville")
+                        .number("1133")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build()
         );
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
@@ -128,7 +174,16 @@ class CustomerTest {
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .complement("Apt. 114")
+                        .neighborhood("North Ville")
+                        .number("1133")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build()
         );
 
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
@@ -149,7 +204,16 @@ class CustomerTest {
                 new Phone("123-456-7890"),
                 new Document("123-45-6789"),
                 false,
-                OffsetDateTime.now()
+                OffsetDateTime.now(),
+                Address.builder()
+                        .street("Bourbon Street")
+                        .complement("Apt. 114")
+                        .neighborhood("North Ville")
+                        .number("1133")
+                        .city("York")
+                        .state("South California")
+                        .zipCode(new ZipCode("12345"))
+                        .build()
         );
 
         LoyaltyPoints loyaltyPointsZero = new LoyaltyPoints(0);
