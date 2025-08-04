@@ -20,6 +20,10 @@ public record FullName(String firstName, String lastName) {
         this.lastName = lastName.trim();
     }
 
+    public static FullName of (String firstName, String lastName) {
+        return new FullName(firstName, lastName);
+    }
+
     @Override
     public String toString() {
         return firstName.concat(" ").concat(lastName);

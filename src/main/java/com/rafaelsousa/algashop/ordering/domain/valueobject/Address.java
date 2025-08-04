@@ -24,4 +24,14 @@ public record Address(
         FieldValidations.requiredNotBlank(state);
         Objects.requireNonNull(zipCode);
     }
+
+    public static Address of(String street,
+                             String complement,
+                             String neighborhood,
+                             String number,
+                             String city,
+                             String state,
+                             ZipCode zipCode) {
+        return new Address(street, complement, neighborhood, number, city, state, zipCode);
+    }
 }
