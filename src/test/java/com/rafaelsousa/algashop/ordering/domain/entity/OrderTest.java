@@ -42,16 +42,24 @@ class OrderTest {
 
     @Test
     void shouldGenerateExceptionWhenTryToChangeItemsSet() {
-        String productName = "Product 1";
-        ProductId productId = new ProductId();
-        Money price = Money.of("10.00");
         Order order = Order.draft(new CustomerId());
 
-        order.addItem(productId, new ProductName(productName), price, Quantity.of(1));
+        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("10.00"), Quantity.of(1));
 
         Set<OrderItem> items = order.items();
 
         Assertions.assertThatThrownBy(items::clear)
                 .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void shouldCalculateTotals() {
+        Order order = Order.draft(new CustomerId());
+
+        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("10.00"), Quantity.of(5));
+        order.addItem(new ProductId(), new ProductName("Product 2"), Money.of("15.00"), Quantity.of(1));
+
+        Assertions.assertThat(order.totalAmount()).isEqualTo(Money.of("65.00"));
+        Assertions.assertThat(order.totalItems()).isEqualTo(Quantity.of(6));
     }
 }
