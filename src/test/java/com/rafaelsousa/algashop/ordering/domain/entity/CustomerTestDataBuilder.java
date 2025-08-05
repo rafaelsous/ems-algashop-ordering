@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.domain.entity;
 
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
+import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;

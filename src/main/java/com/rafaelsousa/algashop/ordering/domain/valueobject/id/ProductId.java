@@ -1,19 +1,18 @@
-package com.rafaelsousa.algashop.ordering.domain.valueobject;
+package com.rafaelsousa.algashop.ordering.domain.valueobject.id;
 
 import com.rafaelsousa.algashop.ordering.domain.utils.IdGenerator;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public record CustomerId(UUID value) {
-    public CustomerId() {
-        this(IdGenerator.generateTimeBasedUUID());
+public record ProductId(UUID value) {
+
+    public ProductId {
+        Objects.requireNonNull(value);
     }
 
-    public CustomerId(UUID value) {
-        Objects.requireNonNull(value);
-
-        this.value = value;
+    public ProductId() {
+        this(IdGenerator.generateTimeBasedUUID());
     }
 
     @Override
