@@ -14,7 +14,7 @@ class OrderTest {
 
     @Test
     void shouldCreateOrder() {
-        var order = OrderTestDataBuilder.anOrder();
+        Order order = OrderTestDataBuilder.anOrder().build();
 
         Assertions.assertThat(order).isNotNull();
     }
