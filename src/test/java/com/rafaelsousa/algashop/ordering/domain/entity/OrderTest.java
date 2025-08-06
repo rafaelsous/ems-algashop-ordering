@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.domain.entity;
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
+import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -138,5 +139,21 @@ class OrderTest {
 
         Assertions.assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
                 .isThrownBy(() -> order.changeShipping(shipping, shippingCost, expectedDeliveryDate));
+    }
+
+    @Test
+    void givenDraftOrderWhenChangeItemQuantityShouldRecalculate() {
+        Order order = Order.draft(new CustomerId());
+
+        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("25.00"), Quantity.of(2));
+
+        OrderItem orderItem = order.items().iterator().next();
+
+        order.changeItemQuantity(orderItem.id(), Quantity.of(5));
+
+        Assertions.assertWith(order,
+                o -> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.of(5)),
+                o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.of("125.00"))
+        );
     }
 }

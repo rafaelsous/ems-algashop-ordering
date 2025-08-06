@@ -36,12 +36,20 @@ public class OrderItem {
     }
 
     @Builder(builderClassName = "BrandNewOrderItemBuilder", builderMethodName = "brandNew")
-    private static OrderItem createBbrandNew(OrderId orderId, ProductId productId, ProductName productName, Money price, Quantity quantity) {
+    private static OrderItem createBrandNew(OrderId orderId, ProductId productId, ProductName productName, Money price, Quantity quantity) {
         OrderItem orderItem = new OrderItem(new OrderItemId(), orderId, productId, productName, price, quantity, Money.ZERO);
 
-        orderItem.calculateTotal();
+        orderItem.recalculateTotal();
 
         return orderItem;
+    }
+
+    void changeQuantity(Quantity quantity) {
+        Objects.requireNonNull(quantity);
+
+        this.setQuantity(quantity);
+
+        this.recalculateTotal();
     }
 
     public OrderItemId id() {
@@ -72,7 +80,7 @@ public class OrderItem {
         return totalAmount;
     }
 
-    private void calculateTotal() {
+    private void recalculateTotal() {
         this.setTotalAmount(this.price().multiply(this.quantity()));
     }
 
