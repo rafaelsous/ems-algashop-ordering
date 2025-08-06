@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.entity;
 
+import com.rafaelsousa.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.OrderId;
@@ -93,6 +94,30 @@ public class Order {
         this.items.add(orderItem);
         
         this.recalculateTotals();
+    }
+
+    public void place() {
+        // TODO: Business rules
+
+        this.changeStatus(OrderStatus.PLACED);
+    }
+
+    public boolean isDraft() {
+        return OrderStatus.DRAFT.equals(this.status());
+    }
+
+    public boolean isPlaced() {
+        return OrderStatus.PLACED.equals(this.status());
+    }
+
+    private void changeStatus(OrderStatus newStatus) {
+        Objects.requireNonNull(newStatus);
+
+        if (this.status().canNotChangeTo(newStatus)) {
+            throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
+        }
+
+        this.setStatus(newStatus);
     }
 
     public OrderId id() {
