@@ -3,7 +3,6 @@ package com.rafaelsousa.algashop.ordering.domain.entity;
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
-import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ class OrderTest {
 
     @Test
     void shouldCreateOrder() {
-        var order = Order.draft(new CustomerId());
+        var order = OrderTestDataBuilder.anOrder();
 
         Assertions.assertThat(order).isNotNull();
     }
@@ -25,7 +24,9 @@ class OrderTest {
         String productName = "Product 1";
         ProductId productId = new ProductId();
         Money price = Money.of("10.0");
-        Order order = Order.draft(new CustomerId());
+        Order order = OrderTestDataBuilder.anOrder()
+                .withItems(false)
+                .build();
 
         order.addItem(productId, new ProductName(productName), price, Quantity.of(1));
 
@@ -43,9 +44,7 @@ class OrderTest {
 
     @Test
     void shouldGenerateExceptionWhenTryToChangeItemsSet() {
-        Order order = Order.draft(new CustomerId());
-
-        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("10.00"), Quantity.of(1));
+        Order order = OrderTestDataBuilder.anOrder().build();
 
         Set<OrderItem> items = order.items();
 
@@ -55,18 +54,15 @@ class OrderTest {
 
     @Test
     void shouldCalculateTotals() {
-        Order order = Order.draft(new CustomerId());
+        Order order = OrderTestDataBuilder.anOrder().build();
 
-        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("10.00"), Quantity.of(5));
-        order.addItem(new ProductId(), new ProductName("Product 2"), Money.of("15.00"), Quantity.of(1));
-
-        Assertions.assertThat(order.totalAmount()).isEqualTo(Money.of("65.00"));
         Assertions.assertThat(order.totalItems()).isEqualTo(Quantity.of(6));
+        Assertions.assertThat(order.totalAmount()).isEqualTo(Money.of("65.00"));
     }
 
     @Test
     void givenDraftOrderWhenPlaceShouldChangeStatusToPlaced() {
-        Order order = Order.draft(new CustomerId());
+        Order order = OrderTestDataBuilder.anOrder().build();
 
         order.place();
 
@@ -74,10 +70,22 @@ class OrderTest {
     }
 
     @Test
-    void givenPlacedOrderWhenPlaceShouldThrowException() {
-        Order order = Order.draft(new CustomerId());
+    void givenPlacedOrderWhenPayShouldChangeStatusToPaid() {
+        Order order = OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build();
 
-        order.place();
+        order.markAsPaid();
+
+        Assertions.assertThat(order.isPaid()).isTrue();
+        Assertions.assertThat(order.paidAt()).isNotNull();
+    }
+
+    @Test
+    void givenPlacedOrderWhenPlaceShouldThrowException() {
+        Order order = OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build();
 
         Assertions.assertThatThrownBy(order::place)
                 .isInstanceOf(OrderStatusCannotBeChangedException.class);
@@ -85,7 +93,9 @@ class OrderTest {
 
     @Test
     void givenDraftOrderWhenChangePaymentMethodShouldAllowChange() {
-        Order order = Order.draft(new CustomerId());
+        Order order = OrderTestDataBuilder.anOrder()
+                .paymentMethod(PaymentMethod.GATEWAY_BALANCE)
+                .build();
 
         order.changePaymentMethod(PaymentMethod.CREDIT_CARD);
 
@@ -94,21 +104,8 @@ class OrderTest {
 
     @Test
     void givenDraftOrderWhenChangeBillingInfoShouldAllowChange() {
-        Order order = Order.draft(new CustomerId());
-        Address address = Address.builder()
-                .street("Bourbon Street")
-                .neighborhood("North Ville")
-                .number("123")
-                .city("New York")
-                .state("South California")
-                .zipCode(new ZipCode("12345"))
-                .build();
-        BillingInfo billing = BillingInfo.builder()
-                .address(address)
-                .document(Document.of("123-12-1234"))
-                .phone(Phone.of("123-123-1234"))
-                .fullName(FullName.of("Rafael", "Sousa"))
-                .build();
+        Order order = OrderTestDataBuilder.anOrder().build();
+        BillingInfo billing = OrderTestDataBuilder.generateBillingInfo();
 
         order.changeBilling(billing);
 
@@ -117,21 +114,8 @@ class OrderTest {
 
     @Test
     void givenDraftOrderWhenChangeShippingInfoShouldAllowChange() {
-        Order order = Order.draft(new CustomerId());
-        Address address = Address.builder()
-                .street("Bourbon Street")
-                .neighborhood("North Ville")
-                .number("123")
-                .city("New York")
-                .state("South California")
-                .zipCode(new ZipCode("12345"))
-                .build();
-        ShippingInfo shipping = ShippingInfo.builder()
-                .address(address)
-                .document(Document.of("123-12-1234"))
-                .phone(Phone.of("123-123-1234"))
-                .fullName(FullName.of("Rafael", "Sousa"))
-                .build();
+        Order order = OrderTestDataBuilder.anOrder().build();
+        ShippingInfo shipping = OrderTestDataBuilder.generateShippingInfo();
 
         Money shippingCost = Money.of("13.99");
         LocalDate expectedDeliveryDate = LocalDate.now().plusDays(5);
@@ -146,21 +130,8 @@ class OrderTest {
 
     @Test
     void givenDraftOrderAndDeliveryDateInThePastWhenChangeShippingInfoShouldNotAllowChange() {
-        Order order = Order.draft(new CustomerId());
-        Address address = Address.builder()
-                .street("Bourbon Street")
-                .neighborhood("North Ville")
-                .number("123")
-                .city("New York")
-                .state("South California")
-                .zipCode(new ZipCode("12345"))
-                .build();
-        ShippingInfo shipping = ShippingInfo.builder()
-                .address(address)
-                .document(Document.of("123-12-1234"))
-                .phone(Phone.of("123-123-1234"))
-                .fullName(FullName.of("Rafael", "Sousa"))
-                .build();
+        Order order = OrderTestDataBuilder.anOrder().build();
+        ShippingInfo shipping = OrderTestDataBuilder.generateShippingInfo();
 
         Money shippingCost = Money.of("13.99");
         LocalDate expectedDeliveryDate = LocalDate.now().minusDays(5);

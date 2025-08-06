@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class CustomerTestDataBuilder {
 
-    public CustomerTestDataBuilder() {
+    private CustomerTestDataBuilder() {
     }
 
     public static Customer.BrandNewCustomerBuild brandNewCustomer() {
