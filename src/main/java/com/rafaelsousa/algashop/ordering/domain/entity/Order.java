@@ -32,7 +32,7 @@ public class Order {
     private OrderStatus status;
     private PaymentMethod paymentMethod;
 
-    private BillingInfo billing;
+    private Billing billing;
     private Shipping shipping;
 
     private Set<OrderItem> items;
@@ -40,7 +40,7 @@ public class Order {
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
                  OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, OrderStatus status,
-                 PaymentMethod paymentMethod, BillingInfo billing, Shipping shipping, Set<OrderItem> items) {
+                 PaymentMethod paymentMethod, Billing billing, Shipping shipping, Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -113,7 +113,7 @@ public class Order {
         this.setPaymentMethod(paymentMethod);
     }
 
-    public void changeBilling(BillingInfo billing) {
+    public void changeBilling(Billing billing) {
         Objects.requireNonNull(billing);
 
         this.setBilling(billing);
@@ -191,7 +191,7 @@ public class Order {
         return paymentMethod;
     }
 
-    public BillingInfo billing() {
+    public Billing billing() {
         return billing;
     }
 
@@ -310,7 +310,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    private void setBilling(BillingInfo billing) {
+    private void setBilling(Billing billing) {
         this.billing = billing;
     }
 

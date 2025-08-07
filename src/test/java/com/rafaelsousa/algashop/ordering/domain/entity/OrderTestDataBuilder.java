@@ -10,7 +10,7 @@ public class OrderTestDataBuilder {
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
     private Shipping shipping = aShipping();
-    private BillingInfo billing = aBillingInfo();
+    private Billing billing = aBilling();
 
     private boolean withItems = true;
     private OrderStatus status = OrderStatus.DRAFT;
@@ -81,12 +81,13 @@ public class OrderTestDataBuilder {
                 .build();
     }
 
-    public static BillingInfo aBillingInfo() {
-        return BillingInfo.builder()
+    public static Billing aBilling() {
+        return Billing.builder()
                 .address(anAddress())
                 .document(Document.of("123-12-1234"))
                 .phone(Phone.of("123-123-1234"))
                 .fullName(FullName.of("Rafael", "Sousa"))
+                .email(Email.of("rafael.sousa@email.com"))
                 .build();
     }
 
@@ -127,7 +128,7 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder billing(BillingInfo billing) {
+    public OrderTestDataBuilder billing(Billing billing) {
         this.billing = billing;
         return this;
     }

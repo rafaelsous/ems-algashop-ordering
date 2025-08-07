@@ -107,9 +107,9 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeBillingInfo_shouldAllowChange() {
+    void givenDraftOrder_whenChangeBilling_shouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        BillingInfo billing = OrderTestDataBuilder.aBillingInfo();
+        Billing billing = OrderTestDataBuilder.aBilling();
 
         order.changeBilling(billing);
 

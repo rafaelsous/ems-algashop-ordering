@@ -3,21 +3,22 @@ package com.rafaelsousa.algashop.ordering.domain.valueobject;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class BillingInfoTest {
+class BillingTest {
 
     @Test
     void given_allValidBillingInfoProperties_whenInstantiate_shouldGenerate() {
         FullName fullName = FullName.of("Rafael", "Sousa");
         Document document = Document.of("12345678901");
         Phone phone = Phone.of("11912345678");
+        Email email = Email.of("rafael.sousa@email.com");
         Address address = Address.of(
                 "Bourbon Street", null,
                 "North Ville", "1324", "New York", "South California",
                 new ZipCode("12345"));
 
-        BillingInfo billingInfo = BillingInfo.of(fullName, document, phone, address);
+        Billing billing = Billing.of(fullName, document, phone, email, address);
 
-        Assertions.assertWith(billingInfo, b -> {
+        Assertions.assertWith(billing, b -> {
             Assertions.assertThat(b.fullName()).isEqualTo(fullName);
             Assertions.assertThat(b.document()).isEqualTo(document);
             Assertions.assertThat(b.phone()).isEqualTo(phone);
@@ -29,18 +30,48 @@ class BillingInfoTest {
     void given_nullFullName_whenTryInstantiate_shouldGenerateException() {
         Document document = Document.of("12345678901");
         Phone phone = Phone.of("11912345678");
+        Email email = Email.of("rafael.sousa@email.com");
         Address address = Address.of(
                 "Bourbon Street", null,
                 "North Ville", "1324", "New York", "South California",
                 new ZipCode("12345"));
 
         Assertions.assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> BillingInfo.of(null, document, phone, address));
+                .isThrownBy(() -> Billing.of(null, document, phone, email, address));
     }
 
     @Test
     void given_nullDocument_whenTryInstantiate_shouldGenerateException() {
         FullName fullName = FullName.of("Rafael", "Sousa");
+        Phone phone = Phone.of("11912345678");
+        Email email = Email.of("rafael.sousa@email.com");
+        Address address = Address.of(
+                "Bourbon Street", null,
+                "North Ville", "1324", "New York", "South California",
+                new ZipCode("12345"));
+
+        Assertions.assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> Billing.of(fullName, null, phone, email, address));
+    }
+
+    @Test
+    void given_nullPhone_whenTryInstantiate_shouldGenerateException() {
+        FullName fullName = FullName.of("Rafael", "Sousa");
+        Document document = Document.of("12345678901");
+        Email email = Email.of("rafael.sousa@email.com");
+        Address address = Address.of(
+                "Bourbon Street", null,
+                "North Ville", "1324", "New York", "South California",
+                new ZipCode("12345"));
+
+        Assertions.assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> Billing.of(fullName, document, null, email, address));
+    }
+
+    @Test
+    void given_nullEmail_whenTryInstantiante_shouldGenerateException() {
+        FullName fullName = FullName.of("Rafael", "Sousa");
+        Document document = Document.of("12345678901");
         Phone phone = Phone.of("11912345678");
         Address address = Address.of(
                 "Bourbon Street", null,
@@ -48,20 +79,7 @@ class BillingInfoTest {
                 new ZipCode("12345"));
 
         Assertions.assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> BillingInfo.of(fullName, null, phone, address));
-    }
-
-    @Test
-    void given_nullPhone_whenTryInstantiate_shouldGenerateException() {
-        FullName fullName = FullName.of("Rafael", "Sousa");
-        Document document = Document.of("12345678901");
-        Address address = Address.of(
-                "Bourbon Street", null,
-                "North Ville", "1324", "New York", "South California",
-                new ZipCode("12345"));
-
-        Assertions.assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> BillingInfo.of(fullName, document, null, address));
+                .isThrownBy(() -> Billing.of(fullName, document, phone, null, address));
     }
 
     @Test
@@ -69,8 +87,9 @@ class BillingInfoTest {
         FullName fullName = FullName.of("Rafael", "Sousa");
         Document document = Document.of("12345678901");
         Phone phone = Phone.of("11912345678");
+        Email email = Email.of("rafael.sousa@email.com");
 
         Assertions.assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> BillingInfo.of(fullName, document, phone, null));
+                .isThrownBy(() -> Billing.of(fullName, document, phone, email, null));
     }
 }
