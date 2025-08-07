@@ -13,8 +13,8 @@ public class OrderTestDataBuilder {
     private Money shippingCost = Money.of(BigDecimal.ZERO);
     private LocalDate expectedDeliveryDate = LocalDate.now().plusWeeks(1);
 
-    private ShippingInfo shipping = generateShippingInfo();
-    private BillingInfo billing = generateBillingInfo();
+    private ShippingInfo shipping = aShippingInfo();
+    private BillingInfo billing = aBillingInfo();
 
     private boolean withItems = true;
     private OrderStatus status = OrderStatus.DRAFT;
@@ -32,8 +32,12 @@ public class OrderTestDataBuilder {
         order.changeBilling(billing);
 
         if (withItems) {
-            order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("10.00"), Quantity.of(5));
-            order.addItem(new ProductId(), new ProductName("Product 2"), Money.of("15.00"), Quantity.of(1));
+            Product product1 = ProductTestDataBuilder.aProduct().build();
+
+            Product product2 = ProductTestDataBuilder.aProductAltRamMemory().build();
+
+            order.addItem(product1, Quantity.of(5));
+            order.addItem(product2, Quantity.of(1));
         }
 
         switch (this.status) {
@@ -55,25 +59,25 @@ public class OrderTestDataBuilder {
         return order;
     }
 
-    public static ShippingInfo generateShippingInfo() {
+    public static ShippingInfo aShippingInfo() {
         return ShippingInfo.builder()
-                .address(generateAddress())
+                .address(anAddress())
                 .document(Document.of("123-12-1234"))
                 .phone(Phone.of("123-123-1234"))
                 .fullName(FullName.of("Rafael", "Sousa"))
                 .build();
     }
 
-    public static BillingInfo generateBillingInfo() {
+    public static BillingInfo aBillingInfo() {
         return BillingInfo.builder()
-                .address(generateAddress())
+                .address(anAddress())
                 .document(Document.of("123-12-1234"))
                 .phone(Phone.of("123-123-1234"))
                 .fullName(FullName.of("Rafael", "Sousa"))
                 .build();
     }
 
-    public static Address generateAddress() {
+    public static Address anAddress() {
         return Address.builder()
                 .street("Bourbon Street")
                 .neighborhood("North Ville")

@@ -8,7 +8,6 @@ import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.OrderItemId;
-import com.rafaelsousa.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -83,13 +82,15 @@ public class Order {
         );
     }
 
-    public void addItem(ProductId productId, ProductName productName, Money price, Quantity quantity) {
+    public void addItem(Product product, Quantity quantity) {
+        Objects.requireNonNull(product);
+        Objects.requireNonNull(quantity);
+
         OrderItem orderItem = OrderItem.brandNew()
                 .orderId(this.id())
-                .productId(productId)
-                .productName(productName)
-                .price(price)
-                .quantity(quantity).build();
+                .product(product)
+                .quantity(quantity)
+                .build();
 
         if (Objects.isNull(this.items)) {
             this.items = new HashSet<>();

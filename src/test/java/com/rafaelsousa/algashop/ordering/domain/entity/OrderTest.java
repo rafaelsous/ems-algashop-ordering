@@ -22,14 +22,13 @@ class OrderTest {
 
     @Test
     void shouldAddItem() {
-        String productName = "Product 1";
-        ProductId productId = new ProductId();
-        Money price = Money.of("10.0");
+        Product product = ProductTestDataBuilder.aProductAltMousePad().build();
+        ProductId productId = product.id();
         Order order = OrderTestDataBuilder.anOrder()
                 .withItems(false)
                 .build();
 
-        order.addItem(productId, new ProductName(productName), price, Quantity.of(1));
+        order.addItem(product, Quantity.of(1));
 
         OrderItem orderItem = order.items().iterator().next();
 
@@ -37,8 +36,8 @@ class OrderTest {
         Assertions.assertThat(order.items()).hasSize(1);
         Assertions.assertWith(orderItem,
                 oi -> Assertions.assertThat(oi.id()).isNotNull(),
-                oi -> Assertions.assertThat(oi.productName().value()).hasToString(productName),
-                oi -> Assertions.assertThat(oi.price()).isEqualTo(price),
+                oi -> Assertions.assertThat(oi.productName().value()).hasToString("Mouse pad"),
+                oi -> Assertions.assertThat(oi.price()).isEqualTo(Money.of("100.0")),
                 oi -> Assertions.assertThat(oi.productId()).isEqualTo(productId)
         );
     }
@@ -55,10 +54,12 @@ class OrderTest {
 
     @Test
     void shouldCalculateTotals() {
-        Order order = OrderTestDataBuilder.anOrder().build();
+        Order order = Order.draft(new CustomerId());
+        order.addItem(ProductTestDataBuilder.aProductAltMousePad().build(), new Quantity(1));
+        order.addItem(ProductTestDataBuilder.aProductAltRamMemory().build(), new Quantity(2));
 
-        Assertions.assertThat(order.totalItems()).isEqualTo(Quantity.of(6));
-        Assertions.assertThat(order.totalAmount()).isEqualTo(Money.of("65.00"));
+        Assertions.assertThat(order.totalItems()).isEqualTo(Quantity.of(3));
+        Assertions.assertThat(order.totalAmount()).isEqualTo(Money.of("400.00"));
     }
 
     @Test
@@ -106,7 +107,7 @@ class OrderTest {
     @Test
     void givenDraftOrderWhenChangeBillingInfoShouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        BillingInfo billing = OrderTestDataBuilder.generateBillingInfo();
+        BillingInfo billing = OrderTestDataBuilder.aBillingInfo();
 
         order.changeBilling(billing);
 
@@ -116,7 +117,7 @@ class OrderTest {
     @Test
     void givenDraftOrderWhenChangeShippingInfoShouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        ShippingInfo shipping = OrderTestDataBuilder.generateShippingInfo();
+        ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
 
         Money shippingCost = Money.of("13.99");
         LocalDate expectedDeliveryDate = LocalDate.now().plusDays(5);
@@ -132,7 +133,7 @@ class OrderTest {
     @Test
     void givenDraftOrderAndDeliveryDateInThePastWhenChangeShippingInfoShouldNotAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        ShippingInfo shipping = OrderTestDataBuilder.generateShippingInfo();
+        ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
 
         Money shippingCost = Money.of("13.99");
         LocalDate expectedDeliveryDate = LocalDate.now().minusDays(5);
@@ -144,8 +145,9 @@ class OrderTest {
     @Test
     void givenDraftOrderWhenChangeItemQuantityShouldRecalculate() {
         Order order = Order.draft(new CustomerId());
+        Product product = ProductTestDataBuilder.aProduct().build();
 
-        order.addItem(new ProductId(), new ProductName("Product 1"), Money.of("25.00"), Quantity.of(2));
+        order.addItem(product, Quantity.of(2));
 
         OrderItem orderItem = order.items().iterator().next();
 
@@ -153,7 +155,7 @@ class OrderTest {
 
         Assertions.assertWith(order,
                 o -> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.of(5)),
-                o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.of("125.00"))
+                o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.of("75000.00"))
         );
     }
 }
