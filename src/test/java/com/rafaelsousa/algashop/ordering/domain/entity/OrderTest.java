@@ -2,10 +2,12 @@ package com.rafaelsousa.algashop.ordering.domain.entity;
 
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.rafaelsousa.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.rafaelsousa.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.ProductId;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -63,7 +65,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderWhenPlaceShouldChangeStatusToPlaced() {
+    void givenDraftOrder_whenPlace_shouldChangeStatusToPlaced() {
         Order order = OrderTestDataBuilder.anOrder().build();
 
         order.place();
@@ -72,7 +74,7 @@ class OrderTest {
     }
 
     @Test
-    void givenPlacedOrderWhenPayShouldChangeStatusToPaid() {
+    void givenPlacedOrder_whenPay_shouldChangeStatusToPaid() {
         Order order = OrderTestDataBuilder.anOrder()
                 .status(OrderStatus.PLACED)
                 .build();
@@ -84,7 +86,7 @@ class OrderTest {
     }
 
     @Test
-    void givenPlacedOrderWhenPlaceShouldThrowException() {
+    void givenPlacedOrder_whenPlace_shouldThrowException() {
         Order order = OrderTestDataBuilder.anOrder()
                 .status(OrderStatus.PLACED)
                 .build();
@@ -94,7 +96,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderWhenChangePaymentMethodShouldAllowChange() {
+    void givenDraftOrder_whenChangePaymentMethod_shouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder()
                 .paymentMethod(PaymentMethod.GATEWAY_BALANCE)
                 .build();
@@ -105,7 +107,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderWhenChangeBillingInfoShouldAllowChange() {
+    void givenDraftOrder_whenChangeBillingInfo_shouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
         BillingInfo billing = OrderTestDataBuilder.aBillingInfo();
 
@@ -115,7 +117,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderWhenChangeShippingInfoShouldAllowChange() {
+    void givenDraftOrder_whenChangeShippingInfo_shouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
         ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
 
@@ -131,7 +133,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderAndDeliveryDateInThePastWhenChangeShippingInfoShouldNotAllowChange() {
+    void givenDraftOrderAndDeliveryDateInThePast_whenChangeShippingInfo_shouldNotAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
         ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
 
@@ -143,7 +145,7 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrderWhenChangeItemQuantityShouldRecalculate() {
+    void givenDraftOrder_whenChangeItemQuantity_shouldRecalculate() {
         Order order = Order.draft(new CustomerId());
         Product product = ProductTestDataBuilder.aProduct().build();
 
@@ -157,5 +159,18 @@ class OrderTest {
                 o -> Assertions.assertThat(o.totalItems()).isEqualTo(Quantity.of(5)),
                 o -> Assertions.assertThat(o.totalAmount()).isEqualTo(Money.of("75000.00"))
         );
+    }
+
+    @Test
+    void givenOutOfStockProduct_whenTryToAddItem_shouldThrowException() {
+        Order order = Order.draft(new CustomerId());
+
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> order.addItem(
+                ProductTestDataBuilder.aProductUnavailable().build(),
+                Quantity.of(1)
+        );
+
+        Assertions.assertThatExceptionOfType(ProductOutOfStockException.class)
+                .isThrownBy(throwingCallable);
     }
 }
