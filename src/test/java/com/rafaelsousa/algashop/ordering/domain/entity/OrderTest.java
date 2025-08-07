@@ -117,31 +117,25 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeShippingInfo_shouldAllowChange() {
+    void givenDraftOrder_whenChangeShipping_shouldAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
+        Shipping shipping = OrderTestDataBuilder.aShipping();
 
-        Money shippingCost = Money.of("13.99");
-        LocalDate expectedDeliveryDate = LocalDate.now().plusDays(5);
-        order.changeShipping(shipping, shippingCost, expectedDeliveryDate);
+        order.changeShipping(shipping);
 
-        Assertions.assertWith(order,
-                o -> Assertions.assertThat(order.shipping()).isEqualTo(shipping),
-                o -> Assertions.assertThat(order.shippingCost()).isEqualTo(shippingCost),
-                o -> Assertions.assertThat(order.expectedDeliveryDate()).isEqualTo(expectedDeliveryDate)
-        );
+        Assertions.assertThat(order.shipping()).isEqualTo(shipping);
     }
 
     @Test
-    void givenDraftOrderAndDeliveryDateInThePast_whenChangeShippingInfo_shouldNotAllowChange() {
+    void givenDraftOrderAndDeliveryDateInThePast_whenChangeShipping_shouldNotAllowChange() {
         Order order = OrderTestDataBuilder.anOrder().build();
-        ShippingInfo shipping = OrderTestDataBuilder.aShippingInfo();
-
-        Money shippingCost = Money.of("13.99");
         LocalDate expectedDeliveryDate = LocalDate.now().minusDays(5);
+        Shipping shipping = OrderTestDataBuilder.aShipping().toBuilder()
+                .expectedDate(expectedDeliveryDate)
+                .build();
 
         Assertions.assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
-                .isThrownBy(() -> order.changeShipping(shipping, shippingCost, expectedDeliveryDate));
+                .isThrownBy(() -> order.changeShipping(shipping));
     }
 
     @Test

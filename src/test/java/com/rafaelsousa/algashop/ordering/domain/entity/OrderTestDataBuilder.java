@@ -2,18 +2,14 @@ package com.rafaelsousa.algashop.ordering.domain.entity;
 
 import com.rafaelsousa.algashop.ordering.domain.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.valueobject.id.ProductId;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class OrderTestDataBuilder {
     private CustomerId customerId = new CustomerId();
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
-    private Money shippingCost = Money.of(BigDecimal.ZERO);
-    private LocalDate expectedDeliveryDate = LocalDate.now().plusWeeks(1);
 
-    private ShippingInfo shipping = aShippingInfo();
+    private Shipping shipping = aShipping();
     private BillingInfo billing = aBillingInfo();
 
     private boolean withItems = true;
@@ -28,7 +24,7 @@ public class OrderTestDataBuilder {
     public Order build() {
         Order order = Order.draft(customerId);
         order.changePaymentMethod(paymentMethod);
-        order.changeShipping(shipping, shippingCost, expectedDeliveryDate);
+        order.changeShipping(shipping);
         order.changeBilling(billing);
 
         if (withItems) {
@@ -59,12 +55,29 @@ public class OrderTestDataBuilder {
         return order;
     }
 
-    public static ShippingInfo aShippingInfo() {
-        return ShippingInfo.builder()
+    public static Shipping aShipping() {
+        return Shipping.builder()
                 .address(anAddress())
-                .document(Document.of("123-12-1234"))
-                .phone(Phone.of("123-123-1234"))
-                .fullName(FullName.of("Rafael", "Sousa"))
+                .recipient(Recipient.builder()
+                        .fullName(FullName.of("Rafael", "Sousa"))
+                        .document(Document.of("123-12-1234"))
+                        .phone(Phone.of("123-123-1234"))
+                        .build())
+                .cost(Money.of("10.00"))
+                .expectedDate(LocalDate.now().plusWeeks(1))
+                .build();
+    }
+
+    public static Shipping aShippingAlt() {
+        return Shipping.builder()
+                .address(anAddressAlt())
+                .recipient(Recipient.builder()
+                        .fullName(FullName.of("Tatiane", "Sousa"))
+                        .document(Document.of("456-45-4567"))
+                        .phone(Phone.of("456-456-4567"))
+                        .build())
+                .cost(Money.of("25.00"))
+                .expectedDate(LocalDate.now().plusWeeks(3))
                 .build();
     }
 
@@ -88,6 +101,17 @@ public class OrderTestDataBuilder {
                 .build();
     }
 
+    public static Address anAddressAlt() {
+        return Address.builder()
+                .street("Sansome Street")
+                .neighborhood("Sansome")
+                .number("789")
+                .city("San Francisco")
+                .state("California")
+                .zipCode(new ZipCode("45678"))
+                .build();
+    }
+
     public OrderTestDataBuilder customerId(CustomerId customerId) {
         this.customerId = customerId;
         return this;
@@ -98,17 +122,7 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder shippingCost(Money shippingCost) {
-        this.shippingCost = shippingCost;
-        return this;
-    }
-
-    public OrderTestDataBuilder expectedDeliveryDate(LocalDate expectedDeliveryDate) {
-        this.expectedDeliveryDate = expectedDeliveryDate;
-        return this;
-    }
-
-    public OrderTestDataBuilder shipping(ShippingInfo shipping) {
+    public OrderTestDataBuilder shipping(Shipping shipping) {
         this.shipping = shipping;
         return this;
     }
