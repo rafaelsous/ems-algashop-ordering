@@ -22,10 +22,10 @@ public class OrderTestDataBuilder {
     }
 
     public Order build() {
-        Order order = Order.draft(customerId);
-        order.changePaymentMethod(paymentMethod);
-        order.changeShipping(shipping);
-        order.changeBilling(billing);
+        Order order = Order.draft(this.customerId);
+        order.changePaymentMethod(this.paymentMethod);
+        order.changeShipping(this.shipping);
+        order.changeBilling(this.billing);
 
         if (withItems) {
             Product product1 = ProductTestDataBuilder.aProduct().build();
@@ -47,8 +47,15 @@ public class OrderTestDataBuilder {
                 order.markAsPaid();
             }
             case READY -> {
+                order.place();
+                order.markAsPaid();
+                order.markAsReady();
             }
             case CANCELED -> {
+                order.place();
+                order.markAsPaid();
+                order.markAsReady();
+                order.cancel();
             }
         }
 
