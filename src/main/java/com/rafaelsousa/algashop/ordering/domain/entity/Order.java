@@ -72,10 +72,10 @@ public class Order {
     }
 
     public void addItem(Product product, Quantity quantity) {
-        this.verifyChangeable();
-
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
+
+        this.verifyChangeable();
 
         product.checkOutOfStock();
 
@@ -91,6 +91,18 @@ public class Order {
 
         this.items.add(orderItem);
         
+        this.recalculateTotals();
+    }
+
+    public void removeItem(OrderItemId orderItemId) {
+        Objects.requireNonNull(orderItemId);
+
+        this.verifyChangeable();
+
+        OrderItem orderItem = this.findOrderItem(orderItemId);
+
+        this.items.remove(orderItem);
+
         this.recalculateTotals();
     }
 
@@ -117,25 +129,25 @@ public class Order {
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {
-        this.verifyChangeable();
-
         Objects.requireNonNull(paymentMethod);
+
+        this.verifyChangeable();
 
         this.setPaymentMethod(paymentMethod);
     }
 
     public void changeBilling(Billing billing) {
-        this.verifyChangeable();
-
         Objects.requireNonNull(billing);
+
+        this.verifyChangeable();
 
         this.setBilling(billing);
     }
 
     public void changeShipping(Shipping newShipping) {
-        this.verifyChangeable();
-
         Objects.requireNonNull(newShipping);
+
+        this.verifyChangeable();
 
         if (newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
@@ -145,10 +157,10 @@ public class Order {
     }
 
     public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {
-        this.verifyChangeable();
-
         Objects.requireNonNull(orderItemId);
         Objects.requireNonNull(quantity);
+
+        this.verifyChangeable();
 
         OrderItem orderItem = this.findOrderItem(orderItemId);
         orderItem.changeQuantity(quantity);
