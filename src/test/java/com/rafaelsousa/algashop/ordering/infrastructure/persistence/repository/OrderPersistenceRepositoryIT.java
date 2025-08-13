@@ -1,14 +1,18 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository;
 
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceTestDataBuilder;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Import(SpringDataAuditingConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class OrderPersistenceRepositoryIT {
     private final OrderPersistenceRepository orderPersistenceRepository;
@@ -24,13 +28,26 @@ class OrderPersistenceRepositoryIT {
 
         orderPersistenceRepository.saveAndFlush(orderPersistence);
 
-        Assertions.assertThat(orderPersistenceRepository.existsById(orderPersistence.getId())).isTrue();
+        assertThat(orderPersistenceRepository.existsById(orderPersistence.getId())).isTrue();
     }
 
     @Test
     void shouldCount() {
         long ordersCount = orderPersistenceRepository.count();
 
-        Assertions.assertThat(ordersCount).isZero();
+        assertThat(ordersCount).isZero();
+    }
+
+    @Test
+    void shouldSetAuditingValues() {
+        OrderPersistence orderPersistence = OrderPersistenceTestDataBuilder.existingOrder().build();
+
+        orderPersistence = orderPersistenceRepository.saveAndFlush(orderPersistence);
+
+        assertThat(orderPersistence).satisfies(
+                sop -> assertThat(sop.getCreatedByUserId()).isNotNull(),
+                sop -> assertThat(sop.getLastModifiedByUserId()).isNotNull(),
+                sop -> assertThat(sop.getLastModifiedAt()).isNotNull()
+        );
     }
 }
