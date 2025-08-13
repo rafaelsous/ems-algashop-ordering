@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity;
 
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -36,6 +38,12 @@ public class OrderPersistence {
     private OffsetDateTime paidAt;
     private OffsetDateTime canceledAt;
     private OffsetDateTime readyAt;
+
+    @Embedded
+    private BillingEmbeddable billing;
+
+    @Embedded
+    private ShippingEmbeddable shipping;
 
     @CreatedBy
     private UUID createdByUserId;
