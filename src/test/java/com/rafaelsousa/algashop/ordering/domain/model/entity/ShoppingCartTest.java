@@ -56,7 +56,7 @@ class ShoppingCartTest {
         shoppingCart.addItem(mousePad, quantity);
 
         Assertions.assertWith(shoppingCart,
-                sc -> Assertions.assertThat(sc.items()).hasSize(2),
+                sc -> Assertions.assertThat(sc.items()).hasSize(1),
                 sc -> Assertions.assertThat(sc.totalAmount()).isEqualTo(Money.of("200.00")),
                 sc -> Assertions.assertThat(sc.totalItems()).isEqualTo(Quantity.of(2))
         );

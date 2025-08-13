@@ -13,10 +13,7 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     private ShoppingCartId id;
@@ -70,7 +67,13 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
             this.items = new HashSet<>();
         }
 
-        this.items.add(shoppingCartItem);
+        this.findItemByProductId(product.id()).ifPresentOrElse(
+                i -> {
+                    i.refresh(product);
+                    i.changeQuantity(i.quantity().add(quantity));
+                },
+                () -> this.items.add(shoppingCartItem)
+        );
 
         this.recalculateTotals();
     }
@@ -165,6 +168,14 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
         this.setTotalAmount(Money.of(totalItemsAmount));
         this.setTotalItems(Quantity.of(totalItemsQuantity));
+    }
+
+    private Optional<ShoppingCartItem> findItemByProductId(ProductId productId) {
+        Objects.requireNonNull(productId);
+
+        return this.items.stream()
+                .filter(i -> i.productId().equals(productId))
+                .findFirst();
     }
 
     private void setId(ShoppingCartId id) {
