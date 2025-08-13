@@ -32,5 +32,5 @@ public class OrderPersistence {
     private OffsetDateTime placedAt;
     private OffsetDateTime paidAt;
     private OffsetDateTime canceledAt;
-    private OffsetDateTime readAt;
+    private OffsetDateTime readyAt;
 }
