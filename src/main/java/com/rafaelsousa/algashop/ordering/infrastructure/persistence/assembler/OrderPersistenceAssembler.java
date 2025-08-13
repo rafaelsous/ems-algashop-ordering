@@ -2,7 +2,9 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistence;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderPersistenceAssembler {
 
     public OrderPersistence fromDomain(Order order) {

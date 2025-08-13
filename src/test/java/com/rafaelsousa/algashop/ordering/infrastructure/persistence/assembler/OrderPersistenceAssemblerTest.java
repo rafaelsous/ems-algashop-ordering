@@ -11,7 +11,7 @@ class OrderPersistenceAssemblerTest {
     private final OrderPersistenceAssembler assembler = new OrderPersistenceAssembler();
 
     @Test
-    void shouldConvertFromDomakin() {
+    void shouldConvertFromDomain() {
         Order order = OrderTestDataBuilder.anOrder().build();
         OrderPersistence orderPersistence = assembler.fromDomain(order);
 

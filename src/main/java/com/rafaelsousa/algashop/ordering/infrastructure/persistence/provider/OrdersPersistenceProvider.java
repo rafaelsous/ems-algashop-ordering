@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.repository.Orders;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,13 @@ import java.util.Optional;
 public class OrdersPersistenceProvider implements Orders {
     private final OrderPersistenceRepository orderPersistenceRepository;
     private final OrderPersistenceAssembler assembler;
+    private final OrderPersistenceDisassembler disassembler;
 
     @Override
     public Optional<Order> ofId(OrderId orderId) {
-        return Optional.empty();
+        Optional<OrderPersistence> orderPersistenceOptional = orderPersistenceRepository.findById(orderId.value().toLong());
+
+        return orderPersistenceOptional.map(disassembler::toDomain);
     }
 
     @Override
