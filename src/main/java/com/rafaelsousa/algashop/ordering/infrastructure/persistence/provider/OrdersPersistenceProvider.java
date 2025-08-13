@@ -9,8 +9,11 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.Order
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Component
@@ -46,7 +49,7 @@ public class OrdersPersistenceProvider implements Orders {
     private void insert(Order aggregateRoot) {
         OrderPersistence orderPersistence = assembler.fromDomain(aggregateRoot);
         orderPersistenceRepository.saveAndFlush(orderPersistence);
-        aggregateRoot.setVersion(orderPersistence.getVersion());
+        updateVersion(aggregateRoot, orderPersistence);
     }
 
     private void update(Order aggregateRoot, OrderPersistence orderPersistence) {
@@ -54,7 +57,18 @@ public class OrdersPersistenceProvider implements Orders {
         entityManager.detach(orderPersistence);
 
         orderPersistence = orderPersistenceRepository.saveAndFlush(orderPersistence);
-        aggregateRoot.setVersion(orderPersistence.getVersion());
+        updateVersion(aggregateRoot, orderPersistence);
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("java:S3011")
+    private void updateVersion(Order aggregateRoot, OrderPersistence orderPersistence) {
+        Field version = aggregateRoot.getClass().getDeclaredField("version");
+        version.setAccessible(true);
+
+        ReflectionUtils.setField(version, aggregateRoot, orderPersistence.getVersion());
+
+        version.setAccessible(false);
     }
 
     @Override
