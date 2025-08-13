@@ -22,6 +22,7 @@ public class OrderPersistenceAssembler {
         orderPersistence.setPaidAt(order.paidAt());
         orderPersistence.setCanceledAt(order.canceledAt());
         orderPersistence.setReadyAt(order.readyAt());
+        orderPersistence.setVersion(order.version());
 
         return orderPersistence;
     }

@@ -28,6 +28,7 @@ public class OrderPersistenceDisassembler {
                 .canceledAt(orderPersistence.getCanceledAt())
                 .status(OrderStatus.valueOf(orderPersistence.getStatus()))
                 .items(new HashSet<>())
+                .version(orderPersistence.getVersion())
                 .build();
     }
 }

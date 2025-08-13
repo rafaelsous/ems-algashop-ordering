@@ -34,10 +34,12 @@ public class Order implements AggregateRoot<OrderId> {
 
     private Set<OrderItem> items;
 
+    private Long version;
+
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
                  OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, OrderStatus status,
-                 PaymentMethod paymentMethod, Billing billing, Shipping shipping, Set<OrderItem> items) {
+                 PaymentMethod paymentMethod, Billing billing, Shipping shipping, Set<OrderItem> items, Long version) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -51,6 +53,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.setBilling(billing);
         this.setShipping(shipping);
         this.setItems(items);
+        this.setVersion(version);
     }
 
     public static Order draft(CustomerId customerId) {
@@ -67,8 +70,8 @@ public class Order implements AggregateRoot<OrderId> {
                 null,
                 null,
                 null,
-                new HashSet<>()
-        );
+                new HashSet<>(),
+                null);
     }
 
     public void addItem(Product product, Quantity quantity) {
@@ -240,6 +243,10 @@ public class Order implements AggregateRoot<OrderId> {
         return Collections.unmodifiableSet(this.items);
     }
 
+    public Long version() {
+        return version;
+    }
+
     private void recalculateTotals() {
         BigDecimal totalItemsAmount = this.items().stream().map(i -> i.totalAmount().value())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -365,6 +372,10 @@ public class Order implements AggregateRoot<OrderId> {
         Objects.requireNonNull(items);
 
         this.items = items;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     @Override
