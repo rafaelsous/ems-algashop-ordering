@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RecipientEmbeddable {
 
     private String firstName;
-    private String lasstName;
+    private String lastName;
     private String document;
     private String phone;
 }
