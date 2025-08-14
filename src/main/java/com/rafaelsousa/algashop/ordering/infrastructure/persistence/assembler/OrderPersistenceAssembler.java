@@ -40,11 +40,11 @@ public class OrderPersistenceAssembler {
     }
 
     private BillingEmbeddable buildBilling(Billing billing) {
-        Objects.requireNonNull(billing);
+        if (Objects.isNull(billing)) return null;
 
         return BillingEmbeddable.builder()
                 .firstName(billing.fullName().firstName())
-                .lasstName(billing.fullName().lastName())
+                .lastName(billing.fullName().lastName())
                 .document(billing.document().value())
                 .phone(billing.phone().value())
                 .email(billing.email().value())
@@ -53,7 +53,7 @@ public class OrderPersistenceAssembler {
     }
 
     private ShippingEmbeddable buildShipping(Shipping shipping) {
-        Objects.requireNonNull(shipping);
+        if (Objects.isNull(shipping)) return null;
 
         return ShippingEmbeddable.builder()
                 .cost(shipping.cost().value())
@@ -82,7 +82,7 @@ public class OrderPersistenceAssembler {
 
         return RecipientEmbeddable.builder()
                 .firstName(recipient.fullName().firstName())
-                .lasstName(recipient.fullName().lastName())
+                .lastName(recipient.fullName().lastName())
                 .document(recipient.document().value())
                 .phone(recipient.phone().value())
                 .build();
