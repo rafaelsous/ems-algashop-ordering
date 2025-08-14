@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider.OrdersPersistenceProvider;
@@ -19,7 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({OrdersPersistenceProvider.class, OrderPersistenceAssembler.class, OrderPersistenceDisassembler.class})
+@Import({
+        OrdersPersistenceProvider.class,
+        OrderPersistenceAssembler.class,
+        OrderPersistenceDisassembler.class,
+        HibernateConfig.class
+})
 class OrdersIT {
     private final Orders orders;
 
