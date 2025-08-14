@@ -15,6 +15,10 @@ public record ZipCode(String value) {
         }
     }
 
+    public static ZipCode of (String value) {
+        return new ZipCode(value);
+    }
+
     @Override
     public String toString() {
         return value;
