@@ -32,7 +32,9 @@ class OrderPersistenceDisassemblerTest {
                 o -> assertThat(o.paidAt()).isEqualTo(orderPersistence.getPlacedAt()),
                 o -> assertThat(o.readyAt()).isEqualTo(orderPersistence.getReadyAt()),
                 o -> assertThat(o.canceledAt()).isEqualTo(orderPersistence.getCanceledAt()),
-                o -> assertThat(o.status()).isEqualTo(OrderStatus.valueOf(orderPersistence.getStatus()))
+                o -> assertThat(o.status()).isEqualTo(OrderStatus.valueOf(orderPersistence.getStatus())),
+
+                o -> assertThat(o.items()).hasSize(orderPersistence.getItems().size())
         );
     }
 }

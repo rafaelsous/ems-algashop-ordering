@@ -6,7 +6,6 @@ import lombok.Builder;
 
 import java.util.Objects;
 
-@Builder
 public record Product(
         ProductId id,
         ProductName name,
@@ -18,6 +17,15 @@ public record Product(
         Objects.requireNonNull(name);
         Objects.requireNonNull(price);
         Objects.requireNonNull(inStock);
+    }
+
+    @Builder
+    public static Product of(ProductId id, ProductName name, Money price, Boolean inStock) {
+        if (Objects.isNull(inStock)) {
+            inStock = true;
+        }
+
+        return new Product(id, name, price, inStock);
     }
 
     public void checkOutOfStock() {

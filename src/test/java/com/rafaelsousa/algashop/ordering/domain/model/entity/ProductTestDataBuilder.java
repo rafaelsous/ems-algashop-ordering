@@ -17,8 +17,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(PRODUCT_ID)
                 .name(ProductName.of("Macbook M4"))
-                .price(Money.of("15000"))
-                .inStock(true);
+                .price(Money.of("15000"));
     }
 
     public static Product.ProductBuilder aProductUnavailable() {
@@ -33,15 +32,13 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(ALT_RAM_MEMORY_PRODUCT_ID)
                 .name(ProductName.of("4G RAM"))
-                .price(Money.of("150.00"))
-                .inStock(true);
+                .price(Money.of("150.00"));
     }
 
     public static Product.ProductBuilder aProductAltMousePad() {
         return Product.builder()
                 .id(ALT_MOUSE_PAD_PRODUCT_ID)
                 .name(ProductName.of("Mouse pad"))
-                .price(Money.of("100.00"))
-                .inStock(true);
+                .price(Money.of("100.00"));
     }
 }
