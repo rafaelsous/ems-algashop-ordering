@@ -33,17 +33,18 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public boolean exists(OrderId orderId) {
-        return false;
+        return orderPersistenceRepository.existsById(orderId.value().toLong());
     }
 
     @Override
     public void add(Order aggregateRoot) {
         long orderId = aggregateRoot.id().value().toLong();
 
-        orderPersistenceRepository.findById(orderId).ifPresentOrElse(
-                orderPersistence -> update(aggregateRoot, orderPersistence),
-                () -> insert(aggregateRoot)
-        );
+        orderPersistenceRepository.findById(orderId)
+                .ifPresentOrElse(
+                        orderPersistence -> update(aggregateRoot, orderPersistence),
+                        () -> insert(aggregateRoot)
+                );
     }
 
     private void insert(Order aggregateRoot) {
@@ -72,7 +73,7 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
-    public int count() {
-        return 0;
+    public long count() {
+        return orderPersistenceRepository.count();
     }
 }
