@@ -11,14 +11,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
-@Builder
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(of = "id")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "\"order\"")
 @EntityListeners(AuditingEntityListener.class)
@@ -45,6 +45,9 @@ public class OrderPersistence {
     @Embedded
     private ShippingEmbeddable shipping;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItemPersistence> items = new HashSet<>();
+
     @CreatedBy
     private UUID createdByUserId;
 
@@ -56,4 +59,61 @@ public class OrderPersistence {
 
     @Version
     private Long version;
+
+    @Builder
+    public OrderPersistence(Long id, UUID customerId, BigDecimal totalAmount, Integer totalItems, String status,
+                            String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt,
+                            OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingEmbeddable billing,
+                            ShippingEmbeddable shipping, Set<OrderItemPersistence> items, UUID createdByUserId,
+                            OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.replaceItems(items);
+        this.createdByUserId = createdByUserId;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedByUserId = lastModifiedByUserId;
+        this.version = version;
+    }
+
+    public void replaceItems(Set<OrderItemPersistence> items) {
+        if (Objects.isNull(items) || items.isEmpty()) {
+            this.setItems(new HashSet<>());
+
+            return;
+        }
+
+        items.forEach(item -> item.setOrder(this));
+        this.setItems(items);
+    }
+
+    public void addItem(OrderItemPersistence item) {
+        if (Objects.isNull(item)) return;
+
+        if (Objects.isNull(this.getItems())) this.setItems(new HashSet<>());
+
+        item.setOrder(this);
+        this.getItems().add(item);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderPersistence that = (OrderPersistence) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
