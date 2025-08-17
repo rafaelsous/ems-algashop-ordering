@@ -8,7 +8,6 @@ import com.rafaelsousa.algashop.ordering.domain.model.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.ProductId;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
@@ -32,7 +31,7 @@ public class OrderPersistenceDisassembler {
                 .totalItems(Quantity.of(orderPersistence.getTotalItems()))
                 .paymentMethod(PaymentMethod.valueOf(orderPersistence.getPaymentMethod()))
                 .placedAt(orderPersistence.getPlacedAt())
-                .paidAt(orderPersistence.getPlacedAt())
+                .paidAt(orderPersistence.getPaidAt())
                 .readyAt(orderPersistence.getReadyAt())
                 .canceledAt(orderPersistence.getCanceledAt())
                 .status(OrderStatus.valueOf(orderPersistence.getStatus()))
@@ -68,7 +67,7 @@ public class OrderPersistenceDisassembler {
                 .document(Document.of(billing.getDocument()))
                 .phone(Phone.of(billing.getPhone()))
                 .email(Email.of(billing.getEmail()))
-                .address(this.buildAddress(billing.getAddress()))
+                .address(AddressEmbeddableDisassembler.toDomain(billing.getAddress()))
                 .build();
     }
 
@@ -79,21 +78,7 @@ public class OrderPersistenceDisassembler {
                 .cost(Money.of(shipping.getCost()))
                 .expectedDate(shipping.getExpectedDate())
                 .recipient(this.buildRecipient(shipping.getRecipient()))
-                .address(this.buildAddress(shipping.getAddress()))
-                .build();
-    }
-
-    private Address buildAddress(AddressEmbeddable address) {
-        Objects.requireNonNull(address);
-
-        return Address.builder()
-                .street(address.getStreet())
-                .number(address.getNumber())
-                .complement(address.getComplement())
-                .neighborhood(address.getNeighborhood())
-                .city(address.getCity())
-                .state(address.getState())
-                .zipCode(ZipCode.of(address.getZipCode()))
+                .address(AddressEmbeddableDisassembler.toDomain(shipping.getAddress()))
                 .build();
     }
 

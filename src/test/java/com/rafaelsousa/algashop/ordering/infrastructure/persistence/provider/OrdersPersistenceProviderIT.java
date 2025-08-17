@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
@@ -77,5 +78,27 @@ class OrdersPersistenceProviderIT {
         ordersPersistenceProvider.add(order);
 
         assertThatNoException().isThrownBy(() -> ordersPersistenceProvider.ofId(order.id()).orElseThrow());
+    }
+
+    @Test
+    void shouldCountCorrectly() {
+        assertThat(ordersPersistenceProvider.count()).isZero();
+
+        Order order = OrderTestDataBuilder.anOrder().build();
+        ordersPersistenceProvider.add(order);
+
+        assertThat(ordersPersistenceProvider.count()).isEqualTo(1L);
+    }
+
+    @Test
+    void shouldVerifyIfExists() {
+        Order order = OrderTestDataBuilder.anOrder().build();
+        OrderId orderId = order.id();
+
+        assertThat(ordersPersistenceProvider.exists(orderId)).isFalse();
+
+        ordersPersistenceProvider.add(order);
+
+        assertThat(ordersPersistenceProvider.exists(orderId)).isTrue();
     }
 }

@@ -2,11 +2,9 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderItem;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Address;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Billing;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Recipient;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Shipping;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
@@ -99,7 +97,9 @@ public class OrderPersistenceAssembler {
                 .document(billing.document().value())
                 .phone(billing.phone().value())
                 .email(billing.email().value())
-                .address(buildAddress(billing.address()))
+                .address(
+                        AddressEmbeddableAssembler.fromPersistence(billing.address())
+                )
                 .build();
     }
 
@@ -110,21 +110,9 @@ public class OrderPersistenceAssembler {
                 .cost(shipping.cost().value())
                 .expectedDate(shipping.expectedDate())
                 .recipient(buildRecipient(shipping.recipient()))
-                .address(buildAddress(shipping.address()))
-                .build();
-    }
-
-    private AddressEmbeddable buildAddress(Address address) {
-        Objects.requireNonNull(address);
-
-        return AddressEmbeddable.builder()
-                .street(address.street())
-                .number(address.number())
-                .complement(address.complement())
-                .neighborhood(address.neighborhood())
-                .city(address.city())
-                .state(address.state())
-                .zipCode(address.zipCode().value())
+                .address(
+                        AddressEmbeddableAssembler.fromPersistence(shipping.address())
+                )
                 .build();
     }
 

@@ -50,6 +50,11 @@ public class OrdersPersistenceProvider implements Orders {
                 );
     }
 
+    @Override
+    public long count() {
+        return orderPersistenceRepository.count();
+    }
+
     private void insert(Order aggregateRoot) {
         OrderPersistence orderPersistence = assembler.fromDomain(aggregateRoot);
         orderPersistenceRepository.saveAndFlush(orderPersistence);
@@ -73,10 +78,5 @@ public class OrdersPersistenceProvider implements Orders {
         ReflectionUtils.setField(version, aggregateRoot, orderPersistence.getVersion());
 
         version.setAccessible(false);
-    }
-
-    @Override
-    public long count() {
-        return orderPersistenceRepository.count();
     }
 }
