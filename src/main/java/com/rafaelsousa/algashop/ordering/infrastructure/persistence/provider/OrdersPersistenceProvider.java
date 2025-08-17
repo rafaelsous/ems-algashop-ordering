@@ -2,6 +2,8 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.repository.Orders;
+import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
@@ -63,6 +65,16 @@ public class OrdersPersistenceProvider implements Orders {
         List<OrderPersistence> orderPersistenceList = orderPersistenceRepository.placedByCustomerIdInYear(customerId.value(), year.getValue());
 
         return orderPersistenceList.stream().map(disassembler::toDomain).toList();
+    }
+
+    @Override
+    public Quantity salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
+        return Quantity.of((int) orderPersistenceRepository.salesQuantityByCustomerIdInYear(customerId.value(), year.getValue()));
+    }
+
+    @Override
+    public Money totalSoldForCustomer(CustomerId customerId) {
+        return Money.of(orderPersistenceRepository.totalSoldForCustomerId(customerId.value()));
     }
 
     private void insert(Order aggregateRoot) {

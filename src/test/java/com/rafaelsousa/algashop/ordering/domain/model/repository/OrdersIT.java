@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBui
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
@@ -177,5 +178,56 @@ class OrdersIT {
         orderList = orders.placedByCustomerInYear(new CustomerId(), Year.now());
 
         assertThat(orderList).isEmpty();
+    }
+
+    @Test
+    void shouldReturnTotalSoldByCustomer() {
+        CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+        Order order2 = OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build();
+
+        orders.add(order1);
+        orders.add(order2);
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build());
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.CANCELED)
+                .build());
+
+        Money expectedTotalSold = order1.totalAmount().add(order2.totalAmount());
+
+        assertThat(orders.totalSoldForCustomer(customerId)).isEqualTo(expectedTotalSold);
+        assertThat(orders.totalSoldForCustomer(new CustomerId())).isEqualTo(Money.ZERO);
+    }
+
+    @Test
+    void shouldReturnQuantityOrderedByCustomer() {
+        CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+        List<Order> ordersWithValidStates = List.of(
+                OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build(),
+                OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).build()
+        );
+
+        ordersWithValidStates.forEach(orders::add);
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build());
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.CANCELED)
+                .build());
+
+        Year currentYear = Year.now();
+        assertThat(orders.salesQuantityByCustomerInYear(customerId, currentYear).value())
+                .isEqualTo(ordersWithValidStates.size());
+        assertThat(orders.salesQuantityByCustomerInYear(new CustomerId(), currentYear).value())
+                .isZero();
+        assertThat(orders.salesQuantityByCustomerInYear(customerId, currentYear.minusYears(1)).value())
+                .isZero();
     }
 }
