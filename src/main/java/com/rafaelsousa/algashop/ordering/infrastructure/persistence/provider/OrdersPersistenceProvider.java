@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.time.OffsetDateTime;
 import java.time.Year;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,10 +60,7 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
-        OffsetDateTime start = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = start.plusYears(1).minusNanos(1);
-
-        List<OrderPersistence> orderPersistenceList = orderPersistenceRepository.findByCustomer_IdAndPlacedAtBetween(customerId.value(), start, end);
+        List<OrderPersistence> orderPersistenceList = orderPersistenceRepository.placedByCustomerIdInYear(customerId.value(), year.getValue());
 
         return orderPersistenceList.stream().map(disassembler::toDomain).toList();
     }
