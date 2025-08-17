@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -124,7 +125,7 @@ class CustomersIT {
 
     @Test
     void shouldReturnIfCustomerExists() {
-        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
 
         assertThat(customers.exists(customer.id())).isFalse();
 
@@ -132,5 +133,21 @@ class CustomersIT {
 
         assertThat(customers.exists(customer.id())).isTrue();
         assertThat(customers.exists(new CustomerId())).isFalse();
+    }
+
+    @Test
+    void shouldFindByEmail() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
+        customers.add(customer);
+
+        assertThat(customers.ofEmail(customer.email())).isPresent();
+    }
+
+    @Test
+    void shouldNotFindByEmailIfNoCustomerExistsWithEmail() {
+        String inexistingEmail = "%s@example.com".formatted(UUID.randomUUID());
+
+        assertThat(customers.ofEmail(Email.of(inexistingEmail))).isNotPresent();
     }
 }
