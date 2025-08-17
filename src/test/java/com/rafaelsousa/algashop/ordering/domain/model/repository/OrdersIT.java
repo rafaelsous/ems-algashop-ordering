@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBui
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
@@ -19,10 +20,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
+import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @Import({
@@ -139,5 +141,41 @@ class OrdersIT {
 
         assertThat(orders.exists(order.id())).isTrue();
         assertThat(orders.exists(new OrderId())).isFalse();
+    }
+
+    @Test
+    void shouldListExistingOrdersByYear() {
+        CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build());
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.PLACED)
+                .build());
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.DRAFT)
+                .build());
+
+        orders.add(OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.CANCELED)
+                .build());
+
+        List<Order> orderList = orders.placedByCustomerInYear(customerId, Year.now());
+
+        assertWith(orderList,
+                o -> assertThat(o).isNotEmpty(),
+                o -> assertThat(o).hasSize(2)
+        );
+
+        orderList = orders.placedByCustomerInYear(customerId, Year.now().minusYears(1));
+
+        assertThat(orderList).isEmpty();
+
+        orderList = orders.placedByCustomerInYear(new CustomerId(), Year.now());
+
+        assertThat(orderList).isEmpty();
     }
 }
