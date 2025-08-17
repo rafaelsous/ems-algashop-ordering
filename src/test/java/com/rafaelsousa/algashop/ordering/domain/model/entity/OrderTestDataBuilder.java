@@ -5,8 +5,10 @@ import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
 import java.time.LocalDate;
 
+import static com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
 public class OrderTestDataBuilder {
-    private CustomerId customerId = new CustomerId();
+    private CustomerId customerId = DEFAULT_CUSTOMER_ID;
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
     private Shipping shipping = aShipping();

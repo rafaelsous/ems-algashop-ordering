@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class CustomerTestDataBuilder {
+    public static final CustomerId DEFAULT_CUSTOMER_ID = new CustomerId();
 
     private CustomerTestDataBuilder() {
     }
@@ -34,7 +35,7 @@ public class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuild existingAnonymizedCustomer() {
         return Customer.existing()
-                .id(new CustomerId())
+                .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("Anonymous", "Anonymous"))
                 .birthDate(null)
                 .email(new Email(UUID.randomUUID().toString().concat("@anonymous.com")))
@@ -58,7 +59,7 @@ public class CustomerTestDataBuilder {
 
     public static Customer.ExistingCustomerBuild existingCustomer() {
         return Customer.existing()
-                .id(new CustomerId())
+                .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("John", "Doe"))
                 .birthDate(new BirthDate(LocalDate.of(1990, 9, 18)))
                 .email(new Email("john.doe@value.com"))

@@ -27,7 +27,10 @@ public class OrderPersistence {
     @Id
     @EqualsAndHashCode.Include
     private Long id;
-    private UUID customerId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn
+    private CustomerPersistence customer;
 
     private BigDecimal totalAmount;
     private Integer totalItems;
@@ -61,13 +64,13 @@ public class OrderPersistence {
     private Long version;
 
     @Builder
-    public OrderPersistence(Long id, UUID customerId, BigDecimal totalAmount, Integer totalItems, String status,
+    public OrderPersistence(Long id, CustomerPersistence customer, BigDecimal totalAmount, Integer totalItems, String status,
                             String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt,
                             OffsetDateTime canceledAt, OffsetDateTime readyAt, BillingEmbeddable billing,
                             ShippingEmbeddable shipping, Set<OrderItemPersistence> items, UUID createdByUserId,
                             OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version) {
         this.id = id;
-        this.customerId = customerId;
+        this.customer = customer;
         this.totalAmount = totalAmount;
         this.totalItems = totalItems;
         this.status = status;
@@ -103,6 +106,12 @@ public class OrderPersistence {
 
         item.setOrder(this);
         this.getItems().add(item);
+    }
+
+    public UUID getCustomerId() {
+        if (Objects.isNull(this.customer)) return null;
+
+        return this.customer.getId();
     }
 
     @Override

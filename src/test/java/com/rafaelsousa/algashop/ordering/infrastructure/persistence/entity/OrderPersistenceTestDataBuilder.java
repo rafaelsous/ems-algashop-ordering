@@ -11,7 +11,7 @@ public class OrderPersistenceTestDataBuilder {
     public static OrderPersistenceBuilder existingOrder() {
         return OrderPersistence.builder()
                 .id(IdGenerator.generateTSID().toLong())
-                .customerId(IdGenerator.generateTimeBasedUUID())
+                .customer(CustomerPersistenceTestDataBuilder.aCustomer().build())
                 .totalAmount(BigDecimal.valueOf(1250))
                 .totalItems(3)
                 .status("DRAFT")

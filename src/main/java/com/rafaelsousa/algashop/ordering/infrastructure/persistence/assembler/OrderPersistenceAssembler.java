@@ -8,8 +8,11 @@ import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Shipping;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -20,7 +23,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class OrderPersistenceAssembler {
+    private final CustomerPersistenceRepository customerPersistenceRepository;
 
     public OrderPersistence fromDomain(Order order) {
         return merge(new OrderPersistence(), order);
@@ -28,7 +33,6 @@ public class OrderPersistenceAssembler {
 
     public OrderPersistence merge(OrderPersistence orderPersistence, Order order) {
         orderPersistence.setId(order.id().value().toLong());
-        orderPersistence.setCustomerId(order.customerId().value());
         orderPersistence.setTotalAmount(order.totalAmount().value());
         orderPersistence.setTotalItems(order.totalItems().value());
         orderPersistence.setStatus(order.status().name());
@@ -40,7 +44,10 @@ public class OrderPersistenceAssembler {
         orderPersistence.setVersion(order.version());
         orderPersistence.setBilling(this.buildBilling(order.billing()));
         orderPersistence.setShipping(this.buildShipping(order.shipping()));
-        
+
+        CustomerPersistence customerPersistence = customerPersistenceRepository.getReferenceById(order.customerId().value());
+        orderPersistence.setCustomer(customerPersistence);
+
         Set<OrderItemPersistence> mergedItems = mergeItems(orderPersistence, order);
         orderPersistence.replaceItems(mergedItems);
 
