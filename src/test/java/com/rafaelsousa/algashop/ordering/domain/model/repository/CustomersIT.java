@@ -150,4 +150,16 @@ class CustomersIT {
 
         assertThat(customers.ofEmail(Email.of(inexistingEmail))).isNotPresent();
     }
+
+    @Test
+    void shouldReturnIfEmailIsInUser() {
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
+        customers.add(customer);
+
+        assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
+        assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
+        assertThat(customers.isEmailUnique(Email.of("other-email@example.com"), customer.id())).isTrue();
+        assertThat(customers.isEmailUnique(Email.of("other-email@example.com"), new CustomerId())).isTrue();
+    }
 }

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface CustomerPersistenceRepository extends JpaRepository<CustomerPersistence, UUID> {
     Optional<CustomerPersistence> findByEmail(String value);
+    boolean existsByEmailAndIdNot(String email, UUID customerId);
 }
