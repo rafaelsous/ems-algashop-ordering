@@ -23,7 +23,7 @@ class OrderChangingTest {
     private OrderItemId orderItemId;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         product = ProductTestDataBuilder.aProductAltMousePad().build();
         quantity = Quantity.of(2);
         billing = OrderTestDataBuilder.aBilling();

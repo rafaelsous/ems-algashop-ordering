@@ -34,7 +34,7 @@ class OrderPersistenceAssemblerTest {
     private OrderPersistenceAssembler assembler;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         when(customerPersistenceRepository.getReferenceById(any(UUID.class)))
                 .then(a -> {
                     UUID customerId = a.getArgument(0, UUID.class);

@@ -18,7 +18,7 @@ class OrderRemoveItemTest {
     private OrderItemId orderItemId;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
         ramMemory = ProductTestDataBuilder.aProductAltRamMemory().build();
 

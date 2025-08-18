@@ -13,32 +13,33 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(of = "id")
 @Entity
-@Table(name = "order_item")
-public class OrderItemPersistence {
+@Table(name = "shopping_cart_item")
+public class ShoppingCartItemPersistence extends AuditableEntity {
 
     @Id
-    private Long id;
+    private UUID id;
 
     private UUID productId;
     private String productName;
     private BigDecimal price;
     private Integer quantity;
     private BigDecimal totalAmount;
+    private Boolean available;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id")
-    private OrderPersistence order;
+    private ShoppingCartPersistence shoppingCart;
 
-    public Long getOrderId() {
-        if (Objects.isNull(getOrder())) return null;
+    public UUID getShoppingCardId() {
+        if (Objects.isNull(shoppingCart)) return null;
 
-        return getOrder().getId();
+        return this.shoppingCart.getId();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        OrderItemPersistence that = (OrderItemPersistence) o;
+        ShoppingCartItemPersistence that = (ShoppingCartItemPersistence) o;
         return Objects.equals(id, that.id);
     }
 

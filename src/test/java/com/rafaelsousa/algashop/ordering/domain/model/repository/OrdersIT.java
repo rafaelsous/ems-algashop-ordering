@@ -48,7 +48,7 @@ class OrdersIT {
     }
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
             customers.add(CustomerTestDataBuilder.existingCustomer().build());
         }

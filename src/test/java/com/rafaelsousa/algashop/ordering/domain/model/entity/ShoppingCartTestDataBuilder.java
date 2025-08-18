@@ -4,8 +4,11 @@ import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
+import static com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+
 public class ShoppingCartTestDataBuilder {
     private boolean withItems = true;
+    private CustomerId customerId = DEFAULT_CUSTOMER_ID;
 
     private ShoppingCartTestDataBuilder() {}
 
@@ -14,7 +17,7 @@ public class ShoppingCartTestDataBuilder {
     }
 
     public ShoppingCart build() {
-        ShoppingCart shoppingCart = ShoppingCart.startShopping(new CustomerId());
+        ShoppingCart shoppingCart = ShoppingCart.startShopping(customerId);
 
         if (this.withItems) {
             Product mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
@@ -29,6 +32,11 @@ public class ShoppingCartTestDataBuilder {
 
     public ShoppingCartTestDataBuilder withItems(boolean withItems) {
         this.withItems = withItems;
+        return this;
+    }
+
+    public ShoppingCartTestDataBuilder customerId(CustomerId customerId) {
+        this.customerId = customerId;
         return this;
     }
 }

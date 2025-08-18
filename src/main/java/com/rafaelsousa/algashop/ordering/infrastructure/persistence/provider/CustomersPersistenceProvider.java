@@ -42,6 +42,7 @@ public class CustomersPersistenceProvider implements Customers {
     }
 
     @Override
+    @Transactional
     public void add(Customer aggregateRoot) {
         UUID customerId = aggregateRoot.id().value();
 

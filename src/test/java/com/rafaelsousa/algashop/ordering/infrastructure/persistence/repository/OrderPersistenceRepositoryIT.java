@@ -34,7 +34,7 @@ class OrderPersistenceRepositoryIT {
     }
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
 
         if (!customerPersistenceRepository.existsById(customerId)) {

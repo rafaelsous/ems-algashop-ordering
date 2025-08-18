@@ -50,7 +50,7 @@ class OrdersPersistenceProviderIT {
     }
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
             customersPersistenceProvider.add(CustomerTestDataBuilder.existingCustomer().build());
         }
