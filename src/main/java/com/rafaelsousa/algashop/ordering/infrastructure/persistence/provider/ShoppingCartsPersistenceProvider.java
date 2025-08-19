@@ -77,7 +77,7 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
 
         shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
-        this.updateVersion(aggregateRoot, new ShoppingCartPersistence());
+        this.updateVersion(aggregateRoot, shoppingCartPersistence);
     }
 
     private void update(ShoppingCart aggregateRoot, ShoppingCartPersistence shoppingCartPersistence) {

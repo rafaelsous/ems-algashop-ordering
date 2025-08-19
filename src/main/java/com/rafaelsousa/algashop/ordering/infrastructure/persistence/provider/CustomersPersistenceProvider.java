@@ -73,7 +73,7 @@ public class CustomersPersistenceProvider implements Customers {
 
         customerPersistenceRepository.saveAndFlush(customerPersistence);
 
-        this.updateVersion(aggregateRoot, new CustomerPersistence());
+        this.updateVersion(aggregateRoot, customerPersistence);
     }
 
     private void update(Customer aggregateRoot, CustomerPersistence customerPersistence) {

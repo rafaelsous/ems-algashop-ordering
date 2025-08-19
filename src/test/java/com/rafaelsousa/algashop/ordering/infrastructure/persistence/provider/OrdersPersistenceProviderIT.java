@@ -119,4 +119,24 @@ class OrdersPersistenceProviderIT {
 
         assertThat(ordersPersistenceProvider.exists(orderId)).isTrue();
     }
+
+    @Test
+    void shouldUpdateVersionCorrectly() {
+        Order order = OrderTestDataBuilder.anOrder().build();
+        long orderId = order.id().value().toLong();
+
+        ordersPersistenceProvider.add(order);
+
+        OrderPersistence orderPersistence = orderPersistenceRepository.findById(orderId).orElseThrow();
+
+        assertThat(orderPersistence.getVersion()).isZero();
+
+        order = ordersPersistenceProvider.ofId(order.id()).orElseThrow();
+        order.place();
+        ordersPersistenceProvider.add(order);
+
+        orderPersistence = orderPersistenceRepository.findById(orderId).orElseThrow();
+
+        assertThat(orderPersistence.getVersion()).isEqualTo(1);
+    }
 }

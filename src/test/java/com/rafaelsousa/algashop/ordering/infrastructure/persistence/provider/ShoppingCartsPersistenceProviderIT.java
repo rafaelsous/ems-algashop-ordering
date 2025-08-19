@@ -144,4 +144,24 @@ class ShoppingCartsPersistenceProviderIT {
 
         assertThat(shoppingCartsPersistenceProvider.count()).isEqualTo(1L);
     }
+
+    @Test
+    void shouldUpdateVersionCorrectly() {
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        UUID shoppingCartId = shoppingCart.id().value();
+
+        shoppingCartsPersistenceProvider.add(shoppingCart);
+
+        ShoppingCartPersistence shoppingCartPersistence = shoppingCartPersistenceRepository.findById(shoppingCartId).orElseThrow();
+
+        assertThat(shoppingCartPersistence.getVersion()).isZero();
+
+        shoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.id()).orElseThrow();
+        shoppingCart.empty();
+        shoppingCartsPersistenceProvider.add(shoppingCart);
+
+        shoppingCartPersistence = shoppingCartPersistenceRepository.findById(shoppingCartId).orElseThrow();
+
+        assertThat(shoppingCartPersistence.getVersion()).isEqualTo(1);
+    }
 }

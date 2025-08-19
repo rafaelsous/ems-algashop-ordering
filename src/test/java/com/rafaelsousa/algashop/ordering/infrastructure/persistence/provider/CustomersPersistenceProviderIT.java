@@ -108,4 +108,23 @@ class CustomersPersistenceProviderIT {
 
         assertThat(customersPersistenceProvider.exists(customerId)).isTrue();
     }
+
+    @Test
+    void shouldUpdateVersionCorrectly() {
+        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+        CustomerId customerId = customer.id();
+
+        customersPersistenceProvider.add(customer);
+
+        CustomerPersistence customerPersistence = customerPersistenceRepository.findById(customerId.value()).orElseThrow();
+
+        assertThat(customerPersistence.getVersion()).isZero();
+
+        customer.changeEmail(Email.of("other-email@example.com"));
+        customersPersistenceProvider.add(customer);
+
+        customerPersistence = customerPersistenceRepository.findById(customerId.value()).orElseThrow();
+
+        assertThat(customerPersistence.getVersion()).isEqualTo(1);
+    }
 }
