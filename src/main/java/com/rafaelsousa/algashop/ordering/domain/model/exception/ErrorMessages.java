@@ -37,4 +37,6 @@ public class ErrorMessages {
     public static final String ERROR_CANNOT_ADD_LOYALTY_POINTS_ORDER_IS_NOT_READY = "Can not add loyalty points because order %s is not ready";
 
     public static final String ERROR_ORDER_NOT_BELONGS_TO_CUSTOMER = "Order %s not belongs to customer %s";
+
+    public static final String ERROR_CUSTOMER_EMAIL_IS_IN_USE = "Customer email %s is in use";
 }
