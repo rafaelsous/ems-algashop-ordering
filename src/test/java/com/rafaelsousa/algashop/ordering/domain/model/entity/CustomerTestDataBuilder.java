@@ -69,7 +69,7 @@ public class CustomerTestDataBuilder {
                 .archived(false)
                 .registeredAt(OffsetDateTime.now().minusDays(1))
                 .archivedAt(null)
-                .loyaltyPoints(new LoyaltyPoints(20))
+                .loyaltyPoints(LoyaltyPoints.ZERO)
                 .address(
                         Address.builder()
                                 .street("Bourbon Street")

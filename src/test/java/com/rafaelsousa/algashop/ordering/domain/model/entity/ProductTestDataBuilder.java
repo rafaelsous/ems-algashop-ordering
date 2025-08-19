@@ -17,7 +17,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(PRODUCT_ID)
                 .name(ProductName.of("Macbook M4"))
-                .price(Money.of("15000"));
+                .price(Money.of("15000.00"));
     }
 
     public static Product.ProductBuilder aProductUnavailable() {

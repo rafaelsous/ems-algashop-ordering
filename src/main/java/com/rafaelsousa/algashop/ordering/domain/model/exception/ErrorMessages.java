@@ -33,4 +33,8 @@ public class ErrorMessages {
     public static final String ERROR_SHOPPING_CART_DOES_NOT_CONTAIN_PRODUCT = "Shopping cart %s does not contain product %s";
 
     public static final String ERROR_SHOPPING_CART_ITEM_INCOMPATIBLE_PRODUCT = "Shopping cart item %s is incompatible with product %s";
+
+    public static final String ERROR_CANNOT_ADD_LOYALTY_POINTS_ORDER_IS_NOT_READY = "Can not add loyalty points because order %s is not ready";
+
+    public static final String ERROR_ORDER_NOT_BELONGS_TO_CUSTOMER = "Order %s not belongs to customer %s";
 }

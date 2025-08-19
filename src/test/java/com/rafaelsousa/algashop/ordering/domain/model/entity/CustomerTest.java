@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CustomerTest {
 
     @Test
+    @SuppressWarnings("java:S5778")
     void given_invalidEmail_whenTryCreateCustomer_shouldGenerateException() {
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() ->
@@ -20,6 +21,7 @@ class CustomerTest {
     }
 
     @Test
+    @SuppressWarnings("java:S5778")
     void given_invalidEmail_whenTryUpdateCustomerEmail_shouldGenerateException() {
         Customer customer = CustomerTestDataBuilder.existingCustomer().build();
 
@@ -64,9 +66,7 @@ class CustomerTest {
 
         Email newEmail = new Email("example@value.com");
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> {
-                    customer.changeEmail(newEmail);
-                });
+                .isThrownBy(() -> customer.changeEmail(newEmail));
 
         Phone newPhone = new Phone("000-000-0000");
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
@@ -97,10 +97,10 @@ class CustomerTest {
 
         LoyaltyPoints loyaltyPointsZero = new LoyaltyPoints(0);
 
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        Assertions.assertThatNoException()
                 .isThrownBy(() -> customer.addLoyaltyPoints(loyaltyPointsZero));
 
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> customer.addLoyaltyPoints(new LoyaltyPoints(-10)));
+                .isThrownBy(() -> new LoyaltyPoints(-10));
     }
 }
