@@ -8,12 +8,8 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.Shopp
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,7 +31,7 @@ public class ShoppingCartPersistenceAssembler {
         CustomerPersistence customerPersistence = customerPersistenceRepository.getReferenceById(shoppingCart.customerId().value());
         shoppingCartPersistence.setCustomer(customerPersistence);
 
-        Set<ShoppingCartItemPersistence> mergedItems = mergeItems(shoppingCartPersistence, shoppingCart);
+        Set<ShoppingCartItemPersistence> mergedItems = buildItems(shoppingCart.items());
         shoppingCartPersistence.replaceItems(mergedItems);
 
         return shoppingCartPersistence;
@@ -45,31 +41,8 @@ public class ShoppingCartPersistenceAssembler {
         return merge(new ShoppingCartItemPersistence(), shoppingCartItem);
     }
 
-    private Set<ShoppingCartItemPersistence> mergeItems(ShoppingCartPersistence shoppingCartPersistence,
-                                                 ShoppingCart shoppingCart) {
-        Set<ShoppingCartItem> newOrUpdatedItems = shoppingCart.items();
-
-        if (CollectionUtils.isEmpty(newOrUpdatedItems)) {
-            return new HashSet<>();
-        }
-
-        Set<ShoppingCartItemPersistence> existingItems = shoppingCartPersistence.getItems();
-        if (CollectionUtils.isEmpty(existingItems)) {
-            return newOrUpdatedItems.stream()
-                    .map(this::fromDomain)
-                    .collect(Collectors.toSet());
-        }
-
-        Map<UUID, ShoppingCartItemPersistence> existingItemsMap = existingItems.stream()
-                .collect(Collectors.toMap(ShoppingCartItemPersistence::getId, item -> item));
-
-        return newOrUpdatedItems.stream()
-                .map(orderItem -> {
-                    ShoppingCartItemPersistence itemPersistence = existingItemsMap
-                            .getOrDefault(orderItem.id().value(), new ShoppingCartItemPersistence());
-
-                    return merge(itemPersistence, orderItem);
-                }).collect(Collectors.toSet());
+    private Set<ShoppingCartItemPersistence> buildItems(Set<ShoppingCartItem> items) {
+        return items.stream().map(i -> this.merge(new ShoppingCartItemPersistence(), i)).collect(Collectors.toSet());
     }
 
     private ShoppingCartItemPersistence merge(ShoppingCartItemPersistence shoppingCartItemPersistence,
@@ -80,6 +53,7 @@ public class ShoppingCartPersistenceAssembler {
         shoppingCartItemPersistence.setPrice(shoppingCartItem.price().value());
         shoppingCartItemPersistence.setQuantity(shoppingCartItem.quantity().value());
         shoppingCartItemPersistence.setTotalAmount(shoppingCartItem.totalAmount().value());
+        shoppingCartItemPersistence.setAvailable(shoppingCartItem.isAvailable());
 
         return shoppingCartItemPersistence;
     }

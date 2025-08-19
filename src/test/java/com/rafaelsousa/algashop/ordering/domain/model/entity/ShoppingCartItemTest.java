@@ -24,7 +24,7 @@ class ShoppingCartItemTest {
                 sci -> Assertions.assertThat(sci.productName()).isEqualTo(ProductName.of("Notebook")),
                 sci -> Assertions.assertThat(sci.price()).isEqualTo(Money.of("1000.00")),
                 sci -> Assertions.assertThat(sci.quantity()).isEqualTo(Quantity.of(1)),
-                sci -> Assertions.assertThat(sci.available()).isTrue()
+                sci -> Assertions.assertThat(sci.isAvailable()).isTrue()
         );
     }
 
@@ -89,7 +89,7 @@ class ShoppingCartItemTest {
     }
 
     @Test
-    void givenShoppingCartItem_whenChangeAvailable_shouldUpdateStatus() {
+    void givenShoppingCartItem_whenChangeIsAvailable_shouldUpdateStatus() {
         ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew()
                 .shoppingCartId(new ShoppingCartId())
                 .product(ProductTestDataBuilder.aProductAltMousePad().build())
@@ -102,7 +102,7 @@ class ShoppingCartItemTest {
 
         shoppingCartItem.refresh(productWithDifferentAvailable);
 
-        Assertions.assertThat(shoppingCartItem.available()).isFalse();
+        Assertions.assertThat(shoppingCartItem.isAvailable()).isFalse();
     }
 
     @Test

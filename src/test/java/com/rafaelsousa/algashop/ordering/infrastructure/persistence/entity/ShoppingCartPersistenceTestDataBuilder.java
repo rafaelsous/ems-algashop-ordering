@@ -28,6 +28,7 @@ public class ShoppingCartPersistenceTestDataBuilder {
                 .productName("Notebook")
                 .price(BigDecimal.valueOf(500))
                 .quantity(2)
+                .available(true)
                 .totalAmount(BigDecimal.valueOf(1000));
     }
 
@@ -38,6 +39,7 @@ public class ShoppingCartPersistenceTestDataBuilder {
                 .productName("Mouse pad")
                 .price(BigDecimal.valueOf(250))
                 .quantity(1)
+                .available(true)
                 .totalAmount(BigDecimal.valueOf(250));
     }
 }

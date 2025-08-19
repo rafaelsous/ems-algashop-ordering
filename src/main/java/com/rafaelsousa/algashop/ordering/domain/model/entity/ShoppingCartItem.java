@@ -36,31 +36,18 @@ public class ShoppingCartItem {
     }
 
     @Builder(builderClassName = "BrandNewShoppingCartItemBuilder", builderMethodName = "brandNew")
-    public static ShoppingCartItem createBrandNew(ShoppingCartId shoppingCartId, Product product, Quantity quantity) {
-        Objects.requireNonNull(shoppingCartId);
-        Objects.requireNonNull(product);
-        Objects.requireNonNull(quantity);
-
-        if (quantity.value().equals(0)) {
-            throw new IllegalArgumentException();
-        }
-
-        product.checkOutOfStock();
-
-        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(
-                new ShoppingCartItemId(),
+    public ShoppingCartItem(ShoppingCartId shoppingCartId, Product product, Quantity quantity) {
+        this(new ShoppingCartItemId(),
                 shoppingCartId,
                 product.id(),
                 product.name(),
                 product.price(),
                 quantity,
-                product.price().multiply(quantity),
+                Money.ZERO,
                 product.inStock()
         );
 
-        shoppingCartItem.recalculateTotal();
-
-        return shoppingCartItem;
+        this.recalculateTotal();
     }
 
     void refresh(Product newProduct) {
@@ -113,7 +100,7 @@ public class ShoppingCartItem {
         return totalAmount;
     }
 
-    public Boolean available() {
+    public Boolean isAvailable() {
         return available;
     }
 
