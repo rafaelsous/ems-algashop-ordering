@@ -39,4 +39,6 @@ public class ErrorMessages {
     public static final String ERROR_ORDER_NOT_BELONGS_TO_CUSTOMER = "Order %s not belongs to customer %s";
 
     public static final String ERROR_CUSTOMER_EMAIL_IS_IN_USE = "Customer email %s is in use";
+
+    public static final String ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT = "Shopping cart %s cant proceed to checkout";
 }
