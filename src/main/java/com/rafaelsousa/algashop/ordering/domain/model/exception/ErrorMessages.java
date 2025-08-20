@@ -41,4 +41,8 @@ public class ErrorMessages {
     public static final String ERROR_CUSTOMER_EMAIL_IS_IN_USE = "Customer email %s is in use";
 
     public static final String ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT = "Shopping cart %s cant proceed to checkout";
+
+    public static final String ERROR_CUSTOMER_NOT_FOUND = "Customer %s not found";
+
+    public static final String ERROR_CUSTOMER_ALREADY_HAVE_SHOPPING_CART = "Customer %s already have shopping car %s";
 }
