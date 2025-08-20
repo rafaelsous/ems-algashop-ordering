@@ -3,10 +3,12 @@ package com.rafaelsousa.algashop.ordering.domain.model.service;
 import com.rafaelsousa.algashop.ordering.domain.model.entity.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.exception.CustomerEmailIsInUseExistsException;
 import com.rafaelsousa.algashop.ordering.domain.model.repository.Customers;
+import com.rafaelsousa.algashop.ordering.domain.model.utils.DomainService;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.*;
 import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import lombok.RequiredArgsConstructor;
 
+@DomainService
 @RequiredArgsConstructor
 public class CustomerRegistrationService {
     private final Customers customers;
