@@ -23,13 +23,13 @@ class CheckoutServiceTest {
     @Test
     void givenShoppingCartWithUnavailableItems_whenCallCheckout_shouldThrowException() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
-        Product availableMousePad = ProductTestDataBuilder.aProductAltMousePad().build();
+        Product mousePadAvailable = ProductTestDataBuilder.aProductAltMousePad().build();
 
-        shoppingCart.addItem(availableMousePad, Quantity.of(1));
+        shoppingCart.addItem(mousePadAvailable, Quantity.of(1));
 
-        Product unavailableMousePad = ProductTestDataBuilder.aProductAltMousePad().inStock(false).build();
+        Product mousePadUnavailablee = ProductTestDataBuilder.aProductAltMousePad().inStock(false).build();
 
-        shoppingCart.refreshItem(unavailableMousePad);
+        shoppingCart.refreshItem(mousePadUnavailablee);
 
         assertThatThrownBy(() -> checkoutService.checkout(shoppingCart, null, null, null))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);
