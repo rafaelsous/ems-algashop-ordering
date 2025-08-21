@@ -45,9 +45,9 @@ class CheckoutServiceTest {
 
         shoppingCart.addItem(mousePadAvailable, Quantity.of(1));
 
-        Product mousePadUnavailablee = ProductTestDataBuilder.aProductAltMousePad().inStock(false).build();
+        Product mousePadUnavailable = ProductTestDataBuilder.aProductAltMousePad().inStock(false).build();
 
-        shoppingCart.refreshItem(mousePadUnavailablee);
+        shoppingCart.refreshItem(mousePadUnavailable);
 
         assertThatThrownBy(() -> checkoutService.checkout(shoppingCart, billing, shipping, paymentMethod))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);

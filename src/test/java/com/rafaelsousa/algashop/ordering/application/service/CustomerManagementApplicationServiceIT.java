@@ -2,6 +2,8 @@ package com.rafaelsousa.algashop.ordering.application.service;
 
 import com.rafaelsousa.algashop.ordering.application.model.AddressData;
 import com.rafaelsousa.algashop.ordering.application.model.CustomerInput;
+import com.rafaelsousa.algashop.ordering.application.model.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +24,7 @@ class CustomerManagementApplicationServiceIT {
     }
 
     @Test
-    void shouldRegister() {
+    void shouldRegisterAndFindCustomer() {
         CustomerInput customerInput = CustomerInput.builder()
                 .firstName("John")
                 .lastName("Doe")
@@ -45,5 +47,33 @@ class CustomerManagementApplicationServiceIT {
         UUID customerId = customerManagementApplicationService.create(customerInput);
 
         assertThat(customerId).isNotNull();
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput).satisfies(
+                co -> assertThat(co.getId()).isEqualTo(customerId),
+                co -> assertThat(co.getFirstName()).isEqualTo(customerInput.getFirstName()),
+                co -> assertThat(co.getLastName()).isEqualTo(customerInput.getLastName()),
+                co -> assertThat(co.getBirthDate()).isEqualTo(customerOutput.getBirthDate()),
+                co -> assertThat(co.getDocument()).isEqualTo(customerInput.getDocument()),
+                co -> assertThat(co.getPhone()).isEqualTo(customerInput.getPhone()),
+                co -> assertThat(co.getEmail()).isEqualTo(customerInput.getEmail()),
+                co -> assertThat(co.getPromotionNotificationsAllowed()).isFalse(),
+                co -> assertThat(co.getArchived()).isFalse(),
+                co -> assertThat(co.getRegisteredAt()).isNotNull(),
+                co -> assertThat(co.getLoyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO.value()),
+                co -> {
+                    AddressData addressData = customerInput.getAddress();
+                    assertThat(co.getAddressData()).satisfies(
+                            ad -> assertThat(ad.getStreet()).isEqualTo(addressData.getStreet()),
+                            ad -> assertThat(ad.getNumber()).isEqualTo(addressData.getNumber()),
+                            ad -> assertThat(ad.getComplement()).isEqualTo(addressData.getComplement()),
+                            ad -> assertThat(ad.getNeighborhood()).isEqualTo(addressData.getNeighborhood()),
+                            ad -> assertThat(ad.getCity()).isEqualTo(addressData.getCity()),
+                            ad -> assertThat(ad.getState()).isEqualTo(addressData.getState()),
+                            ad -> assertThat(ad.getZipCode()).isEqualTo(addressData.getZipCode())
+                    );
+                }
+        );
     }
 }
