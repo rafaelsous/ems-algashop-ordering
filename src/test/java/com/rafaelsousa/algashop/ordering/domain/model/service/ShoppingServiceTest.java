@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ShoppingServiceTest {
@@ -41,6 +41,9 @@ class ShoppingServiceTest {
 
         assertThatThrownBy(() -> shoppingService.startShopping(inexistingCustomerId))
                 .isInstanceOf(CustomerNotFoundException.class);
+
+        verify(customers, times(1)).exists(inexistingCustomerId);
+        verify(shoppingCarts, never()).ofCustomer(inexistingCustomerId);
     }
 
     @Test
@@ -53,6 +56,9 @@ class ShoppingServiceTest {
 
         assertThatThrownBy(() -> shoppingService.startShopping(customerId))
                 .isInstanceOf(CustomerAlreadyHaveShoppingCartException.class);
+
+        verify(customers, times(1)).exists(customerId);
+        verify(shoppingCarts, times(1)).ofCustomer(customerId);
     }
 
     @Test
@@ -73,5 +79,8 @@ class ShoppingServiceTest {
                 sc -> assertThat(sc.items()).isEmpty(),
                 sc -> assertThat(sc.version()).isNull()
         );
+
+        verify(customers, times(1)).exists(customerId);
+        verify(shoppingCarts, times(1)).ofCustomer(customerId);
     }
 }

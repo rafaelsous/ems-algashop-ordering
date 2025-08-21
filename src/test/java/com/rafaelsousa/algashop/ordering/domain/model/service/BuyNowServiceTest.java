@@ -49,7 +49,8 @@ class BuyNowServiceTest {
 
         Order order = buyNowService.buyNow(product, customerId, billing, shipping, quantity, paymentMethod);
 
-        Quantity expectedTotalItems = order.items().iterator().next().quantity();
+        OrderItem orderItem = order.items().iterator().next();
+        Quantity expectedTotalItems = orderItem.quantity();
         Money expectedTotalAmount = product.price().add(shipping.cost());
 
         assertThat(order).satisfies(
@@ -63,6 +64,13 @@ class BuyNowServiceTest {
                 o -> assertThat(o.billing()).isEqualTo(billing),
                 o -> assertThat(o.shipping()).isEqualTo(shipping),
                 o -> assertThat(o.paymentMethod()).isEqualTo(paymentMethod)
+        );
+
+        assertThat(orderItem).satisfies(
+                oi -> assertThat(oi.productId()).isEqualTo(product.id()),
+                oi -> assertThat(oi.productName()).isEqualTo(product.name()),
+                oi -> assertThat(oi.quantity()).isEqualTo(quantity),
+                oi -> assertThat(oi.price()).isEqualTo(product.price())
         );
     }
 }

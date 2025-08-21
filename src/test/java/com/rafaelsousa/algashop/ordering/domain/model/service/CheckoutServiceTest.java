@@ -18,6 +18,12 @@ class CheckoutServiceTest {
 
         assertThatThrownBy(() -> checkoutService.checkout(shoppingCart, null, null, null))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);
+
+        assertThat(shoppingCart).satisfies(
+                sc -> assertThat(sc.isEmpty()).isTrue(),
+                sc -> assertThat(sc.totalItems()).isEqualTo(Quantity.ZERO),
+                sc -> assertThat(sc.totalAmount()).isEqualTo(Money.ZERO)
+        );
     }
 
     @Test
@@ -33,21 +39,41 @@ class CheckoutServiceTest {
 
         assertThatThrownBy(() -> checkoutService.checkout(shoppingCart, null, null, null))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);
+
+        assertThat(shoppingCart).satisfies(
+                sc -> assertThat(sc.isEmpty()).isTrue(),
+                sc -> assertThat(sc.totalItems()).isEqualTo(Quantity.ZERO),
+                sc -> assertThat(sc.totalAmount()).isEqualTo(Money.ZERO)
+        );
     }
 
     @Test
     void givenShoppingCartWithAvailableItems_whenCallCheckout_shouldReturnOrder() {
         CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
-                .customerId(customerId).withItems(true).build();
+                .customerId(customerId).withItems(false).build();
+
         Billing billing = OrderTestDataBuilder.aBilling();
         Shipping shipping = OrderTestDataBuilder.aShipping();
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
+
+        Quantity quantity = Quantity.of(1);
+        Product mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
+        shoppingCart.addItem(mousePad, quantity);
+
+        ShoppingCartItem shoppingCartItem = shoppingCart.items().stream().findFirst().orElseThrow();
 
         Money expectedTotalAmount = shoppingCart.totalAmount().add(shipping.cost());
         Quantity expectedTotalItems = shoppingCart.totalItems();
 
         Order order = checkoutService.checkout(shoppingCart, billing, shipping, paymentMethod);
+
+        assertThat(shoppingCartItem).satisfies(
+                sci -> assertThat(sci.productId()).isEqualTo(mousePad.id()),
+                sci -> assertThat(sci.productName()).isEqualTo(mousePad.name()),
+                sci -> assertThat(sci.quantity()).isEqualTo(quantity),
+                sci -> assertThat(sci.price()).isEqualTo(mousePad.price())
+        );
 
         assertThat(order).satisfies(
                 o -> assertThat(o.customerId()).isEqualTo(customerId),
