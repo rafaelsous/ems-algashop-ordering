@@ -27,5 +27,5 @@ public class CustomerOutput {
     private OffsetDateTime archivedAt;
     private Boolean promotionNotificationsAllowed;
     private Boolean archived;
-    private AddressData addressData;
+    private AddressData address;
 }

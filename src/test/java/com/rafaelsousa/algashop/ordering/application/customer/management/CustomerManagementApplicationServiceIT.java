@@ -61,15 +61,15 @@ class CustomerManagementApplicationServiceIT {
                 co -> assertThat(co.getRegisteredAt()).isNotNull(),
                 co -> assertThat(co.getLoyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO.value()),
                 co -> {
-                    AddressData addressData = customerInput.getAddress();
-                    assertThat(co.getAddressData()).satisfies(
-                            ad -> assertThat(ad.getStreet()).isEqualTo(addressData.getStreet()),
-                            ad -> assertThat(ad.getNumber()).isEqualTo(addressData.getNumber()),
-                            ad -> assertThat(ad.getComplement()).isEqualTo(addressData.getComplement()),
-                            ad -> assertThat(ad.getNeighborhood()).isEqualTo(addressData.getNeighborhood()),
-                            ad -> assertThat(ad.getCity()).isEqualTo(addressData.getCity()),
-                            ad -> assertThat(ad.getState()).isEqualTo(addressData.getState()),
-                            ad -> assertThat(ad.getZipCode()).isEqualTo(addressData.getZipCode())
+                    AddressData address = customerInput.getAddress();
+                    assertThat(co.getAddress()).satisfies(
+                            ad -> assertThat(ad.getStreet()).isEqualTo(address.getStreet()),
+                            ad -> assertThat(ad.getNumber()).isEqualTo(address.getNumber()),
+                            ad -> assertThat(ad.getComplement()).isEqualTo(address.getComplement()),
+                            ad -> assertThat(ad.getNeighborhood()).isEqualTo(address.getNeighborhood()),
+                            ad -> assertThat(ad.getCity()).isEqualTo(address.getCity()),
+                            ad -> assertThat(ad.getState()).isEqualTo(address.getState()),
+                            ad -> assertThat(ad.getZipCode()).isEqualTo(address.getZipCode())
                     );
                 }
         );
