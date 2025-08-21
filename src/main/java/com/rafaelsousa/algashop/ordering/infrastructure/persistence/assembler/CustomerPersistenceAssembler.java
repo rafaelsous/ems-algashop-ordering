@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.Customer;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
 import org.springframework.stereotype.Component;
 

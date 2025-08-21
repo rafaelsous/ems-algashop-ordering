@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderItem;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Billing;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Recipient;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Shipping;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderItem;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Billing;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Recipient;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Shipping;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;

@@ -1,13 +1,13 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity;
 
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Address;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Address;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.AddressEmbeddableAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence.CustomerPersistenceBuilder;
 
 import java.time.LocalDate;
 
-import static com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class CustomerPersistenceTestDataBuilder {
 

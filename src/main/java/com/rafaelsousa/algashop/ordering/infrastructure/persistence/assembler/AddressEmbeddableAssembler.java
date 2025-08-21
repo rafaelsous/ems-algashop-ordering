@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Address;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Address;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

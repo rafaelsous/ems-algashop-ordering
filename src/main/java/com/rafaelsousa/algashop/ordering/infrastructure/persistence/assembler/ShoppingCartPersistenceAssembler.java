@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.entity.ShoppingCartItem;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistence;

@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
 import org.junit.jupiter.api.Test;

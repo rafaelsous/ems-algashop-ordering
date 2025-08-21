@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Address;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.ZipCode;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Address;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderStatus;
-import com.rafaelsousa.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderStatus;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;

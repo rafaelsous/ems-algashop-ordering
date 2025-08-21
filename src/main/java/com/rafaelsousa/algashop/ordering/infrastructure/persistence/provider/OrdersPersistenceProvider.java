@@ -1,11 +1,11 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.repository.Orders;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistence;

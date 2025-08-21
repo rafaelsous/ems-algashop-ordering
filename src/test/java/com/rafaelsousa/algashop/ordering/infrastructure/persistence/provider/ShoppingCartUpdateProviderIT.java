@@ -1,10 +1,14 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.*;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.ShoppingCartPersistenceAssembler;

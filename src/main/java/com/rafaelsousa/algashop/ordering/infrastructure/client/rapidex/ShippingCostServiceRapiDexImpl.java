@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.client.rapidex;
 
-import com.rafaelsousa.algashop.ordering.domain.model.service.ShippingCostService;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,13 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.Customer;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.*;
-import com.rafaelsousa.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Document;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.FullName;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Phone;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.BirthDate;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
 import org.springframework.stereotype.Component;
 

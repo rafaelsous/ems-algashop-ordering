@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository;
 
-import com.rafaelsousa.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
