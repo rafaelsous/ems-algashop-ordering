@@ -1,6 +1,8 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity;
 
 import com.rafaelsousa.algashop.ordering.domain.model.IdGenerator;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartItemPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

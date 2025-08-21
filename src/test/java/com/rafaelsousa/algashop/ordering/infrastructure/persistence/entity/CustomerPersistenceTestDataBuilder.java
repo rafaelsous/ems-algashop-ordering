@@ -2,8 +2,9 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity;
 
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Address;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.AddressEmbeddableAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence.CustomerPersistenceBuilder;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence.CustomerPersistenceBuilder;
 
 import java.time.LocalDate;
 

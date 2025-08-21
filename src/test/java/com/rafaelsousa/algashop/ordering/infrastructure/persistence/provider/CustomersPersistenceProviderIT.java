@@ -5,11 +5,12 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataB
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.config.SpringDataAuditingConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceDisassembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
