@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.application.model;
+package com.rafaelsousa.algashop.ordering.application.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

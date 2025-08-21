@@ -1,8 +1,6 @@
-package com.rafaelsousa.algashop.ordering.application.service;
+package com.rafaelsousa.algashop.ordering.application.customer.management;
 
-import com.rafaelsousa.algashop.ordering.application.model.AddressData;
-import com.rafaelsousa.algashop.ordering.application.model.CustomerInput;
-import com.rafaelsousa.algashop.ordering.application.model.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import lombok.RequiredArgsConstructor;
