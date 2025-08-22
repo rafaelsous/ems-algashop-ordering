@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 class CustomerManagementApplicationServiceIT {
-
     private final CustomerManagementApplicationService customerManagementApplicationService;
 
     @Autowired
@@ -93,6 +92,36 @@ class CustomerManagementApplicationServiceIT {
                             ad -> assertThat(ad.getZipCode()).isEqualTo(address.getZipCode())
                     );
                 }
+        );
+    }
+
+    @Test
+    void shouldArchiveCustomer() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        UUID customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThat(customerId).isNotNull();
+
+        customerManagementApplicationService.archive(customerId);
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput).satisfies(
+                co -> assertThat(co.getId()).isEqualTo(customerId),
+                co -> assertThat(co.isArchived()).isTrue(),
+                co -> assertThat(co.getArchivedAt()).isNotNull(),
+                co -> assertThat(co.getFirstName()).isEqualTo("Anonymous"),
+                co -> assertThat(co.getLastName()).isEqualTo("Anonymous"),
+                co -> assertThat(co.getPhone()).isEqualTo("000-000-0000"),
+                co -> assertThat(co.getDocument()).isEqualTo("000-00-0000"),
+                co -> assertThat(co.getEmail()).contains("@anonymous.com"),
+                co -> assertThat(co.getBirthDate()).isNull(),
+                co -> assertThat(co.getPromotionNotificationsAllowed()).isFalse(),
+                co -> assertThat(co.getAddress()).satisfies(
+                        ad -> assertThat(ad.getNumber()).isEqualTo("Anonymized"),
+                        ad -> assertThat(ad.getComplement()).isNull()
+                )
         );
     }
 }

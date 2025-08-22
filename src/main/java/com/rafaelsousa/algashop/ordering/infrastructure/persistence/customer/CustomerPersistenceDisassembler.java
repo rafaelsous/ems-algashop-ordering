@@ -11,6 +11,8 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableDisassembler;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class CustomerPersistenceDisassembler {
 
@@ -18,7 +20,7 @@ public class CustomerPersistenceDisassembler {
         return Customer.existing()
                 .id(new CustomerId(customerPersistence.getId()))
                 .fullName(FullName.of(customerPersistence.getFirstName(), customerPersistence.getLastName()))
-                .birthDate(BirthDate.of(customerPersistence.getBirthDate()))
+                .birthDate(Objects.nonNull(customerPersistence.getBirthDate()) ? BirthDate.of(customerPersistence.getBirthDate()) : null)
                 .email(Email.of(customerPersistence.getEmail()))
                 .phone(Phone.of(customerPersistence.getPhone()))
                 .document(Document.of(customerPersistence.getDocument()))

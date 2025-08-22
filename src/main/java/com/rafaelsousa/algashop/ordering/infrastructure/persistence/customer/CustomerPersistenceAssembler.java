@@ -4,6 +4,8 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableAssembler;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class CustomerPersistenceAssembler {
 
@@ -15,7 +17,7 @@ public class CustomerPersistenceAssembler {
         customerPersistence.setId(aggregateRoot.id().value());
         customerPersistence.setFirstName(aggregateRoot.fullName().firstName());
         customerPersistence.setLastName(aggregateRoot.fullName().lastName());
-        customerPersistence.setBirthDate(aggregateRoot.birthDate().value());
+        customerPersistence.setBirthDate(Objects.nonNull(aggregateRoot.birthDate()) ? aggregateRoot.birthDate().value() : null);
         customerPersistence.setEmail(aggregateRoot.email().value());
         customerPersistence.setPhone(aggregateRoot.phone().value());
         customerPersistence.setDocument(aggregateRoot.document().value());
