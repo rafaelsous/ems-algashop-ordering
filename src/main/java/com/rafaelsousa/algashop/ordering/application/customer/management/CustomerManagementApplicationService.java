@@ -26,7 +26,7 @@ public class CustomerManagementApplicationService {
 
         Customer customer = customerRegistrationService.register(
                 FullName.of(customerInput.getFirstName(), customerInput.getLastName()),
-                BirthDate.of(customerInput.getBithDate()),
+                BirthDate.of(customerInput.getBirthDate()),
                 Email.of(customerInput.getEmail()),
                 Phone.of(customerInput.getPhone()),
                 Document.of(customerInput.getDocument()),
@@ -47,6 +47,7 @@ public class CustomerManagementApplicationService {
         return customer.id().value();
     }
 
+    @Transactional(readOnly = true)
     public CustomerOutput findById(UUID customerId) {
         Objects.requireNonNull(customerId);
 
@@ -54,5 +55,37 @@ public class CustomerManagementApplicationService {
         Customer customer = customers.ofId(id).orElseThrow(() -> new CustomerNotFoundException(id));
 
         return mapper.convert(customer, CustomerOutput.class);
+    }
+
+    @Transactional
+    public void update(UUID rawCustomerId, CustomerUpdateInput customerUpdateInput) {
+        Objects.requireNonNull(rawCustomerId);
+        Objects.requireNonNull(customerUpdateInput);
+
+        CustomerId customerId = new CustomerId(rawCustomerId);
+        Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        customer.changeName(FullName.of(customerUpdateInput.getFirstName(), customerUpdateInput.getLastName()));
+        customer.changePhone(Phone.of(customerUpdateInput.getPhone()));
+
+        if (Boolean.TRUE.equals(customerUpdateInput.getPromotionNotificationsAllowed())) {
+            customer.enablePromotionNotifications();
+        } else {
+            customer.disablePromotionNotifications();
+        }
+
+        AddressData address = customerUpdateInput.getAddress();
+        customer.changeAddress(Address.builder()
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .neighborhood(address.getNeighborhood())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(ZipCode.of(address.getZipCode()))
+                .build()
+        );
+
+        customers.add(customer);
     }
 }
