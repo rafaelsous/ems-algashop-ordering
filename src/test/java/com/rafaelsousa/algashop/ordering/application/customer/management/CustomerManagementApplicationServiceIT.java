@@ -1,6 +1,9 @@
 package com.rafaelsousa.algashop.ordering.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerArchivedException;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -123,5 +127,31 @@ class CustomerManagementApplicationServiceIT {
                         ad -> assertThat(ad.getComplement()).isNull()
                 )
         );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToArchiveInexistingCustomer() {
+        UUID customerId = UUID.randomUUID();
+
+        assertThat(customerId).isNotNull();
+
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId))
+                .isInstanceOf(CustomerNotFoundException.class)
+                .hasMessage(ErrorMessages.ERROR_CUSTOMER_NOT_FOUND.formatted(customerId));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToArchiveCustomerAlreadyArchived() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        UUID customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThat(customerId).isNotNull();
+
+        customerManagementApplicationService.archive(customerId);
+
+        assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId))
+                .isInstanceOf(CustomerArchivedException.class)
+                .hasMessage(ErrorMessages.ERROR_CUSTOMER_ARCHIVED);
     }
 }
