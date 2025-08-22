@@ -28,4 +28,12 @@ public class CustomerOutput {
     private Boolean promotionNotificationsAllowed;
     private Boolean archived;
     private AddressData address;
+
+    public Boolean isPromotionNotificationsAllowed() {
+        return promotionNotificationsAllowed;
+    }
+
+    public Boolean isArchived() {
+        return archived;
+    }
 }
