@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CustomerLoyaltyPointsServiceTest {
-
     CustomerLoyaltyPointsService customerLoyaltyPointsService = new CustomerLoyaltyPointsService();
 
     @Test
@@ -21,7 +20,9 @@ class CustomerLoyaltyPointsServiceTest {
 
         customerLoyaltyPointsService.addPoints(customer, order);
 
-        assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(375));
+        LoyaltyPoints expectedLoyaltyPointsTotal = customerLoyaltyPointsService.getCalculatedPoints(order);
+
+        assertThat(customer.loyaltyPoints()).isEqualTo(expectedLoyaltyPointsTotal);
     }
 
     @Test

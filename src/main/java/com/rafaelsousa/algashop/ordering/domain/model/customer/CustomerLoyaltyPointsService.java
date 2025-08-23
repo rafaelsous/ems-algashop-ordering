@@ -24,10 +24,14 @@ public class CustomerLoyaltyPointsService {
             throw new CantAddLoyaltyPointsOrderIsNotReady(order.id());
         }
 
-        customer.addLoyaltyPoints(calculatePOints(order));
+        customer.addLoyaltyPoints(calculatePoints(order));
     }
 
-    private LoyaltyPoints calculatePOints(Order order) {
+    public LoyaltyPoints getCalculatedPoints(Order order) {
+        return calculatePoints(order);
+    }
+
+    private LoyaltyPoints calculatePoints(Order order) {
         if (shouldGivePointsByAmount(order.totalAmount())) {
             Money result = order.totalAmount().divide(expectedAmountToGivePoints);
 

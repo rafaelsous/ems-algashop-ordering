@@ -47,4 +47,6 @@ public class ErrorMessages {
     public static final String ERROR_CUSTOMER_ALREADY_HAVE_SHOPPING_CART = "Customer %s already have shopping car %s";
 
     public static final String ERROR_PRODUCT_NOT_FOUND = "Product %s not found";
+
+    public static final String ERROR_ORDER_NOT_FOUND = "Order %s not found";
 }
