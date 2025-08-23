@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.application.customer.management;
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerArchivedException;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerEmailAlreadyExistsException;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import org.junit.jupiter.api.Test;
@@ -153,5 +154,90 @@ class CustomerManagementApplicationServiceIT {
         assertThatThrownBy(() -> customerManagementApplicationService.archive(customerId))
                 .isInstanceOf(CustomerArchivedException.class)
                 .hasMessage(ErrorMessages.ERROR_CUSTOMER_ARCHIVED);
+    }
+
+    @Test
+    void shouldChangeEmail() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        UUID customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThat(customerId).isNotNull();
+
+        String newEmail = "new-email@example.com";
+        customerManagementApplicationService.changeEmail(customerId, newEmail);
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+
+        assertThat(customerOutput).satisfies(
+                co -> assertThat(co.getId()).isEqualTo(customerId),
+                co -> assertThat(co.getEmail()).isEqualTo(newEmail)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToChangeEmailOfNonExistentCustomer() {
+        UUID customerId = UUID.randomUUID();
+
+        String newEmail = "new-email@example.com";
+
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId, newEmail))
+                .isInstanceOf(CustomerNotFoundException.class)
+                .hasMessage(ErrorMessages.ERROR_CUSTOMER_NOT_FOUND.formatted(customerId));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToChangeEmailOfArchivedCustomer() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        UUID customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThat(customerId).isNotNull();
+
+        customerManagementApplicationService.archive(customerId);
+
+        String newEmail = "new-email@example.com";
+
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId, newEmail))
+                .isInstanceOf(CustomerArchivedException.class)
+                .hasMessage(ErrorMessages.ERROR_CUSTOMER_ARCHIVED);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToChangeEmailWithInvalidEmail() {
+        CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+
+        UUID customerId = customerManagementApplicationService.create(customerInput);
+
+        assertThat(customerId).isNotNull();
+
+        String newEmail = "invalid-email";
+
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId, newEmail))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToChangeEmailUsingAlreadyExistingEmail() {
+        CustomerInput customerInput1 = CustomerInputTestDataBuilder.aCustomer().build();
+        CustomerInput customerInput2 = CustomerInputTestDataBuilder.aCustomer().email("customer2@email.com").build();
+
+        UUID customerId1 = customerManagementApplicationService.create(customerInput1);
+        UUID customerId2 = customerManagementApplicationService.create(customerInput2);
+
+        assertThat(customerId1).isNotNull();
+        assertThat(customerId2).isNotNull();
+
+        String newEmail = customerInput2.getEmail();
+
+        assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId1, newEmail))
+                .isInstanceOf(CustomerEmailAlreadyExistsException.class);
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId1);
+
+        assertThat(customerOutput).satisfies(
+                co -> assertThat(co.getId()).isEqualTo(customerId1),
+                co -> assertThat(co.getEmail()).isEqualTo(customerInput1.getEmail())
+        );
     }
 }

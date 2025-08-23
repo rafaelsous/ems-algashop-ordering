@@ -100,4 +100,17 @@ public class CustomerManagementApplicationService {
 
         customers.add(customer);
     }
+
+    @Transactional
+    public void changeEmail(UUID rawCustomerId, String newEmail) {
+        Objects.requireNonNull(rawCustomerId);
+        Objects.requireNonNull(newEmail);
+
+        CustomerId customerId = new CustomerId(rawCustomerId);
+        Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        customerRegistrationService.changeEmail(customer, Email.of(newEmail));
+
+        customers.add(customer);
+    }
 }
