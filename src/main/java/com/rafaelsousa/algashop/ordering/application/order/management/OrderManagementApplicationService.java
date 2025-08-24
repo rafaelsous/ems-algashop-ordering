@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class OrderManagementApplicationService {
@@ -15,6 +17,8 @@ public class OrderManagementApplicationService {
 
     @Transactional
     public void cancel(Long rawOrderId) {
+        Objects.requireNonNull(rawOrderId);
+
         Order order = orders.ofId(new OrderId(rawOrderId))
                 .orElseThrow(() -> new OrderNotFoundException(new OrderId(rawOrderId)));
 
@@ -25,6 +29,8 @@ public class OrderManagementApplicationService {
 
     @Transactional
     public void markAsPaid(Long rawOrderId) {
+        Objects.requireNonNull(rawOrderId);
+
         Order order = orders.ofId(new OrderId(rawOrderId))
                 .orElseThrow(() -> new OrderNotFoundException(new OrderId(rawOrderId)));
 
@@ -35,6 +41,8 @@ public class OrderManagementApplicationService {
 
     @Transactional
     public void markAsReady(Long rawOrderId) {
+        Objects.requireNonNull(rawOrderId);
+
         Order order = orders.ofId(new OrderId(rawOrderId))
                 .orElseThrow(() -> new OrderNotFoundException(new OrderId(rawOrderId)));
 
