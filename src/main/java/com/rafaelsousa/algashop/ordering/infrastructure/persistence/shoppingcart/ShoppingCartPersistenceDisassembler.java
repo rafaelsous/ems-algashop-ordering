@@ -26,6 +26,7 @@ public class ShoppingCartPersistenceDisassembler {
                 .totalItems(Quantity.of(shoppingCartPersistence.getTotalItems()))
                 .totalAmount(Money.of(shoppingCartPersistence.getTotalAmount()))
                 .createdAt(shoppingCartPersistence.getCreatedAt())
+                .version(shoppingCartPersistence.getVersion())
                 .items(
                         buildItems(shoppingCartPersistence.getItems())
                 )

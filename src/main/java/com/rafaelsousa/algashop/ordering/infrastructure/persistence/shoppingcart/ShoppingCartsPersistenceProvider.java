@@ -1,9 +1,10 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
     private final ShoppingCartPersistenceAssembler assembler;
     private final ShoppingCartPersistenceDisassembler disassembler;
+    private final EntityManager entityManager;
 
     @Override
     public Optional<ShoppingCart> ofCustomer(CustomerId customerId) {
@@ -31,11 +33,13 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     }
 
     @Override
+    @Transactional
     public void remove(ShoppingCart shoppingCart) {
         shoppingCartPersistenceRepository.deleteById(shoppingCart.id().value());
     }
 
     @Override
+    @Transactional
     public void remove(ShoppingCartId shoppingCartId) {
         shoppingCartPersistenceRepository.deleteById(shoppingCartId.value());
     }
@@ -54,13 +58,15 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     }
 
     @Override
+    @Transactional
     public void add(ShoppingCart aggregateRoot) {
         UUID shoppingCartId = aggregateRoot.id().value();
 
-        shoppingCartPersistenceRepository.findById(shoppingCartId).ifPresentOrElse(
-                shoppingCartPersistence -> this.update(aggregateRoot, shoppingCartPersistence),
-                () -> this.insert(aggregateRoot)
-        );
+        shoppingCartPersistenceRepository.findById(shoppingCartId)
+                .ifPresentOrElse(
+                        shoppingCartPersistence -> update(aggregateRoot, shoppingCartPersistence),
+                        () -> insert(aggregateRoot)
+                );
     }
 
     @Override
@@ -73,15 +79,16 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
 
         shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
-        this.updateVersion(aggregateRoot, shoppingCartPersistence);
+        updateVersion(aggregateRoot, shoppingCartPersistence);
     }
 
     private void update(ShoppingCart aggregateRoot, ShoppingCartPersistence shoppingCartPersistence) {
         shoppingCartPersistence = assembler.merge(shoppingCartPersistence, aggregateRoot);
+        entityManager.detach(shoppingCartPersistence);
 
-        shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
+        shoppingCartPersistence = shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
-        this.updateVersion(aggregateRoot, shoppingCartPersistence);
+        updateVersion(aggregateRoot, shoppingCartPersistence);
     }
 
     @SneakyThrows
