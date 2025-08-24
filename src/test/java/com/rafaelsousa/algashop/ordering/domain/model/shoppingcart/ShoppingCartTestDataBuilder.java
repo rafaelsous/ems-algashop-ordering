@@ -1,13 +1,15 @@
 package com.rafaelsousa.algashop.ordering.domain.model.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 
 import static com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class ShoppingCartTestDataBuilder {
+    public static final ShoppingCartId DEFAULT_SHOPPING_CART_ID = new ShoppingCartId();
+
     private boolean withItems = true;
     private CustomerId customerId = DEFAULT_CUSTOMER_ID;
 

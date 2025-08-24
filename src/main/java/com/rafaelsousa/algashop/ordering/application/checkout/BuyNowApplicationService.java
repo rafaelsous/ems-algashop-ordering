@@ -44,7 +44,6 @@ public class BuyNowApplicationService {
         Billing billing = billingInputDisassembler.toDomain(buyNowInput.getBilling());
         Shipping shipping = shippingInputDisassembler.toDomain(buyNowInput.getShipping(), calculationResponse);
 
-
         Order order = buyNowService.buyNow(product, customerId, billing, shipping, quantity, paymentMethod);
 
         orders.add(order);
