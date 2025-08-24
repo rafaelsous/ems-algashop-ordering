@@ -204,7 +204,7 @@ class ShoppingCartManagementApplicationServiceIT {
          com a mensagem "Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect")
     **/
     @Test
-    @Disabled("Teste só funcionar quando o carrinho de compras tem apenas um item")
+    @Disabled("Teste só passa quando o carrinho de compras tem apenas um item")
     void shouldRemoveItemWhenShoppingCartHasTwoOrMoreItems() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
 
