@@ -1,23 +1,25 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter @Setter
 @NoArgsConstructor
 @ToString(of = "id")
 @Entity
 @Table(name = "shopping_cart")
-public class ShoppingCartPersistence extends AuditableEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class ShoppingCartPersistence extends AbstractAggregateRoot<ShoppingCartPersistence> {
 
     @Id
     private UUID id;
@@ -32,6 +34,18 @@ public class ShoppingCartPersistence extends AuditableEntity {
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private Set<ShoppingCartItemPersistence> items = new HashSet<>();
+
+    @CreatedBy
+    private UUID createdByUserId;
+
+    @LastModifiedDate
+    private OffsetDateTime lastModifiedAt;
+
+    @LastModifiedBy
+    private UUID lastModifiedByUserId;
+
+    @Version
+    private Long version;
 
     @Builder(toBuilder = true)
     public ShoppingCartPersistence(UUID id, CustomerPersistence customer, BigDecimal totalAmount, Integer totalItems,
@@ -62,6 +76,18 @@ public class ShoppingCartPersistence extends AuditableEntity {
 
         item.setShoppingCart(this);
         this.getItems().add(item);
+    }
+
+    public Collection<Object> getEvents() {
+        return super.domainEvents();
+    }
+
+    public void addEvents(Collection<Object> events) {
+        if (Objects.nonNull(events)) {
+            for (Object event : events) {
+                this.registerEvent(event);
+            }
+        }
     }
 
     public UUID getCustomerId() {

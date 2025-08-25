@@ -3,9 +3,9 @@ package com.rafaelsousa.algashop.ordering.domain.model.shoppingcart;
 import com.rafaelsousa.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.rafaelsousa.algashop.ordering.domain.model.AggregateRoot;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
 import lombok.Builder;
 
@@ -39,7 +39,7 @@ public class ShoppingCart
     }
 
     public static ShoppingCart startShopping(CustomerId customerId) {
-        return new ShoppingCart(
+        ShoppingCart shoppingCart = new ShoppingCart(
                 new ShoppingCartId(),
                 customerId,
                 Money.ZERO,
@@ -48,12 +48,26 @@ public class ShoppingCart
                 new HashSet<>(),
                 null
         );
+
+        shoppingCart.publishDomainEvent(ShoppingCartCreatedEvent.builder()
+                .shoppingCartId(shoppingCart.id())
+                .customerId(shoppingCart.customerId())
+                .createdAt(shoppingCart.createdAt())
+                .build());
+
+        return shoppingCart;
     }
 
     public void empty() {
         this.items.clear();
 
         this.recalculateTotals();
+
+        this.publishDomainEvent(ShoppingCartEmptiedEvent.builder()
+                .shoppingCartId(this.id())
+                .customerId(this.customerId())
+                .emptiedAt(OffsetDateTime.now())
+                .build());
     }
 
     public void addItem(Product product, Quantity quantity) {
@@ -81,6 +95,12 @@ public class ShoppingCart
         );
 
         this.recalculateTotals();
+
+        this.publishDomainEvent(ShoppingCartItemAddedEvent.builder()
+                .shoppingCartId(this.id())
+                .customerId(this.customerId())
+                .productId(product.id())
+                .build());
     }
 
     public void removeItem(ShoppingCartItemId shoppingCartItemId) {
@@ -91,6 +111,12 @@ public class ShoppingCart
         this.items.remove(shoppingCartItem);
 
         this.recalculateTotals();
+
+        this.publishDomainEvent(ShoppingCartItemRemovedEvent.builder()
+                .shoppingCartId(this.id())
+                .customerId(this.customerId())
+                .productId(shoppingCartItem.productId())
+                .build());
     }
 
     public void refreshItem(Product product) {

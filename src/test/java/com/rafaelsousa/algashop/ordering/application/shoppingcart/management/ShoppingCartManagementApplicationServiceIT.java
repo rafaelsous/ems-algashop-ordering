@@ -6,12 +6,14 @@ import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.domain.model.product.*;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.*;
+import com.rafaelsousa.algashop.ordering.infrastructure.listener.shoppingcart.ShoppingCartEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -19,7 +21,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
@@ -30,6 +33,9 @@ class ShoppingCartManagementApplicationServiceIT {
 
     @MockitoBean
     private ProductCatalogService productCatalogService;
+
+    @MockitoSpyBean
+    private ShoppingCartEventListener shoppingCartEventListener;
 
     @Autowired
     ShoppingCartManagementApplicationServiceIT(
@@ -51,6 +57,9 @@ class ShoppingCartManagementApplicationServiceIT {
     void shouldAddItem() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCarts.add(shoppingCart);
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
 
         Product ramMemory = ProductTestDataBuilder.aProductAltRamMemory().build();
 
@@ -78,31 +87,37 @@ class ShoppingCartManagementApplicationServiceIT {
                 sc -> assertThat(sc.totalAmount()).isEqualTo(ramMemory.price()),
                 sc -> assertThat(sc.totalItems()).isEqualTo(quantity)
         );
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartItemAddedEvent.class));
     }
 
     @Test
     void shouldThrowExceptionWhenTryingToAddItemToNonExistentShoppingCart() {
         Product ramMemory = ProductTestDataBuilder.aProductAltRamMemory().build();
 
-        ShoppingCartId shoppingCartId = new ShoppingCartId();
+        ShoppingCartId nonExistentShoppingCartId = new ShoppingCartId();
         ProductId ramMemoryProductId = ramMemory.id();
         Quantity quantity = Quantity.of(1);
 
         ShoppingCartItemInput shoppingCartItemInput = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCartId.value())
+                .shoppingCartId(nonExistentShoppingCartId.value())
                 .productId(ramMemoryProductId.value())
                 .quantity(quantity.value())
                 .build();
 
         assertThatThrownBy(() -> shoppingCartManagementApplicationService.addItem(shoppingCartItemInput))
                 .isInstanceOf(ShoppingCartNotFoundException.class)
-                .hasMessage(ErrorMessages.ERROR_SHOPPING_CART_NOT_FOUND.formatted(shoppingCartId));
+                .hasMessage(ErrorMessages.ERROR_SHOPPING_CART_NOT_FOUND.formatted(nonExistentShoppingCartId));
     }
 
     @Test
     void shouldThrowExceptionWhenTryingToAddNonExistentProduct() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCarts.add(shoppingCart);
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
 
         ProductId productId = new ProductId();
         Quantity quantity = Quantity.of(1);
@@ -130,6 +145,9 @@ class ShoppingCartManagementApplicationServiceIT {
     void shoulThrowExceptionWhenTryingToAddUnavailableProduct() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCarts.add(shoppingCart);
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
 
         Product unavailableRamMemory = ProductTestDataBuilder.aProductAltRamMemory().inStock(false).build();
 
@@ -161,6 +179,9 @@ class ShoppingCartManagementApplicationServiceIT {
 
         UUID shoppingCartId = shoppingCartManagementApplicationService.createNew(customerId);
 
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
+
         ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
 
         assertThat(shoppingCart).satisfies(
@@ -188,6 +209,9 @@ class ShoppingCartManagementApplicationServiceIT {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
                 .customerId(defaultCustomerId).withItems(false).build();
         shoppingCarts.add(shoppingCart);
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
 
         UUID rawCustomerId = defaultCustomerId.value();
 
@@ -249,6 +273,9 @@ class ShoppingCartManagementApplicationServiceIT {
         shoppingCart.addItem(ramMemory, Quantity.of(1));
         shoppingCarts.add(shoppingCart);
 
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
+
         ShoppingCartItem ramMemoryShoppingCarItem = shoppingCart.findItem(ramMemory.id());
 
         UUID rawShoppingCartId = shoppingCart.id().value();
@@ -259,6 +286,9 @@ class ShoppingCartManagementApplicationServiceIT {
         ShoppingCart updatedShoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
 
         assertThat(updatedShoppingCart.items()).isEmpty();
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartItemRemovedEvent.class));
     }
 
     @Test
@@ -279,6 +309,9 @@ class ShoppingCartManagementApplicationServiceIT {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCarts.add(shoppingCart);
 
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
+
         UUID rawShoppingCartId = shoppingCart.id().value();
 
         UUID nonExistentShoppingCartItemId = UUID.randomUUID();
@@ -295,6 +328,9 @@ class ShoppingCartManagementApplicationServiceIT {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCarts.add(shoppingCart);
 
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
+
         UUID rawShoppingCartId = shoppingCart.id().value();
 
         shoppingCartManagementApplicationService.empty(rawShoppingCartId);
@@ -307,6 +343,9 @@ class ShoppingCartManagementApplicationServiceIT {
                 sc -> assertThat(sc.totalAmount()).isEqualTo(Money.ZERO),
                 sc -> assertThat(sc.totalItems()).isEqualTo(Quantity.ZERO)
         );
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartEmptiedEvent.class));
     }
 
     @Test
@@ -322,6 +361,9 @@ class ShoppingCartManagementApplicationServiceIT {
     void shouldDeleteShoppingCart() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCarts.add(shoppingCart);
+
+        verify(shoppingCartEventListener, times(1))
+                .listen(any(ShoppingCartCreatedEvent.class));
 
         UUID rawShoppingCartId = shoppingCart.id().value();
 

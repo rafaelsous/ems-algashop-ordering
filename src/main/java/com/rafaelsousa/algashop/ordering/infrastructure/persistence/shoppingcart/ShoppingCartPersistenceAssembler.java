@@ -32,6 +32,8 @@ public class ShoppingCartPersistenceAssembler {
         Set<ShoppingCartItemPersistence> mergedItems = buildItems(shoppingCart.items());
         shoppingCartPersistence.replaceItems(mergedItems);
 
+        shoppingCartPersistence.addEvents(shoppingCart.domainEvents());
+
         return shoppingCartPersistence;
     }
 

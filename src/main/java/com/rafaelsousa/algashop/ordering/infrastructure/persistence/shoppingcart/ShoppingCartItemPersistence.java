@@ -1,6 +1,5 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +14,7 @@ import java.util.UUID;
 @ToString(of = "id")
 @Entity
 @Table(name = "shopping_cart_item")
-public class ShoppingCartItemPersistence extends AuditableEntity {
+public class ShoppingCartItemPersistence {
 
     @Id
     private UUID id;
