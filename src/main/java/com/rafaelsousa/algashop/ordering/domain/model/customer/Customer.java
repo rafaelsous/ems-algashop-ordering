@@ -30,10 +30,12 @@ public class Customer
     @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
     private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email, Phone phone,
                                     Document document, Boolean promotionNotificationsAllowed, Address address, Long version) {
-        Customer customer = new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false,
-                OffsetDateTime.now(), null, LoyaltyPoints.ZERO, address, version);
+        Customer customer = new Customer(new CustomerId(), fullName, birthDate, email, phone, document,
+                promotionNotificationsAllowed, false, OffsetDateTime.now(), null,
+                LoyaltyPoints.ZERO, address, version);
 
-        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(), customer.registeredAt()));
+        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(), customer.registeredAt(),
+                customer.fullName(), customer.email()));
 
         return customer;
     }

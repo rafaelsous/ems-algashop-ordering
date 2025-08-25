@@ -109,6 +109,8 @@ class CustomerTest {
 
         CustomerRegisteredEvent customerRegisteredEvent = CustomerRegisteredEvent.builder()
                 .customerId(customer.id())
+                .fullName(customer.fullName())
+                .email(customer.email())
                 .registeredAt(customer.registeredAt())
                 .build();
 

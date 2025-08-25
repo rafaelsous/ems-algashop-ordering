@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.listener.customer;
 
 import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
+import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerArchivedEvent;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,11 @@ public class CustomerEventListener {
     @EventListener
     public void listen(CustomerRegisteredEvent customerRegisteredEvent) {
         log.info("CustomerRegisteredEvent listen");
-        customerNotificationApplicationService.notifyNewRegistration(customerRegisteredEvent.customerId().value());
+        customerNotificationApplicationService.notifyNewRegistration(NotifyNewRegistrationInput.builder()
+                .rawCustomerId(customerRegisteredEvent.customerId().value())
+                .firstName(customerRegisteredEvent.fullName().firstName())
+                .email(customerRegisteredEvent.email().value())
+                .build());
     }
 
     @EventListener
