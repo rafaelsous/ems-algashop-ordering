@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
@@ -29,6 +30,9 @@ class CustomerManagementApplicationServiceIT {
 
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;
+
+    @MockitoSpyBean
+    private CustomerNotificationApplicationService customerNotificationApplicationService;
 
     @Test
     void shouldRegisterAndFindCustomer() {
@@ -67,6 +71,7 @@ class CustomerManagementApplicationServiceIT {
         );
 
         verify(customerEventListener).listen(any(CustomerRegisteredEvent.class));
+        verify(customerNotificationApplicationService).notifyNewRegistration(any(UUID.class));
     }
 
     @Test
