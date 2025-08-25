@@ -30,6 +30,7 @@ public class CustomerPersistenceAssembler {
                 AddressEmbeddableAssembler.fromPersistence(aggregateRoot.address())
         );
         customerPersistence.setVersion(aggregateRoot.version());
+        customerPersistence.addEvents(aggregateRoot.domainEvents());
 
         return customerPersistence;
     }

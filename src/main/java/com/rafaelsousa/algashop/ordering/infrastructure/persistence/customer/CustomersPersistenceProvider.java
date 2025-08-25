@@ -46,6 +46,8 @@ public class CustomersPersistenceProvider implements Customers {
                 customerPersistence -> this.update(aggregateRoot, customerPersistence),
                 () -> this.insert(aggregateRoot)
         );
+
+        aggregateRoot.clearDomainEvents();
     }
 
     @Override
