@@ -1,24 +1,27 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AuditableEntity;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.ShippingEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @ToString(of = "id")
 @Entity
 @Table(name = "\"order\"")
-public class OrderPersistence extends AuditableEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class OrderPersistence extends AbstractAggregateRoot<OrderPersistence> {
 
     @Id
     private Long id;
@@ -45,6 +48,18 @@ public class OrderPersistence extends AuditableEntity {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderItemPersistence> items = new HashSet<>();
+
+    @CreatedBy
+    private UUID createdByUserId;
+
+    @LastModifiedDate
+    private OffsetDateTime lastModifiedAt;
+
+    @LastModifiedBy
+    private UUID lastModifiedByUserId;
+
+    @Version
+    private Long version;
 
     @Builder
     public OrderPersistence(Long id, CustomerPersistence customer, BigDecimal totalAmount, Integer totalItems, String status,
@@ -90,6 +105,18 @@ public class OrderPersistence extends AuditableEntity {
         if (Objects.isNull(this.customer)) return null;
 
         return this.customer.getId();
+    }
+
+    public Collection<Object> getEvents() {
+        return super.domainEvents();
+    }
+
+    public void addEvents(Collection<Object> events) {
+        if (Objects.nonNull(events)) {
+            for (Object event : events) {
+                this.registerEvent(event);
+            }
+        }
     }
 
     @Override

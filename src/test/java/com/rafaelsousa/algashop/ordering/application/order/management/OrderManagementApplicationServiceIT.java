@@ -4,14 +4,18 @@ import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.*;
+import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 @Transactional
 @SpringBootTest
@@ -19,6 +23,9 @@ class OrderManagementApplicationServiceIT {
     private final Orders orders;
     private final Customers customers;
     private final OrderManagementApplicationService orderManagementApplicationService;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
 
     @Autowired
     OrderManagementApplicationServiceIT(Orders orders, Customers customers, OrderManagementApplicationService orderManagementApplicationService) {
@@ -48,6 +55,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isCanceled()).isTrue(),
                 o -> assertThat(o.canceledAt()).isNotNull()
         );
+
+        verify(orderEventListener).listen(any(OrderCanceledEvent.class));
     }
 
     @Test
@@ -92,6 +101,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isPaid()).isTrue(),
                 o -> assertThat(o.paidAt()).isNotNull()
         );
+
+        verify(orderEventListener).listen(any(OrderPaidEvent.class));
     }
 
     @Test
@@ -141,6 +152,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isReady()).isTrue(),
                 o -> assertThat(o.paidAt()).isNotNull()
         );
+
+        verify(orderEventListener).listen(any(OrderReadyEvent.class));
     }
 
     @Test

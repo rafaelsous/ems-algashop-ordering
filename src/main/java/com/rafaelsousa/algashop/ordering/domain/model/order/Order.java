@@ -4,8 +4,8 @@ import com.rafaelsousa.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.rafaelsousa.algashop.ordering.domain.model.AggregateRoot;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -117,21 +117,45 @@ public class Order
 
         this.changeStatus(OrderStatus.PLACED);
         this.setPlacedAt(OffsetDateTime.now());
+
+        this.publishDomainEvent(OrderPlacedEvent.builder()
+                .orderId(this.id())
+                .customerId(this.customerId())
+                .placedAt(this.placedAt())
+                .build());
     }
 
     public void markAsPaid() {
         this.changeStatus(OrderStatus.PAID);
         this.setPaidAt(OffsetDateTime.now());
+
+        this.publishDomainEvent(OrderPaidEvent.builder()
+                .orderId(this.id())
+                .customerId(this.customerId())
+                .paidAt(this.paidAt())
+                .build());
     }
 
     public void markAsReady() {
         this.changeStatus(OrderStatus.READY);
         this.setReadyAt(OffsetDateTime.now());
+
+        this.publishDomainEvent(OrderReadyEvent.builder()
+                .orderId(this.id())
+                .customerId(this.customerId())
+                .readyAt(this.readyAt())
+                .build());
     }
 
     public void cancel() {
         this.changeStatus(OrderStatus.CANCELED);
         this.setCanceledAt(OffsetDateTime.now());
+
+        this.publishDomainEvent(OrderCanceledEvent.builder()
+                .orderId(this.id())
+                .customerId(this.customerId())
+                .canceledAt(this.canceledAt())
+                .build());
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {

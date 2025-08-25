@@ -7,17 +7,20 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataB
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderPlacedEvent;
 import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.*;
+import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -25,6 +28,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Transactional
@@ -37,6 +41,9 @@ class CheckoutApplicationServiceIT {
 
     @MockitoBean
     private ShippingCostService shippingCostService;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
 
     @Autowired
     CheckoutApplicationServiceIT(Orders orders, Customers customers, ShoppingCarts shoppingCarts, CheckoutApplicationService checkoutApplicationService) {
@@ -86,6 +93,8 @@ class CheckoutApplicationServiceIT {
         ShoppingCart updatedShoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
 
         assertThat(updatedShoppingCart.isEmpty()).isTrue();
+
+        verify(orderEventListener).listen(any(OrderPlacedEvent.class));
     }
 
     @Test

@@ -29,25 +29,26 @@ public class OrderPersistenceAssembler {
         return merge(new OrderPersistence(), order);
     }
 
-    public OrderPersistence merge(OrderPersistence orderPersistence, Order order) {
-        orderPersistence.setId(order.id().value().toLong());
-        orderPersistence.setTotalAmount(order.totalAmount().value());
-        orderPersistence.setTotalItems(order.totalItems().value());
-        orderPersistence.setStatus(order.status().name());
-        orderPersistence.setPaymentMethod(order.paymentMethod().name());
-        orderPersistence.setPlacedAt(order.placedAt());
-        orderPersistence.setPaidAt(order.paidAt());
-        orderPersistence.setCanceledAt(order.canceledAt());
-        orderPersistence.setReadyAt(order.readyAt());
-        orderPersistence.setVersion(order.version());
-        orderPersistence.setBilling(this.buildBilling(order.billing()));
-        orderPersistence.setShipping(this.buildShipping(order.shipping()));
+    public OrderPersistence merge(OrderPersistence orderPersistence, Order aggregateRoot) {
+        orderPersistence.setId(aggregateRoot.id().value().toLong());
+        orderPersistence.setTotalAmount(aggregateRoot.totalAmount().value());
+        orderPersistence.setTotalItems(aggregateRoot.totalItems().value());
+        orderPersistence.setStatus(aggregateRoot.status().name());
+        orderPersistence.setPaymentMethod(aggregateRoot.paymentMethod().name());
+        orderPersistence.setPlacedAt(aggregateRoot.placedAt());
+        orderPersistence.setPaidAt(aggregateRoot.paidAt());
+        orderPersistence.setCanceledAt(aggregateRoot.canceledAt());
+        orderPersistence.setReadyAt(aggregateRoot.readyAt());
+        orderPersistence.setVersion(aggregateRoot.version());
+        orderPersistence.setBilling(this.buildBilling(aggregateRoot.billing()));
+        orderPersistence.setShipping(this.buildShipping(aggregateRoot.shipping()));
 
-        CustomerPersistence customerPersistence = customerPersistenceRepository.getReferenceById(order.customerId().value());
+        CustomerPersistence customerPersistence = customerPersistenceRepository.getReferenceById(aggregateRoot.customerId().value());
         orderPersistence.setCustomer(customerPersistence);
 
-        Set<OrderItemPersistence> mergedItems = mergeItems(orderPersistence, order);
+        Set<OrderItemPersistence> mergedItems = mergeItems(orderPersistence, aggregateRoot);
         orderPersistence.replaceItems(mergedItems);
+        orderPersistence.addEvents(aggregateRoot.domainEvents());
 
         return orderPersistence;
     }
