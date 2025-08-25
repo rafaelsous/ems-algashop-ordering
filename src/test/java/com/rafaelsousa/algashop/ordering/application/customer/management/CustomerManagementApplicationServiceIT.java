@@ -2,19 +2,20 @@ package com.rafaelsousa.algashop.ordering.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerArchivedException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerEmailAlreadyExistsException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
+import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Transactional
@@ -25,6 +26,9 @@ class CustomerManagementApplicationServiceIT {
     CustomerManagementApplicationServiceIT(CustomerManagementApplicationService customerManagementApplicationService) {
         this.customerManagementApplicationService = customerManagementApplicationService;
     }
+
+    @MockitoSpyBean
+    private CustomerEventListener customerEventListener;
 
     @Test
     void shouldRegisterAndFindCustomer() {
@@ -61,6 +65,8 @@ class CustomerManagementApplicationServiceIT {
                     );
                 }
         );
+
+        verify(customerEventListener).listen(any(CustomerRegisteredEvent.class));
     }
 
     @Test
@@ -120,7 +126,7 @@ class CustomerManagementApplicationServiceIT {
                 co -> assertThat(co.getLastName()).isEqualTo("Anonymous"),
                 co -> assertThat(co.getPhone()).isEqualTo("000-000-0000"),
                 co -> assertThat(co.getDocument()).isEqualTo("000-00-0000"),
-                co -> assertThat(co.getEmail()).contains("@anonymous.com"),
+                co -> assertThat(co.getEmail()).endsWith("@anonymous.com"),
                 co -> assertThat(co.getBirthDate()).isNull(),
                 co -> assertThat(co.getPromotionNotificationsAllowed()).isFalse(),
                 co -> assertThat(co.getAddress()).satisfies(
