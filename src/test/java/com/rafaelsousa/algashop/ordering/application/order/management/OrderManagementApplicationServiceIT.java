@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.order.management;
 
+import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerLoyaltyPointsApplicationService;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,6 +29,9 @@ class OrderManagementApplicationServiceIT {
 
     @MockitoSpyBean
     private OrderEventListener orderEventListener;
+
+    @MockitoSpyBean
+    private CustomerLoyaltyPointsApplicationService customerLoyaltyPointsApplicationService;
 
     @Autowired
     OrderManagementApplicationServiceIT(Orders orders, Customers customers, OrderManagementApplicationService orderManagementApplicationService) {
@@ -154,6 +160,8 @@ class OrderManagementApplicationServiceIT {
         );
 
         verify(orderEventListener).listen(any(OrderReadyEvent.class));
+        verify(customerLoyaltyPointsApplicationService).addLoyaltyPoints(any(UUID.class), any(String.class));
+
     }
 
     @Test
