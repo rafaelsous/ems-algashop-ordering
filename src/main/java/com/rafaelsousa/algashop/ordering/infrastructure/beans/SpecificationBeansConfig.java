@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.beans;
 
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.rafaelsousa.algashop.ordering.domain.model.order.CustomerHaveFreeShippingSpecification;
 import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +20,9 @@ public class SpecificationBeansConfig {
     ) {
         return new CustomerHaveFreeShippingSpecification(
                 orders,
-                minPointsForFreeShippingRule1,
-                minSalesQuantityForFreeShippingRule1,
-                minPointsForFreeShippingRule2
+                LoyaltyPoints.of(minPointsForFreeShippingRule1),
+                Quantity.of((int) minSalesQuantityForFreeShippingRule1),
+                LoyaltyPoints.of(minPointsForFreeShippingRule2)
         );
     }
 }

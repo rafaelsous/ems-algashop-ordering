@@ -15,7 +15,10 @@ public record LoyaltyPoints(Integer value) implements Comparable<LoyaltyPoints> 
         if (value < 0) {
             throw new IllegalArgumentException();
         }
+    }
 
+    public static LoyaltyPoints of(Integer value) {
+        return new LoyaltyPoints(value);
     }
 
     public LoyaltyPoints add(Integer value) {

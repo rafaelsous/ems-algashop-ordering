@@ -34,9 +34,9 @@ class BuyNowServiceTest {
     void setUp() {
         CustomerHaveFreeShippingSpecification specification = new CustomerHaveFreeShippingSpecification(
                 orders,
-                100,
-                2,
-                1000
+                LoyaltyPoints.of(100),
+                Quantity.of(2),
+                LoyaltyPoints.of(1000)
         );
 
         buyNowService = new BuyNowService(specification);
