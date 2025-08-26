@@ -8,7 +8,6 @@ import com.rafaelsousa.algashop.ordering.domain.model.product.*;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.shoppingcart.ShoppingCartEventListener;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -221,14 +220,7 @@ class ShoppingCartManagementApplicationServiceIT {
                         shoppingCart.customerId(), shoppingCart.id()));
     }
 
-    /**
-     TODO:
-         Analisar o porquê de o teste só funcionar quando o carrinho de compras tem apenas um item.
-         Quanto dois ou mais itens são adicionados, o teste falha lançando a exceção ObjectOptimisticLockingFailureException
-         com a mensagem "Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect")
-    **/
     @Test
-    @Disabled("Teste só passa quando o carrinho de compras tem apenas um item")
     void shouldRemoveItemWhenShoppingCartHasTwoOrMoreItems() {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
 
@@ -249,18 +241,17 @@ class ShoppingCartManagementApplicationServiceIT {
 
         ShoppingCart updatedShoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
 
-        assertThat(updatedShoppingCart.items()).isEmpty();
-
         Set<ShoppingCartItem> items = updatedShoppingCart.items();
 
         assertThat(items)
                 .hasSize(1)
-                .contains(ramMemoryShoppingCarItem)
-                .doesNotContain(mousePadShoppingCartItem);
+                .containsOnly(mousePadShoppingCartItem);
 
+        Quantity expectedTotalItems = Quantity.of(1);
+        Money expectedTotalAmount = mousePad.price();
         assertThat(updatedShoppingCart).satisfies(
-                sc -> assertThat(sc.totalAmount()).isEqualTo(mousePad.price()),
-                sc -> assertThat(sc.totalItems()).isEqualTo(Quantity.of(1))
+                sc -> assertThat(sc.totalAmount()).isEqualTo(expectedTotalAmount),
+                sc -> assertThat(sc.totalItems()).isEqualTo(expectedTotalItems)
         );
     }
 
