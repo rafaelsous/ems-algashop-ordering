@@ -10,11 +10,12 @@ import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartI
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CheckoutApplicationService {
     private final Orders orders;
@@ -25,6 +26,7 @@ public class CheckoutApplicationService {
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
 
+    @Transactional
     public String checkout(CheckoutInput checkoutInput) {
         Objects.requireNonNull(checkoutInput);
 
