@@ -20,3 +20,12 @@ algashop:
   integrations:
     shipping.provider: "FAKE"
     rapidex.url: "http://localhost:8780"
+  shipping:
+    have-free-shipping:
+      rule1:
+        active: true
+        min-points: 100
+        min-sales-quantity: 2
+      rule2:
+        active: true
+        min-points: 2000

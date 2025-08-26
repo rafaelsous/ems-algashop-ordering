@@ -9,9 +9,9 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductOutOfStockException;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,8 +28,19 @@ class BuyNowServiceTest {
     @Mock
     private Orders orders;
 
-    @InjectMocks
     private BuyNowService buyNowService;
+
+    @BeforeEach
+    void setUp() {
+        CustomerHaveFreeShippingSpecification specification = new CustomerHaveFreeShippingSpecification(
+                orders,
+                100,
+                2,
+                1000
+        );
+
+        buyNowService = new BuyNowService(specification);
+    }
 
     @Test
     void givenUnavailableProduct_whenCallBuyNow_shouldThrowException() {
