@@ -12,6 +12,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService.CalculationRequest;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEventListener;
@@ -146,6 +147,9 @@ class CheckoutApplicationServiceIT {
         shoppingCart.addItem(ramMemoryAvailable, Quantity.of(1));
 
         Product unavailableRamMemory = ProductTestDataBuilder.aProductAltRamMemory().inStock(false).build();
+
+        ProductId productId = shoppingCart.findItem(unavailableRamMemory.id()).productId();
+        assertThat(unavailableRamMemory.id()).isEqualTo(productId);
 
         shoppingCart.refreshItem(unavailableRamMemory);
         shoppingCarts.add(shoppingCart);
