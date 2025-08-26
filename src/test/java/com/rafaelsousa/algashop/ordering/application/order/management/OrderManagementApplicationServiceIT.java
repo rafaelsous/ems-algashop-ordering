@@ -143,6 +143,42 @@ class OrderManagementApplicationServiceIT {
     }
 
     @Test
+    void shouldThrowExceptionWhenTryingToMarkDraftOrderAsPaid() {
+        Order order = OrderTestDataBuilder.anOrder().customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
+                .status(OrderStatus.DRAFT).build();
+        orders.add(order);
+
+        long rawOrderId = order.id().value().toLong();
+
+        assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
+                .isInstanceOf(OrderStatusCannotBeChangedException.class)
+                .hasMessage(ErrorMessages.ERROR_ORDER_STATUS_CANNOT_BE_CHANGED.formatted(order.id(),
+                        order.status(), OrderStatus.PAID));
+
+        order = orders.ofId(order.id()).orElseThrow();
+
+        assertThat(order).satisfies(
+                o -> assertThat(o.isDraft()).isTrue(),
+                o -> assertThat(o.isPaid()).isFalse(),
+                o -> assertThat(o.paidAt()).isNull()
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingMarkPaidOrderAsPaid() {
+        Order order = OrderTestDataBuilder.anOrder().customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
+                .status(OrderStatus.PAID).build();
+        orders.add(order);
+
+        long rawOrderId = order.id().value().toLong();
+
+        assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
+                .isInstanceOf(OrderStatusCannotBeChangedException.class)
+                .hasMessage(ErrorMessages.ERROR_ORDER_STATUS_CANNOT_BE_CHANGED.formatted(order.id(),
+                        order.status(), OrderStatus.PAID));
+    }
+
+    @Test
     void shouldMarkOrderAsReadySuccessfully() {
         Order order = OrderTestDataBuilder.anOrder()
                 .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
@@ -194,5 +230,33 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isReady()).isFalse(),
                 o -> assertThat(o.paidAt()).isNull()
         );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingMarkReadyOrderAsReady() {
+        Order order = OrderTestDataBuilder.anOrder().customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
+                .status(OrderStatus.READY).build();
+        orders.add(order);
+
+        long rawOrderId = order.id().value().toLong();
+
+        assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
+                .isInstanceOf(OrderStatusCannotBeChangedException.class)
+                .hasMessage(ErrorMessages.ERROR_ORDER_STATUS_CANNOT_BE_CHANGED.formatted(order.id(),
+                        order.status(), OrderStatus.READY));
+    }
+
+    @Test
+    void shouldThrowExceptionTryingMarkPlacedOrderAsReady() {
+        Order order = OrderTestDataBuilder.anOrder().customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)
+                .status(OrderStatus.PLACED).build();
+        orders.add(order);
+
+        long rawOrderId = order.id().value().toLong();
+
+        assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
+                .isInstanceOf(OrderStatusCannotBeChangedException.class)
+                .hasMessage(ErrorMessages.ERROR_ORDER_STATUS_CANNOT_BE_CHANGED.formatted(order.id(),
+                        order.status(), OrderStatus.READY));
     }
 }
