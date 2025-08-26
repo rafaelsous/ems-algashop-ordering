@@ -2,7 +2,10 @@ package com.rafaelsousa.algashop.ordering.application.checkout;
 
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
@@ -26,6 +29,7 @@ public class BuyNowApplicationService {
     private final ShippingCostService shippingCostService;
     private final OriginAddressService originAddressService;
     private final Orders orders;
+    private final Customers customers;
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
 
@@ -38,13 +42,14 @@ public class BuyNowApplicationService {
         PaymentMethod paymentMethod = PaymentMethod.valueOf(buyNowInput.getPaymentMethod());
         ProductId productId = new ProductId(buyNowInput.getProductId());
 
+        Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
         Product product = findProduct(productId);
         CalculationResponse calculationResponse = calculateShippingCost(buyNowInput.getShipping());
 
         Billing billing = billingInputDisassembler.toDomain(buyNowInput.getBilling());
         Shipping shipping = shippingInputDisassembler.toDomain(buyNowInput.getShipping(), calculationResponse);
 
-        Order order = buyNowService.buyNow(product, customerId, billing, shipping, quantity, paymentMethod);
+        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod);
 
         orders.add(order);
 
