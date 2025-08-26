@@ -1,6 +1,10 @@
 package com.rafaelsousa.algashop.ordering.application.checkout;
 
 import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
@@ -19,6 +23,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CheckoutApplicationService {
     private final Orders orders;
+    private final Customers customers;
     private final ShoppingCarts shoppingCarts;
     private final CheckoutService checkoutService;
     private final ShippingCostService shippingCostService;
@@ -36,12 +41,16 @@ public class CheckoutApplicationService {
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
+        CustomerId customerId = shoppingCart.customerId();
+        Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
         CalculationResponse calculationResponse = calculateShippingCost(checkoutInput.getShipping());
 
         Billing billing = billingInputDisassembler.toDomain(checkoutInput.getBilling());
         Shipping shipping = shippingInputDisassembler.toDomain(checkoutInput.getShipping(), calculationResponse);
 
-        Order order = checkoutService.checkout(shoppingCart, billing, shipping, paymentMethod);
+        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
 
         orders.add(order);
         shoppingCarts.add(shoppingCart);
