@@ -2,11 +2,11 @@ package com.rafaelsousa.algashop.ordering.domain.model.order;
 
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductOutOfStockException;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductOutOfStockException;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
@@ -135,12 +135,17 @@ class OrderTest {
 
     @Test
     void givenDraftOrder_whenChangeShipping_shouldAllowChange() {
-        Order order = OrderTestDataBuilder.anOrder().build();
+        Order order = Order.draft(new CustomerId());
         Shipping shipping = OrderTestDataBuilder.aShipping();
+
+        Money expectedTotalAmount = order.totalAmount().add(shipping.cost());
 
         order.changeShipping(shipping);
 
-        Assertions.assertThat(order.shipping()).isEqualTo(shipping);
+        Assertions.assertWith(order,
+                o -> Assertions.assertThat(order.shipping()).isEqualTo(shipping),
+                o -> Assertions.assertThat(order.totalAmount()).isEqualTo(expectedTotalAmount)
+        );
     }
 
     @Test
