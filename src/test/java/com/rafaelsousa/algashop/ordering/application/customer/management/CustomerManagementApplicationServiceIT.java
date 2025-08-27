@@ -3,6 +3,8 @@ package com.rafaelsousa.algashop.ordering.application.customer.management;
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
+import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
@@ -23,10 +25,12 @@ import static org.mockito.Mockito.verify;
 @Transactional
 class CustomerManagementApplicationServiceIT {
     private final CustomerManagementApplicationService customerManagementApplicationService;
+    private final CustomerQueryService customerQueryService;
 
     @Autowired
-    CustomerManagementApplicationServiceIT(CustomerManagementApplicationService customerManagementApplicationService) {
+    CustomerManagementApplicationServiceIT(CustomerManagementApplicationService customerManagementApplicationService, CustomerQueryService customerQueryService) {
         this.customerManagementApplicationService = customerManagementApplicationService;
+        this.customerQueryService = customerQueryService;
     }
 
     @MockitoSpyBean
@@ -43,7 +47,7 @@ class CustomerManagementApplicationServiceIT {
 
         assertThat(customerId).isNotNull();
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId);
 
         assertThat(customerOutput).satisfies(
                 co -> assertThat(co.getId()).isEqualTo(customerId),
@@ -86,7 +90,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.update(customerId, customerUpdateInput);
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId);
 
         assertThat(customerOutput).satisfies(
                 co -> assertThat(co.getId()).isEqualTo(customerId),
@@ -122,7 +126,7 @@ class CustomerManagementApplicationServiceIT {
 
         customerManagementApplicationService.archive(customerId);
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId);
 
         assertThat(customerOutput).satisfies(
                 co -> assertThat(co.getId()).isEqualTo(customerId),
@@ -179,7 +183,7 @@ class CustomerManagementApplicationServiceIT {
         String newEmail = "new-email@example.com";
         customerManagementApplicationService.changeEmail(customerId, newEmail);
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId);
 
         assertThat(customerOutput).satisfies(
                 co -> assertThat(co.getId()).isEqualTo(customerId),
@@ -245,7 +249,7 @@ class CustomerManagementApplicationServiceIT {
         assertThatThrownBy(() -> customerManagementApplicationService.changeEmail(customerId1, newEmail))
                 .isInstanceOf(CustomerEmailAlreadyExistsException.class);
 
-        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId1);
+        CustomerOutput customerOutput = customerQueryService.findById(customerId1);
 
         assertThat(customerOutput).satisfies(
                 co -> assertThat(co.getId()).isEqualTo(customerId1),

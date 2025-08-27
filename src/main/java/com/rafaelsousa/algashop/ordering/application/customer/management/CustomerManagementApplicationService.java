@@ -1,7 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
-import com.rafaelsousa.algashop.ordering.application.utility.Mapper;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.UUID;
 public class CustomerManagementApplicationService {
     private final Customers customers;
     private final CustomerRegistrationService customerRegistrationService;
-    private final Mapper mapper;
 
     @Transactional
     public UUID create(CustomerInput customerInput) {
@@ -45,16 +43,6 @@ public class CustomerManagementApplicationService {
         customers.add(customer);
 
         return customer.id().value();
-    }
-
-    @Transactional(readOnly = true)
-    public CustomerOutput findById(UUID customerId) {
-        Objects.requireNonNull(customerId);
-
-        CustomerId id = new CustomerId(customerId);
-        Customer customer = customers.ofId(id).orElseThrow(() -> new CustomerNotFoundException(id));
-
-        return mapper.convert(customer, CustomerOutput.class);
     }
 
     @Transactional
