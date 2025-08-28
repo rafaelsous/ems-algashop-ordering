@@ -1,6 +1,8 @@
 package com.rafaelsousa.algashop.ordering.application.checkout;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.application.order.query.BillingData;
+import com.rafaelsousa.algashop.ordering.application.order.query.RecipientData;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 

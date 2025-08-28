@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.application.checkout;
+package com.rafaelsousa.algashop.ordering.application.order.query;
 
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import lombok.AllArgsConstructor;

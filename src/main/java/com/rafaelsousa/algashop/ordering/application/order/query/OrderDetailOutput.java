@@ -1,6 +1,5 @@
 package com.rafaelsousa.algashop.ordering.application.order.query;
 
-import com.rafaelsousa.algashop.ordering.application.checkout.BillingData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +28,6 @@ public class OrderDetailOutput {
     private ShippingData shipping;
     private BillingData billing;
 
+    @Builder.Default
     private List<OrderItemDetailOutput> items = new ArrayList<>();
 }
