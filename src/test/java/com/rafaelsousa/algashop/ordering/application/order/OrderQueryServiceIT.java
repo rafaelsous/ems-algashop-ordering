@@ -8,10 +8,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderStatus;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
+import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -98,5 +95,61 @@ class OrderQueryServiceIT {
         assertThat(page.getContent())
                 .extracting(OrderSummaryOutput::getCustomer)
                 .allMatch(c -> c.getId().equals(customer1.id().value()));
+    }
+
+    @Test
+    void shouldFilterByMultipleParams() {
+        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.id()).build());
+        Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.id()).build();
+        orders.add(order1);
+
+        CustomerId customerId = new CustomerId();
+        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(customerId).build();
+        customers.add(customer2);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
+
+        OrderFilter filter = OrderFilter.ofDefault();
+        filter.setCustomerId(customer1.id().value());
+        filter.setStatus(OrderStatus.PLACED.toString().toLowerCase());
+        filter.setTotalAmountFrom(order1.totalAmount().value());
+
+        Page<OrderSummaryOutput> page = orderQueryService.filter(filter);
+
+        assertThat(page.getTotalPages()).isEqualTo(1);
+        assertThat(page.getTotalElements()).isEqualTo(1);
+        assertThat(page.getContent())
+                .extracting(OrderSummaryOutput::getStatus)
+                .allMatch(s -> s.equals(OrderStatus.PLACED.toString()));
+    }
+
+    @Test
+    void givenInvalidOrderId_whenFilter_shouldReturnEmptyPage() {
+        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.id()).build());
+        Order order1 = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.id()).build();
+        orders.add(order1);
+
+        CustomerId customerId = new CustomerId();
+        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(customerId).build();
+        customers.add(customer2);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
+
+        OrderFilter filter = OrderFilter.ofDefault();
+        filter.setOrderId(new OrderId().toString());
+
+        Page<OrderSummaryOutput> page = orderQueryService.filter(filter);
+
+        assertThat(page.isEmpty()).isTrue();
     }
 }

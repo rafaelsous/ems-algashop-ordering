@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OrderQueryServiceImpl implements OrderQueryService {
+    private static final String TOTAL_AMOUNT_ATTRIBUTE = "totalAmount";
+    private static final String PLACED_AT_ATTRIBUTE = "placedAt";
+
     private final OrderPersistenceRepository orderPersistenceRepository;
     private final Mapper mapper;
     private final EntityManager entityManager;
@@ -82,8 +86,8 @@ public class OrderQueryServiceImpl implements OrderQueryService {
                                 customer.get("phone")
                         ),
                         root.get("totalItems"),
-                        root.get("totalAmount"),
-                        root.get("placedAt"),
+                        root.get(TOTAL_AMOUNT_ATTRIBUTE),
+                        root.get(PLACED_AT_ATTRIBUTE),
                         root.get("paidAt"),
                         root.get("canceledAt"),
                         root.get("readyAt"),
@@ -110,6 +114,39 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         if (Objects.nonNull(filter.getCustomerId())) {
             predicates.add(criteriaBuilder.equal(root.get("customer").get("id"), filter.getCustomerId()));
+        }
+
+        if (Objects.nonNull(filter.getStatus()) && StringUtils.hasText(filter.getStatus())) {
+            predicates.add(criteriaBuilder.equal(root.get("status"), filter.getStatus().toUpperCase()));
+        }
+
+        if (Objects.nonNull(filter.getOrderId()) && StringUtils.hasText(filter.getOrderId())) {
+            long orderIdLongValue;
+
+            try {
+                OrderId orderId = new OrderId(filter.getOrderId());
+                orderIdLongValue = orderId.value().toLong();
+            } catch (IllegalArgumentException ex) {
+                orderIdLongValue = 0L;
+            }
+
+            predicates.add(criteriaBuilder.equal(root.get("id"), orderIdLongValue));
+        }
+
+        if (Objects.nonNull(filter.getPlacedAtFrom())) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtFrom()));
+        }
+
+        if (Objects.nonNull(filter.getPlacedAtTo())) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtTo()));
+        }
+
+        if (Objects.nonNull(filter.getTotalAmountFrom())) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountFrom()));
+        }
+
+        if (Objects.nonNull(filter.getTotalAmountTo())) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountTo()));
         }
 
         return predicates.toArray(new Predicate[0]);
