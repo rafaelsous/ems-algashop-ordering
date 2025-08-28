@@ -1,11 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
-import com.rafaelsousa.algashop.ordering.application.order.query.CustomerMinimalOutput;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutput;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutput;
+import com.rafaelsousa.algashop.ordering.application.order.query.*;
 import com.rafaelsousa.algashop.ordering.application.utility.Mapper;
-import com.rafaelsousa.algashop.ordering.application.utility.PageFilter;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderNotFoundException;
 import jakarta.persistence.EntityManager;
@@ -38,7 +34,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
-    public Page<OrderSummaryOutput> filter(PageFilter filter) {
+    public Page<OrderSummaryOutput> filter(OrderFilter filter) {
         Long totalQueryResults = countTotalQueryResults(filter);
 
         if (totalQueryResults.equals(0L)) {
@@ -50,7 +46,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return filterQuery(filter, totalQueryResults);
     }
 
-    private Long countTotalQueryResults(PageFilter filter) {
+    private Long countTotalQueryResults(OrderFilter filter) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<OrderPersistence> root = criteriaQuery.from(OrderPersistence.class);
@@ -63,7 +59,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return typedQuery.getSingleResult();
     }
 
-    private Page<OrderSummaryOutput> filterQuery(PageFilter filter, Long totalQueryResults) {
+    private Page<OrderSummaryOutput> filterQuery(OrderFilter filter, Long totalQueryResults) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<OrderSummaryOutput> criteriaQuery = criteriaBuilder.createQuery(OrderSummaryOutput.class);
         Root<OrderPersistence> root = criteriaQuery.from(OrderPersistence.class);
