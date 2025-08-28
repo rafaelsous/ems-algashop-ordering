@@ -1,26 +1,39 @@
 package com.rafaelsousa.algashop.ordering.application.order.query;
 
+import com.rafaelsousa.algashop.ordering.application.utility.PageFilter;
 import com.rafaelsousa.algashop.ordering.application.utility.SortablePageFilter;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class OrderFilter extends SortablePageFilter<OrderFilter.SortType> {
     private String status;
     private String orderId;
-    private String customerId;
+    private UUID customerId;
     private OffsetDateTime placedAtFrom;
     private OffsetDateTime placedAtTo;
     private BigDecimal totalAmountFrom;
     private BigDecimal totalAmountTo;
+
+    public OrderFilter(int size, int page) {
+        super(size, page);
+    }
+
+    public static OrderFilter ofDefault() {
+        return new OrderFilter();
+    }
+
+    public static OrderFilter of(int size, int page) {
+        return new OrderFilter(size, page);
+    }
 
     @Override
     public SortType getSortByPropertyOrDefault() {

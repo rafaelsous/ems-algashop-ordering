@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -52,7 +54,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         Root<OrderPersistence> root = criteriaQuery.from(OrderPersistence.class);
 
         Expression<Long> count = criteriaBuilder.count(root);
+        Predicate[] predicates = toPredicates(criteriaBuilder, root, filter);
+
         criteriaQuery.select(count);
+        criteriaQuery.where(predicates);
 
         TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
 
@@ -87,6 +92,9 @@ public class OrderQueryServiceImpl implements OrderQueryService {
                 )
         );
 
+        Predicate[] predicates = toPredicates(criteriaBuilder, root, filter);
+        criteriaQuery.where(predicates);
+
         TypedQuery<OrderSummaryOutput> typedQuery = entityManager.createQuery(criteriaQuery);
 
         typedQuery.setFirstResult(filter.getPage() * filter.getSize());
@@ -95,5 +103,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
 
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResults);
+    }
+
+    private Predicate[] toPredicates(CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (Objects.nonNull(filter.getCustomerId())) {
+            predicates.add(criteriaBuilder.equal(root.get("customer").get("id"), filter.getCustomerId()));
+        }
+
+        return predicates.toArray(new Predicate[0]);
     }
 }

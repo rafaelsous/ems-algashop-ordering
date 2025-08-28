@@ -1,10 +1,11 @@
 package com.rafaelsousa.algashop.ordering.application.order;
 
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutput;
+import com.rafaelsousa.algashop.ordering.application.order.query.OrderFilter;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutput;
-import com.rafaelsousa.algashop.ordering.application.utility.PageFilter;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
@@ -64,10 +65,38 @@ class OrderQueryServiceIT {
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer.id()).build());
         orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer.id()).build());
 
-        Page<OrderSummaryOutput> page = orderQueryService.filter(PageFilter.of(3, 0));
+        Page<OrderSummaryOutput> page = orderQueryService.filter(OrderFilter.of(3, 0));
 
         assertThat(page.getTotalPages()).isEqualTo(2);
         assertThat(page.getTotalElements()).isEqualTo(5);
         assertThat(page.getNumberOfElements()).isEqualTo(3);
+    }
+
+    @Test
+    void shouldFilterByCustomerId() {
+        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.id()).build());
+
+        CustomerId customerId = new CustomerId();
+        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(customerId).build();
+        customers.add(customer2);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
+
+        OrderFilter filter = OrderFilter.ofDefault();
+        filter.setCustomerId(customer1.id().value());
+
+        Page<OrderSummaryOutput> page = orderQueryService.filter(filter);
+
+        assertThat(page.getTotalPages()).isEqualTo(1);
+        assertThat(page.getTotalElements()).isEqualTo(2);
+        assertThat(page.getContent())
+                .extracting(OrderSummaryOutput::getCustomer)
+                .allMatch(c -> c.getId().equals(customer1.id().value()));
     }
 }
