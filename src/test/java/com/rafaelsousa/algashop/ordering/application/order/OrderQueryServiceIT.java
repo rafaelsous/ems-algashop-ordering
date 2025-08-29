@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,5 +152,31 @@ class OrderQueryServiceIT {
         Page<OrderSummaryOutput> page = orderQueryService.filter(filter);
 
         assertThat(page.isEmpty()).isTrue();
+    }
+
+    @Test
+    void shouldOrderByStatus() {
+        Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer1);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.DRAFT).withItems(false).customerId(customer1.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).customerId(customer1.id()).build());
+
+        CustomerId customerId = new CustomerId();
+        Customer customer2 = CustomerTestDataBuilder.existingCustomer().id(customerId).build();
+        customers.add(customer2);
+
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.PAID).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.READY).customerId(customer2.id()).build());
+        orders.add(OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).customerId(customer2.id()).build());
+
+        OrderFilter filter = OrderFilter.ofDefault();
+        filter.setSortByProperty(OrderFilter.SortType.STATUS);
+        filter.setSortDirection(Sort.Direction.ASC);
+
+        Page<OrderSummaryOutput> page = orderQueryService.filter(filter);
+
+        assertThat(page.getContent().getFirst().getStatus()).isEqualTo(OrderStatus.CANCELED.toString());
+        assertThat(page.getContent().getLast().getStatus()).isEqualTo(OrderStatus.READY.toString());
     }
 }
