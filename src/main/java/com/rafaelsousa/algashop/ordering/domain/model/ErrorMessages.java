@@ -51,4 +51,6 @@ public class ErrorMessages {
     public static final String ERROR_ORDER_NOT_FOUND = "Order %s not found";
 
     public static final String ERROR_SHOPPING_CART_NOT_FOUND = "Shopping cart %s not found";
+
+    public static final String ERROR_SHOPPING_CART_NOT_FOUND_FOR_CUSTOMER = "Shopping cart not found for customer %s";
 }
