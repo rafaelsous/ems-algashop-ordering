@@ -1,6 +1,5 @@
 package com.rafaelsousa.algashop.ordering.application.order.query;
 
-import com.rafaelsousa.algashop.ordering.application.utility.PageFilter;
 import com.rafaelsousa.algashop.ordering.application.utility.SortablePageFilter;
 import lombok.*;
 import org.springframework.data.domain.Sort;

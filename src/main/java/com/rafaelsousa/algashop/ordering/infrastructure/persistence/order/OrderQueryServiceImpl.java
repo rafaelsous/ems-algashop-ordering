@@ -117,15 +117,15 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     private Order toSortOrder(CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
-        if (filter.getSortDirectionOrDefault() == Sort.Direction.ASC) {
-            return criteriaBuilder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
-        }
+        Order order = null;
 
-        if (filter.getSortDirectionOrDefault() == Sort.Direction.DESC) {
-            return criteriaBuilder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
-        }
+        if (filter.getSortDirectionOrDefault() == Sort.Direction.ASC)
+            order = criteriaBuilder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
 
-        return null;
+        if (filter.getSortDirectionOrDefault() == Sort.Direction.DESC)
+            order = criteriaBuilder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+
+        return order;
     }
 
     private Predicate[] toPredicates(CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
