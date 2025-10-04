@@ -1,17 +1,28 @@
 package com.rafaelsousa.algashop.ordering.presentation;
 
+import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerInput;
+import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerQueryService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = CustomerController.class)
 class CustomerControllerContractTest {
@@ -21,6 +32,12 @@ class CustomerControllerContractTest {
     CustomerControllerContractTest(WebApplicationContext webApplicationContext) {
         this.webApplicationContext = webApplicationContext;
     }
+
+    @MockitoBean
+    private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @MockitoBean
+    private CustomerQueryService customerQueryService;
 
     @BeforeEach
     void setup() {
@@ -32,6 +49,12 @@ class CustomerControllerContractTest {
 
     @Test
     void createCustomerContract() {
+        CustomerOutput customerOutput = CustomerOutputTestDataBuilder.existing().build();
+        when(customerManagementApplicationService.create(any(CustomerInput.class)))
+                .thenReturn(UUID.randomUUID());
+        when(customerQueryService.findById(Mockito.any(UUID.class)))
+                .thenReturn(customerOutput);
+
         String inputJson = """
         {
           "firstName": "John",
