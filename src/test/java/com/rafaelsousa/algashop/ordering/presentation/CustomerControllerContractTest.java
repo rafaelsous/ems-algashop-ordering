@@ -108,4 +108,51 @@ class CustomerControllerContractTest {
                         "address.zipCode", Matchers.is("62701")
                 );
     }
+
+    @Test
+    void createCustomerErrorContract() {
+        String inputJson = """
+        {
+          "firstName": "",
+          "lastName": "",
+          "email": "johndoe@example.com",
+          "document": "12345",
+          "phone": "1191234564",
+          "birthDate": "1990-01-01",
+          "promotionNotificationsAllowed": false,
+          "address": {
+            "street": "123 Main St",
+            "number": "100",
+            "complement": "Apt 4B",
+            "neighborhood": "Downtown",
+            "city": "Springfield",
+            "state": "South Carolina",
+            "zipCode": "62701"
+          }
+        }
+        """;
+
+        RestAssuredMockMvc.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(inputJson)
+            .when()
+                .post("/api/v1/customers")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(
+                        "status", Matchers.is(HttpStatus.BAD_REQUEST.value()),
+                        "type", Matchers.is("/errors/invalid-fields"),
+                        "title", Matchers.is("Invalid fields"),
+                        "instance", Matchers.notNullValue(),
+                        "detail", Matchers.is("One or more fields are invalid"),
+                        "timestamp", Matchers.notNullValue(),
+                        "fields", Matchers.notNullValue(),
+                        "fields.size()", Matchers.is(2),
+                        "fields.firstName", Matchers.is("must not be blank"),
+                        "fields.lastName", Matchers.is("must not be blank")
+                );
+    }
 }
