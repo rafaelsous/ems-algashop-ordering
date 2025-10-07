@@ -1,14 +1,16 @@
 package com.rafaelsousa.algashop.ordering.presentation;
 
+import com.rafaelsousa.algashop.ordering.domain.model.DomainEntityNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.DomainException;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerEmailAlreadyExistsException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -18,9 +20,12 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @AllArgsConstructor
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+    public static final String TIMESTAMP_PROPERTY_NAME = "timestamp";
+
     private final MessageSource messageSource;
 
     @Override
@@ -41,8 +46,51 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
         problemDetail.setProperty("fields", fieldErrors);
-        problemDetail.setProperty("timestamp", OffsetDateTime.now());
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    @ExceptionHandler(DomainEntityNotFoundException.class)
+    public ProblemDetail handleDomainEntityNotFoundException(DomainEntityNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("Not found");
+        problemDetail.setType(URI.create("/errors/not-found"));
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(DomainException.class)
+    public ProblemDetail handleDomainException(DomainException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        problemDetail.setTitle("Unprocessable entity");
+        problemDetail.setType(URI.create("/errors/unprocessable-entity"));
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(CustomerEmailAlreadyExistsException.class)
+    public ProblemDetail handleCustomerEmailAlreadyExistsException(CustomerEmailAlreadyExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problemDetail.setTitle("Conflict");
+        problemDetail.setType(URI.create("/errors/conflict"));
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleException(Exception ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected internal server error occurred. Please try again and if the problem persists, contact the system administrator.");
+        problemDetail.setTitle("Internal server error");
+        problemDetail.setType(URI.create("/errors/internal"));
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+        log.error(ex.getMessage(), ex);
+
+        return problemDetail;
     }
 }
