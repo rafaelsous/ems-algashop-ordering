@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.presentation;
 
+import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerInput;
 import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.application.customer.query.*;
@@ -218,5 +219,45 @@ class CustomerControllerContractTest {
                         "content[1].loyaltyPoints", Matchers.is(customer2.getLoyaltyPoints()),
                         "content[1].promotionNotificationsAllowed", Matchers.is(customer2.getPromotionNotificationsAllowed())
                 );
+    }
+
+    @Test
+    void findByIdContract() {
+        CustomerOutput customer = CustomerOutputTestDataBuilder.existing().build();
+
+        when(customerQueryService.findById(customer.getId()))
+                .thenReturn(customer);
+
+        AddressData address = customer.getAddress();
+        RestAssuredMockMvc
+                .given()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                    .get("/api/v1/customers/{customerId}", customer.getId())
+                .then()
+                    .assertThat()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .statusCode(HttpStatus.OK.value())
+                    .body(
+                            "id", Matchers.is(customer.getId().toString()),
+                            "firstName", Matchers.is(customer.getFirstName()),
+                            "lastName", Matchers.is(customer.getLastName()),
+                            "email", Matchers.is(customer.getEmail()),
+                            "document", Matchers.is(customer.getDocument()),
+                            "phone", Matchers.is(customer.getPhone()),
+                            "birthDate", Matchers.is(customer.getBirthDate().toString()),
+                            "promotionNotificationsAllowed", Matchers.is(customer.getPromotionNotificationsAllowed()),
+                            "registeredAt", Matchers.notNullValue(),
+                            "archived", Matchers.is(false),
+                            "loyaltyPoints", Matchers.is(0),
+
+                            "address.street", Matchers.is(address.getStreet()),
+                            "address.number", Matchers.is(address.getNumber()),
+                            "address.complement", Matchers.is(address.getComplement()),
+                            "address.neighborhood", Matchers.is(address.getNeighborhood()),
+                            "address.city", Matchers.is(address.getCity()),
+                            "address.state", Matchers.is(address.getState()),
+                            "address.zipCode", Matchers.is(address.getZipCode())
+                    );
     }
 }
