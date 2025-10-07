@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -51,8 +52,10 @@ class CustomerControllerContractTest {
     @Test
     void createCustomerContract() {
         CustomerOutput customerOutput = CustomerOutputTestDataBuilder.existing().build();
+
+        UUID customerId = UUID.randomUUID();
         when(customerManagementApplicationService.create(any(CustomerInput.class)))
-                .thenReturn(UUID.randomUUID());
+                .thenReturn(customerId);
         when(customerQueryService.findById(Mockito.any(UUID.class)))
                 .thenReturn(customerOutput);
 
@@ -88,6 +91,7 @@ class CustomerControllerContractTest {
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, Matchers.containsString("/api/v1/customers/" + customerId))
                 .body(
                         "id", Matchers.notNullValue(),
                         "firstName", Matchers.is("John"),
