@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.presentation;
 
 import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerInput;
 import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerFilter;
 import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutput;
 import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerQueryService;
@@ -45,5 +46,18 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public CustomerOutput findById(@PathVariable UUID customerId) {
         return customerQueryService.findById(customerId);
+    }
+
+    @PutMapping("/{customerId}")
+    public CustomerOutput update(@PathVariable UUID customerId, @RequestBody @Valid CustomerUpdateInput customerUpdateInput) {
+        customerManagementApplicationService.update(customerId, customerUpdateInput);
+
+        return customerQueryService.findById(customerId);
+    }
+
+    @DeleteMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID customerId) {
+        customerManagementApplicationService.archive(customerId);
     }
 }
