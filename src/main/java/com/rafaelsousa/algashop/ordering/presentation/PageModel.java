@@ -18,6 +18,8 @@ public class PageModel<T> {
     private int size;
     private int totalPages;
     private long totalElements;
+
+    @Builder.Default
     private List<T> content = new ArrayList<>();
 
     public static <T> PageModel<T> of(Page<T> page) {

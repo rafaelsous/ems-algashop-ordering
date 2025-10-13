@@ -19,5 +19,7 @@ public class ShoppingCartOutput {
     private UUID customerId;
     private Integer totalItems;
     private BigDecimal totalAmount;
+
+    @Builder.Default
     private List<ShoppingCartItemOutput> items = new ArrayList<>();
 }
