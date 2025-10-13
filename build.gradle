@@ -60,7 +60,7 @@ dependencyManagement {
 contracts {
     testFramework = 'JUNIT5'
     testMode = 'MockMvc'
-    contractsDslDir = project.file("${layout.projectDirectory}/src/contractTest/resources/contracts")
+    packageWithBaseClasses = "com.rafaelsousa.algashop.ordering.contract.base"
 }
 
 tasks.named('contractTest') {

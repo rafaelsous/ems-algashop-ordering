@@ -1,9 +1,5 @@
-package com.rafaelsousa.algashop.ordering.application.order;
+package com.rafaelsousa.algashop.ordering.application.order.query;
 
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutput;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderFilter;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutput;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
