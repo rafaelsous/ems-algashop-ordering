@@ -1,7 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.shoppingcart.management;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +12,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShoppingCartItemInput {
+public class ShoppingCartInput {
 
     @NotNull
-    private UUID shoppingCartId;
-
-    @NotNull
-    private UUID productId;
-
-    @NotNull
-    @Positive
-    private Integer quantity;
+    private UUID customerId;
 }
