@@ -39,7 +39,7 @@ class CustomerTest {
         Assertions.assertWith(customer,
                 c -> assertThat(c.fullName()).isEqualTo(fullNameAnonymous),
                 c -> assertThat(c.birthDate()).isNull(),
-                c -> assertThat(c.email()).isNotEqualTo(new Email("john.doe@value.com")),
+                c -> assertThat(c.email()).isNotEqualTo(new Email("john.doe@email.com")),
                 c -> assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
                 c -> assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
                 c -> assertThat(c.archivedAt()).isNotNull(),

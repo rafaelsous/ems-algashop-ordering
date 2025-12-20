@@ -8,7 +8,6 @@ import com.rafaelsousa.algashop.ordering.domain.model.order.OrderItemId;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +25,7 @@ public class OrderDetailOutputTestDataBuilder {
                         .firstName("John")
                         .lastName("Doe")
                         .document("12345")
-                        .email("johndoe@email.com")
+                        .email("john.doe@email.com")
                         .phone("1191234564")
                         .build())
                 .totalItems(2)
@@ -74,17 +73,17 @@ public class OrderDetailOutputTestDataBuilder {
                 .items(itemsOutput(orderId));
     }
 
-    private static List itemsOutput(String orderId) {
-        List items = new ArrayList<>();
-        items.add(OrderItemDetailOutput.builder()
-                .id(new OrderItemId().toString())
-                .orderId(orderId)
-                .productId(UUID.randomUUID())
-                .productName("Notebook Dive Gamer X11")
-                .price(BigDecimal.valueOf(19.99))
-                .quantity(2)
-                .totalAmount(BigDecimal.valueOf(41.98))
-                .build());
-        return items;
+    private static List<OrderItemDetailOutput> itemsOutput(String orderId) {
+        return List.of(
+                OrderItemDetailOutput.builder()
+                        .id(new OrderItemId().toString())
+                        .orderId(orderId)
+                        .productId(UUID.randomUUID())
+                        .productName("Notebook Dive Gamer X11")
+                        .price(BigDecimal.valueOf(19.99))
+                        .quantity(2)
+                        .totalAmount(BigDecimal.valueOf(41.98))
+                        .build()
+        );
     }
 }

@@ -12,7 +12,7 @@ public class CustomerSummaryOutputTestDataBuilder {
                 .registeredAt(OffsetDateTime.now())
                 .archived(false)
                 .phone("1191234564")
-                .email("johndoe@email.com")
+                .email("john.doe@email.com")
                 .firstName("John")
                 .lastName("Doe")
                 .birthDate(LocalDate.of(1991, 7, 5))

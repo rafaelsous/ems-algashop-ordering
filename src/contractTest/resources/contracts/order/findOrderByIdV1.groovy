@@ -19,7 +19,7 @@ Contract.make {
                         firstName: "John",
                         lastName : "Doe",
                         document : "12345",
-                        email    : "johndoe@email.com",
+                        email    : "john.doe@email.com",
                         phone    : "1191234564"
                 ],
                 totalItems   : 2,

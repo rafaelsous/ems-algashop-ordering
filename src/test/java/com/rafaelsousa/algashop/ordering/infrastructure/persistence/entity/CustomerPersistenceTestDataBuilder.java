@@ -18,7 +18,7 @@ public class CustomerPersistenceTestDataBuilder {
                 .firstName("John")
                 .lastName("Doe")
                 .birthDate(LocalDate.of(1990, 9, 18))
-                .email("john.doe@value.com")
+                .email("john.doe@email.com")
                 .phone("123-456-7890")
                 .document("123-45-6789")
                 .promotionNotificationsAllowed(false)
