@@ -5,7 +5,7 @@ import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.Shopping
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.rafaelsousa.algashop.ordering.presentation.ShoppingCartController;
+import com.rafaelsousa.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

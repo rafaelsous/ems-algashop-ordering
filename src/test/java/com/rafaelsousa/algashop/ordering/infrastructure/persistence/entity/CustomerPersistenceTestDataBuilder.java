@@ -7,6 +7,7 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.Cus
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence.CustomerPersistenceBuilder;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 import static com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
@@ -22,6 +23,10 @@ public class CustomerPersistenceTestDataBuilder {
                 .phone("123-456-7890")
                 .document("123-45-6789")
                 .promotionNotificationsAllowed(false)
+                .registeredAt(OffsetDateTime.now())
+                .archived(false)
+                .archivedAt(null)
+                .loyaltyPoints(0)
                 .address(
                         AddressEmbeddableAssembler.fromPersistence(
                                 Address.builder()

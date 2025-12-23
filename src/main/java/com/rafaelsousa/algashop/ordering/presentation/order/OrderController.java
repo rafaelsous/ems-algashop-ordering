@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.presentation;
+package com.rafaelsousa.algashop.ordering.presentation.order;
 
 import com.rafaelsousa.algashop.ordering.application.checkout.BuyNowApplicationService;
 import com.rafaelsousa.algashop.ordering.application.checkout.BuyNowInput;
@@ -8,6 +8,7 @@ import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutp
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderFilter;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutput;
+import com.rafaelsousa.algashop.ordering.presentation.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

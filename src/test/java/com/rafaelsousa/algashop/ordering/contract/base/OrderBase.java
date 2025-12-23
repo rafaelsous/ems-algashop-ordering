@@ -10,7 +10,7 @@ import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryServi
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderNotFoundException;
-import com.rafaelsousa.algashop.ordering.presentation.OrderController;
+import com.rafaelsousa.algashop.ordering.presentation.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

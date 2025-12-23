@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.presentation;
+package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartInput;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
