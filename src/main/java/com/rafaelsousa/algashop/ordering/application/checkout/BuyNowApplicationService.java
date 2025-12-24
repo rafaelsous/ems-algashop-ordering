@@ -43,7 +43,7 @@ public class BuyNowApplicationService {
         ProductId productId = new ProductId(buyNowInput.getProductId());
 
         Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
-        Product product = findProduct(productId);
+        Product product = productCatalogService.ofId(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         CalculationResponse calculationResponse = calculateShippingCost(buyNowInput.getShipping());
 
         Billing billing = billingInputDisassembler.toDomain(buyNowInput.getBilling());
@@ -62,10 +62,5 @@ public class BuyNowApplicationService {
 
         return shippingCostService.calculate(CalculationRequest.builder()
                 .origin(originZipCode).destination(destinationZipCode).build());
-    }
-
-    private Product findProduct(ProductId productId) {
-        return productCatalogService.ofId(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 }

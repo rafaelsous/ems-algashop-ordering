@@ -8,7 +8,11 @@ import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutp
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderFilter;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutput;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.PageModel;
+import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +39,13 @@ public class OrderController {
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDetailOutput create(@RequestBody @Valid BuyNowInput buyNowInput) {
-        String orderId = buyNowApplicationService.buyNow(buyNowInput);
+        String orderId;
+
+        try {
+            orderId = buyNowApplicationService.buyNow(buyNowInput);
+        } catch (CustomerNotFoundException | ProductNotFoundException ex) {
+            throw new UnprocessableEntityException(ex.getMessage(), ex);
+        }
 
         return orderQueryService.findById(orderId);
     }
@@ -43,7 +53,13 @@ public class OrderController {
     @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDetailOutput create(@RequestBody @Valid CheckoutInput checkoutInput) {
-        String orderId = checkoutApplicationService.checkout(checkoutInput);
+        String orderId;
+
+        try {
+            orderId= checkoutApplicationService.checkout(checkoutInput);
+        } catch (CustomerNotFoundException | ShoppingCartNotFoundException ex) {
+            throw new UnprocessableEntityException(ex.getMessage(), ex);
+        }
 
         return orderQueryService.findById(orderId);
     }
