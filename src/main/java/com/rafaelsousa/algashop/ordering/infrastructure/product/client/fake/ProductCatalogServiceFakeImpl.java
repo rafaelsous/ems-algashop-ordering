@@ -1,15 +1,14 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.product.client.fake;
 
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductName;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductCatalogService;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
-import org.springframework.stereotype.Component;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductName;
 
 import java.util.Optional;
 
-@Component
+//@Component
 public class ProductCatalogServiceFakeImpl implements ProductCatalogService {
 
     @Override
