@@ -6,6 +6,9 @@ import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.Sho
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductNotFoundException;
+import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +27,13 @@ public class ShoppingCartController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartOutput create(@Valid @RequestBody ShoppingCartInput shoppingCartInput) {
-        UUID shoppingCartId = shoppingCartManagementApplicationService.createNew(shoppingCartInput.getCustomerId());
+        UUID shoppingCartId;
+
+        try {
+            shoppingCartId = shoppingCartManagementApplicationService.createNew(shoppingCartInput.getCustomerId());
+        } catch (CustomerNotFoundException ex) {
+            throw new UnprocessableEntityException(ex.getMessage(), ex);
+        }
 
         return shoppingCartQueryService.findById(shoppingCartId);
     }
@@ -55,7 +64,12 @@ public class ShoppingCartController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addItem(@PathVariable("shoppingCartId") UUID shoppingCartId, @Valid @RequestBody ShoppingCartItemInput shoppingCartItemInput) {
         shoppingCartItemInput.setShoppingCartId(shoppingCartId);
-        shoppingCartManagementApplicationService.addItem(shoppingCartItemInput);
+
+        try {
+            shoppingCartManagementApplicationService.addItem(shoppingCartItemInput);
+        } catch (ProductNotFoundException ex) {
+            throw new UnprocessableEntityException(ex.getMessage(), ex);
+        }
     }
 
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
