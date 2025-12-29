@@ -26,6 +26,8 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/*@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL
+        , ids = "com.rafaelsousa.algashop:product-catalog:0.0.1-SNAPSHOT:8681")*/
 class OrderControllerIT {
 
     @LocalServerPort
