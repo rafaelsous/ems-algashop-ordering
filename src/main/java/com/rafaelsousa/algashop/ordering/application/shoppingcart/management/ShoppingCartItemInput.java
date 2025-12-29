@@ -15,7 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ShoppingCartItemInput {
 
-    @NotNull
     private UUID shoppingCartId;
 
     @NotNull
