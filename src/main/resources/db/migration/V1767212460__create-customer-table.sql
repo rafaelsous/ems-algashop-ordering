@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS public.customer (
+  id uuid NOT NULL,
+  archived BOOLEAN,
+  archived_at TIMESTAMP WITH TIME ZONE,
+  birth_date date,
+  created_by_user_id uuid,
+  document VARCHAR(255),
+  email VARCHAR(255),
+  first_name VARCHAR(255),
+  last_modified_at TIMESTAMP WITH TIME ZONE,
+  last_modified_by_user_id uuid,
+  last_name VARCHAR(255),
+  loyalty_points INTEGER,
+  phone VARCHAR(255),
+  promotion_notifications_allowed BOOLEAN,
+  registered_at TIMESTAMP WITH TIME ZONE,
+  address_city VARCHAR(255),
+  address_complement VARCHAR(255),
+  address_neighborhood VARCHAR(255),
+  address_number VARCHAR(255),
+  address_state VARCHAR(255),
+  address_street VARCHAR(255),
+  address_zip_code VARCHAR(255),
+  version BIGINT,
+
+  CONSTRAINT uq_contact_email UNIQUE (email),
+  PRIMARY KEY (id)
+);
