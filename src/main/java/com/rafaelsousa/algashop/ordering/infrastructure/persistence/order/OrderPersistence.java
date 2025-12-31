@@ -46,7 +46,7 @@ public class OrderPersistence extends AbstractAggregateRoot<OrderPersistence> {
     @Embedded
     private ShippingEmbeddable shipping;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItemPersistence> items = new HashSet<>();
 
     @CreatedBy

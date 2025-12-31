@@ -32,7 +32,7 @@ public class ShoppingCartPersistence extends AbstractAggregateRoot<ShoppingCartP
     private Integer totalItems;
     private OffsetDateTime createdAt;
 
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ShoppingCartItemPersistence> items = new HashSet<>();
 
     @CreatedBy

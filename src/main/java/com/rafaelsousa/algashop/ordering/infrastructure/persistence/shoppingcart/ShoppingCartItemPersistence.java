@@ -26,8 +26,8 @@ public class ShoppingCartItemPersistence {
     private BigDecimal totalAmount;
     private Boolean available;
 
+    @JoinColumn
     @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id")
     private ShoppingCartPersistence shoppingCart;
 
     public UUID getShoppingCardId() {
