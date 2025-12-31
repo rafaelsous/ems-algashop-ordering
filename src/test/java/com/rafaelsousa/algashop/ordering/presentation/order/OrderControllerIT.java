@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.UUID;
 
@@ -28,12 +29,11 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 /*@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL
         , ids = "com.rafaelsousa.algashop:product-catalog:0.0.1-SNAPSHOT:8681")*/
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderControllerIT {
 
     @LocalServerPort
     private int port;
-
-    private static boolean databaseInitialized;
 
     @Autowired
     private CustomerPersistenceRepository customerPersistenceRepository;
@@ -76,13 +76,9 @@ class OrderControllerIT {
     }
 
     private void initDatabase() {
-        if (databaseInitialized) return;
-
         customerPersistenceRepository.saveAndFlush(
                 CustomerPersistenceTestDataBuilder.aCustomer().id(VALID_CUSTOMER_ID).build()
         );
-
-        databaseInitialized = true;
     }
 
     @Test
