@@ -1,0 +1,37 @@
+{
+  "shoppingCartId": "28fcd9fb-4ce7-44d6-9583-14d8b3dc5aff",
+  "paymentMethod": "GATEWAY_BALANCE",
+  "shipping": {
+    "recipient": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "document": "123-45-6789",
+      "phone": "123-456-7890"
+    },
+    "address": {
+      "street": "123 Main St",
+      "number": "100",
+      "complement": "Apt 4B",
+      "neighborhood": "Downtown",
+      "city": "Springfield",
+      "state": "South Carolina",
+      "zipCode": "62701"
+    }
+  },
+  "billing": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "document": "123-45-6789",
+    "phone": "123-456-7890",
+    "email": "johndoe@email.com",
+    "address": {
+      "street": "123 Main St",
+      "number": "100",
+      "complement": "Apt 4B",
+      "neighborhood": "Downtown",
+      "city": "Springfield",
+      "state": "South Carolina",
+      "zipCode": "62701"
+    }
+  }
+}

@@ -2,10 +2,14 @@ package com.rafaelsousa.algashop.ordering.presentation.order;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
@@ -41,7 +45,11 @@ class OrderControllerIT {
     @Autowired
     private OrderPersistenceRepository orderPersistenceRepository;
 
+    @Autowired
+    private ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
+
     private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+    private static final UUID VALID_SHOPPING_CART_ID = UUID.fromString("28fcd9fb-4ce7-44d6-9583-14d8b3dc5aff");
 
     private WireMockServer wireMockRapidex;
     private WireMockServer wireMockProductCatalog;
@@ -147,13 +155,65 @@ class OrderControllerIT {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product-and-invalid-customer.json");
 
         RestAssured
-                .given()
-                    .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .contentType("application/vnd.order-with-product.v1+json")
-                    .body(json)
-                .when()
-                    .post("/api/v1/orders")
-                .then()
+            .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-product.v1+json")
+                .body(json)
+            .when()
+                .post("/api/v1/orders")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @Test
+    void shouldCreateOrderWithShoppingCart() {
+        String json = AlgaShopResourceUtils.readContent("json/create-order-with-shopping-cart.json");
+
+        ShoppingCartPersistence shoppingCartPersistence = ShoppingCartPersistenceTestDataBuilder.existingShoppingCart()
+                .id(VALID_SHOPPING_CART_ID)
+                .customer(customerPersistenceRepository.getReferenceById(VALID_CUSTOMER_ID))
+                .build();
+
+        shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
+
+        String createdOrderId = RestAssured
+            .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-shopping-cart.v1+json")
+                .body(json)
+            .when()
+                .post("/api/v1/orders")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.CREATED.value())
+                .body(
+                        "id", Matchers.not(Matchers.emptyString()),
+                        "customer.firstName", Matchers.is("John"),
+                        "customer.lastName", Matchers.is("Doe"),
+                        "customer.document", Matchers.is("123-45-6789"),
+                        "customer.phone", Matchers.is("123-456-7890"))
+            .extract()
+                .body().as(OrderDetailOutput.class).getId();
+
+        boolean orderExists = orderPersistenceRepository.existsById(new OrderId(createdOrderId).value().toLong());
+        assertThat(orderExists).isTrue();
+    }
+
+    @Test
+    void shouldNotCreateOrderWithInexistentShoppingCart() {
+        String json = AlgaShopResourceUtils.readContent("json/create-order-with-invalid-shopping-cart.json");
+
+        RestAssured
+            .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType("application/vnd.order-with-shopping-cart.v1+json")
+                .body(json)
+            .when()
+                .post("/api/v1/orders")
+            .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
