@@ -21,6 +21,7 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
@@ -42,6 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceDisassembler.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ShoppingCartUpdateProviderIT {
     private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;
     private final ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider;
