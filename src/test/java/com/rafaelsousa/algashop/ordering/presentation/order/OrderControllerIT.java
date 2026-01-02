@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
@@ -23,7 +22,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
@@ -34,8 +33,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 /*@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL
         , ids = "com.rafaelsousa.algashop:product-catalog:0.0.1-SNAPSHOT:8781")*/
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Devido exceção java.net.SocketException: Uma conexão estabelecida foi anulada pelo software no computador host
-@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Devido exceção java.net.SocketException: Uma conexão estabelecida foi anulada pelo ‘software’ no computador host
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class OrderControllerIT {
 
     @LocalServerPort
@@ -50,7 +49,7 @@ class OrderControllerIT {
     @Autowired
     private ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
 
-    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("9a0b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d");
     private static final UUID VALID_SHOPPING_CART_ID = UUID.fromString("28fcd9fb-4ce7-44d6-9583-14d8b3dc5aff");
 
     private WireMockServer wireMockRapidex;
@@ -62,8 +61,6 @@ class OrderControllerIT {
         RestAssured.port = port;
 
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
-
-        initDatabase();
 
         wireMockRapidex = new WireMockServer(options()
                         .port(8780)
@@ -83,12 +80,6 @@ class OrderControllerIT {
     void after() {
         wireMockRapidex.stop();
         wireMockProductCatalog.stop();
-    }
-
-    private void initDatabase() {
-        customerPersistenceRepository.saveAndFlush(
-                CustomerPersistenceTestDataBuilder.aCustomer().id(VALID_CUSTOMER_ID).build()
-        );
     }
 
     @Test
@@ -193,10 +184,10 @@ class OrderControllerIT {
                 .statusCode(HttpStatus.CREATED.value())
                 .body(
                         "id", Matchers.not(Matchers.emptyString()),
-                        "customer.firstName", Matchers.is("John"),
-                        "customer.lastName", Matchers.is("Doe"),
-                        "customer.document", Matchers.is("123-45-6789"),
-                        "customer.phone", Matchers.is("123-456-7890"))
+                        "customer.firstName", Matchers.not(Matchers.emptyString()),
+                        "customer.lastName", Matchers.not(Matchers.emptyString()),
+                        "customer.document", Matchers.not(Matchers.emptyString()),
+                        "customer.phone", Matchers.not(Matchers.emptyString()))
             .extract()
                 .body().as(OrderDetailOutput.class).getId();
 

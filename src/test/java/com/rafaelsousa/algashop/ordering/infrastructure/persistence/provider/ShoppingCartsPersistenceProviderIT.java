@@ -2,24 +2,20 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceDisassembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartsPersistenceProvider;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,25 +34,16 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceDisassembler.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class ShoppingCartsPersistenceProviderIT {
     private final ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider;
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
-    private final CustomersPersistenceProvider customersPersistenceProvider;
 
     @Autowired
     public ShoppingCartsPersistenceProviderIT(ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider,
-                                              ShoppingCartPersistenceRepository shoppingCartPersistenceRepository,
-                                              CustomersPersistenceProvider customersPersistenceProvider) {
+                                              ShoppingCartPersistenceRepository shoppingCartPersistenceRepository) {
         this.shoppingCartsPersistenceProvider = shoppingCartsPersistenceProvider;
         this.shoppingCartPersistenceRepository = shoppingCartPersistenceRepository;
-        this.customersPersistenceProvider = customersPersistenceProvider;
-    }
-
-    @BeforeEach
-    void setUp() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(CustomerTestDataBuilder.existingCustomer().build());
-        }
     }
 
     @Test
@@ -141,12 +128,13 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     void shouldCountCorrectly() {
-        assertThat(shoppingCartsPersistenceProvider.count()).isZero();
+        long beforeCount = shoppingCartsPersistenceProvider.count();
 
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCartsPersistenceProvider.add(shoppingCart);
 
-        assertThat(shoppingCartsPersistenceProvider.count()).isEqualTo(1L);
+        long expectedCount = beforeCount + 1;
+        assertThat(shoppingCartsPersistenceProvider.count()).isEqualTo(expectedCount);
     }
 
     @Test

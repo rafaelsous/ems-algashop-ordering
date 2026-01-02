@@ -1,22 +1,21 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.*;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,25 +34,16 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
         CustomerPersistenceDisassembler.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class OrdersPersistenceProviderIT {
     private final OrdersPersistenceProvider ordersPersistenceProvider;
     private final OrderPersistenceRepository orderPersistenceRepository;
-    private final CustomersPersistenceProvider customersPersistenceProvider;
 
     @Autowired
     public OrdersPersistenceProviderIT(OrdersPersistenceProvider ordersPersistenceProvider,
-                                       OrderPersistenceRepository orderPersistenceRepository,
-                                       CustomersPersistenceProvider customersPersistenceProvider) {
+                                       OrderPersistenceRepository orderPersistenceRepository) {
         this.ordersPersistenceProvider = ordersPersistenceProvider;
         this.orderPersistenceRepository = orderPersistenceRepository;
-        this.customersPersistenceProvider = customersPersistenceProvider;
-    }
-
-    @BeforeEach
-    void setUp() {
-        if (!customersPersistenceProvider.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
-            customersPersistenceProvider.add(CustomerTestDataBuilder.existingCustomer().build());
-        }
     }
 
     @Test
@@ -100,12 +90,13 @@ class OrdersPersistenceProviderIT {
 
     @Test
     void shouldCountCorrectly() {
-        assertThat(ordersPersistenceProvider.count()).isZero();
+        long beforeCount = ordersPersistenceProvider.count();
 
         Order order = OrderTestDataBuilder.anOrder().build();
         ordersPersistenceProvider.add(order);
 
-        assertThat(ordersPersistenceProvider.count()).isEqualTo(1L);
+        long expectedCount = beforeCount + 1;
+        assertThat(ordersPersistenceProvider.count()).isEqualTo(expectedCount);
     }
 
     @Test

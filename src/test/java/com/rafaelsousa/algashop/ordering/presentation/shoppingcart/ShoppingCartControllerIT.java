@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemp
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartInput;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
@@ -31,7 +30,8 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class ShoppingCartControllerIT {
 
     @LocalServerPort
@@ -57,8 +57,6 @@ class ShoppingCartControllerIT {
 
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
 
-        initDatabase();
-
         wireMockRapidex = new WireMockServer(options()
                 .port(8780)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
@@ -79,15 +77,10 @@ class ShoppingCartControllerIT {
         wireMockProductCatalog.stop();
     }
 
-    private void initDatabase() {
-        customerPersistenceRepository.saveAndFlush(
-                CustomerPersistenceTestDataBuilder.aCustomer().id(VALID_CUSTOMER_ID).build()
-        );
-    }
-
     @Test
     void shouldCreateShoppingCart() {
-        ShoppingCartInput shoppingCartInput = ShoppingCartInput.builder().customerId(VALID_CUSTOMER_ID).build();
+        ShoppingCartInput shoppingCartInput = ShoppingCartInput.builder()
+                .customerId(UUID.fromString("5f6b7d8e-9c0a-1b2d-3c4a-5f6b7d8e9c0a")).build();
 
         String createdShoppingCartId = RestAssured
             .given()
