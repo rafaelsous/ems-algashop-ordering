@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
@@ -38,17 +39,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ShoppingCartsPersistenceProviderIT {
     private final ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider;
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
+    private final CustomersPersistenceProvider customersPersistenceProvider;
 
     @Autowired
     public ShoppingCartsPersistenceProviderIT(ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider,
-                                              ShoppingCartPersistenceRepository shoppingCartPersistenceRepository) {
+                                              ShoppingCartPersistenceRepository shoppingCartPersistenceRepository,
+                                              CustomersPersistenceProvider customersPersistenceProvider) {
         this.shoppingCartsPersistenceProvider = shoppingCartsPersistenceProvider;
         this.shoppingCartPersistenceRepository = shoppingCartPersistenceRepository;
+        this.customersPersistenceProvider = customersPersistenceProvider;
     }
 
     @Test
     void shouldFindShoppingCartByCustomerId() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
 
         shoppingCartsPersistenceProvider.add(shoppingCart);
 
@@ -59,7 +66,10 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     void shouldRemoveByShoppingCart() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         ShoppingCartId shoppingCartId = shoppingCart.id();
 
         shoppingCartsPersistenceProvider.add(shoppingCart);
@@ -71,7 +81,10 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     void shouldRemoveByShoppingCartId() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         ShoppingCartId shoppingCartId = shoppingCart.id();
 
         shoppingCartsPersistenceProvider.add(shoppingCart);
@@ -83,7 +96,10 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     void shouldVerifyIfExists() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         ShoppingCartId shoppingCartId = shoppingCart.id();
 
         assertThat(shoppingCartsPersistenceProvider.exists(shoppingCartId)).isFalse();
@@ -95,13 +111,16 @@ class ShoppingCartsPersistenceProviderIT {
 
     @Test
     void shouldUpdateAndKeepPersistenEntityState() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         UUID shoppingCartId = shoppingCart.id().value();
-        Integer expectedTotalItems = shoppingCart.totalItems().value();
 
         shoppingCartsPersistenceProvider.add(shoppingCart);
 
         ShoppingCartPersistence shoppingCartPersistence = shoppingCartPersistenceRepository.findById(shoppingCartId).orElseThrow();
+        Integer expectedTotalItems = shoppingCart.totalItems().value();
 
         assertThat(shoppingCartPersistence).satisfies(
                 sc -> assertThat(sc.getTotalItems()).isEqualTo(expectedTotalItems),
@@ -130,16 +149,22 @@ class ShoppingCartsPersistenceProviderIT {
     void shouldCountCorrectly() {
         long beforeCount = shoppingCartsPersistenceProvider.count();
 
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         shoppingCartsPersistenceProvider.add(shoppingCart);
 
-        long expectedCount = beforeCount + 1;
-        assertThat(shoppingCartsPersistenceProvider.count()).isEqualTo(expectedCount);
+        long afterCount = shoppingCartsPersistenceProvider.count();
+        assertThat(afterCount).isEqualTo(beforeCount + 1);
     }
 
     @Test
     void shouldUpdateVersionCorrectly() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+        customersPersistenceProvider.add(customer);
+
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().customerId(customer.id()).build();
         UUID shoppingCartId = shoppingCart.id().value();
 
         shoppingCartsPersistenceProvider.add(shoppingCart);

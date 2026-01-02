@@ -4,8 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartInput;
 import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import io.restassured.RestAssured;
@@ -22,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -38,12 +35,9 @@ class ShoppingCartControllerIT {
     private int port;
 
     @Autowired
-    private CustomerPersistenceRepository customerPersistenceRepository;
-
-    @Autowired
     private ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
 
-    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+    private static final UUID VALID_SHOPPING_CART_ID = UUID.fromString("4f31582a-66e6-4601-a9d3-ff608c2d4461");
     private static final UUID VALID_PRODUCT_ID = UUID.fromString("0199c60b-0dce-7fee-9ef2-d6dc30a8e3fa");
     private static final UUID INVALID_SHOPPING_CART_ID = UUID.fromString("019b7580-c053-766f-8659-d511f2d78b44");
 
@@ -122,19 +116,14 @@ class ShoppingCartControllerIT {
 
     @Test
     void shouldAddItemToShoppingCart() {
-        ShoppingCartPersistence shoppingCartPersistence = ShoppingCartPersistenceTestDataBuilder.existingShoppingCart()
-                .customer(customerPersistenceRepository.getReferenceById(VALID_CUSTOMER_ID))
-                .items(new HashSet<>())
-                .build();
-
-        shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
-
-        int quantity = 2;
+        ShoppingCartPersistence shoppingCartFromDatabase = shoppingCartPersistenceRepository.findById(VALID_SHOPPING_CART_ID).orElseThrow();
+        int beforeQuantity = shoppingCartFromDatabase.getTotalItems();
+        int addedQuantity = 2;
 
         ShoppingCartItemInput shoppingCartItemInput = ShoppingCartItemInput.builder()
-                .shoppingCartId(shoppingCartPersistence.getId())
+                .shoppingCartId(VALID_SHOPPING_CART_ID)
                 .productId(VALID_PRODUCT_ID)
-                .quantity(quantity)
+                .quantity(addedQuantity)
                 .build();
 
         RestAssured
@@ -143,16 +132,19 @@ class ShoppingCartControllerIT {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(shoppingCartItemInput)
             .when()
-                .post("api/v1/shopping-carts/{shoppingCartId}/items", shoppingCartPersistence.getId())
+                .post("api/v1/shopping-carts/{shoppingCartId}/items", VALID_SHOPPING_CART_ID)
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        ShoppingCartPersistence shoppingCartFromDatabase = shoppingCartPersistenceRepository
-                .findByCustomerId(VALID_CUSTOMER_ID).orElseThrow();
+        shoppingCartFromDatabase = shoppingCartPersistenceRepository
+                .findById(VALID_SHOPPING_CART_ID).orElseThrow();
 
-        assertThat(shoppingCartFromDatabase.getTotalItems()).isEqualTo(quantity);
-        assertThat(shoppingCartFromDatabase.getTotalAmount()).isEqualByComparingTo(BigDecimal.valueOf(2000.00));
+        int afterQuantity = shoppingCartFromDatabase.getTotalItems();
+        BigDecimal expectedAmount = BigDecimal.valueOf(afterQuantity * 1000L);
+
+        assertThat(afterQuantity).isEqualTo(beforeQuantity + addedQuantity);
+        assertThat(shoppingCartFromDatabase.getTotalAmount()).isEqualByComparingTo(expectedAmount);
     }
 
     @Test
