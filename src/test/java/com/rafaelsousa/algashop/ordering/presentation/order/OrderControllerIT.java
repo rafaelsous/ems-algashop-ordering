@@ -23,6 +23,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
@@ -32,8 +33,9 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 /*@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL
-        , ids = "com.rafaelsousa.algashop:product-catalog:0.0.1-SNAPSHOT:8681")*/
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+        , ids = "com.rafaelsousa.algashop:product-catalog:0.0.1-SNAPSHOT:8781")*/
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Devido exceção java.net.SocketException: Uma conexão estabelecida foi anulada pelo software no computador host
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class OrderControllerIT {
 
     @LocalServerPort
@@ -64,12 +66,12 @@ class OrderControllerIT {
         initDatabase();
 
         wireMockRapidex = new WireMockServer(options()
-                        .port(8680)
+                        .port(8780)
                         .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
                         .extensions(new ResponseTemplateTransformer(true)));
 
         wireMockProductCatalog = new WireMockServer(options()
-                        .port(8681)
+                        .port(8781)
                         .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog")
                         .extensions(new ResponseTemplateTransformer(true)));
 

@@ -1,20 +1,20 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartUpdateProvider;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartsPersistenceProvider;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +42,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ShoppingCartUpdateProviderIT {
     private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;
     private final ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider;

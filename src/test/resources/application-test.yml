@@ -23,8 +23,8 @@ spring:
 algashop:
   integrations:
     shipping.provider: RAPIDEX
-    rapidex.url: http://localhost:8680
-    product-catalog.url: http://localhost:8681
+    rapidex.url: http://localhost:8780
+    product-catalog.url: http://localhost:8781
   shipping:
     have-free-shipping:
       rule1:

@@ -32,7 +32,7 @@ class ShippingCostServiceIT {
     @BeforeEach
     void setUp() {
         wireMockRapidex = new WireMockServer(options()
-                .port(8680)
+                .port(8780)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
                 .extensions(new ResponseTemplateTransformer(true)));
 

@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ShoppingCartControllerIT {
 
     @LocalServerPort
@@ -60,12 +60,12 @@ class ShoppingCartControllerIT {
         initDatabase();
 
         wireMockRapidex = new WireMockServer(options()
-                .port(8680)
+                .port(8780)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
                 .extensions(new ResponseTemplateTransformer(true)));
 
         wireMockProductCatalog = new WireMockServer(options()
-                .port(8681)
+                .port(8781)
                 .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog")
                 .extensions(new ResponseTemplateTransformer(true)));
 
