@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
 import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
@@ -21,12 +22,18 @@ import java.util.stream.Collectors;
 public class OrderPersistenceDisassembler {
 
     public Order toDomain(OrderPersistence orderPersistence) {
+        CreditCardId creditCardId = null;
+        if (Objects.nonNull(orderPersistence.getCreditCardId())) {
+            creditCardId = new CreditCardId(orderPersistence.getCreditCardId());
+        }
+
         return Order.existing()
                 .id(new OrderId(orderPersistence.getId()))
                 .customerId(new CustomerId(orderPersistence.getCustomerId()))
                 .totalAmount(Money.of(orderPersistence.getTotalAmount()))
                 .totalItems(Quantity.of(orderPersistence.getTotalItems()))
                 .paymentMethod(PaymentMethod.valueOf(orderPersistence.getPaymentMethod()))
+                .creditCardId(creditCardId)
                 .placedAt(orderPersistence.getPlacedAt())
                 .paidAt(orderPersistence.getPaidAt())
                 .readyAt(orderPersistence.getReadyAt())

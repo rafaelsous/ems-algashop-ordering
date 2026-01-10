@@ -1,9 +1,10 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 
 import java.time.LocalDate;
 
@@ -19,6 +20,8 @@ public class OrderTestDataBuilder {
     private boolean withItems = true;
     private OrderStatus status = OrderStatus.DRAFT;
 
+    private CreditCardId creditCardId = null;
+
     private OrderTestDataBuilder() { }
 
     public static OrderTestDataBuilder anOrder() {
@@ -27,7 +30,7 @@ public class OrderTestDataBuilder {
 
     public Order build() {
         Order order = Order.draft(this.customerId);
-        order.changePaymentMethod(this.paymentMethod);
+        order.changePaymentMethod(this.paymentMethod, creditCardId);
         order.changeShipping(this.shipping);
         order.changeBilling(this.billing);
 
@@ -42,6 +45,7 @@ public class OrderTestDataBuilder {
 
         switch (this.status) {
             case DRAFT -> {
+                // Não faz nada
             }
             case PLACED -> order.place();
             case PAID -> {
@@ -144,6 +148,11 @@ public class OrderTestDataBuilder {
 
     public OrderTestDataBuilder status(OrderStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public OrderTestDataBuilder creditCardId(CreditCardId creditCardId) {
+        this.creditCardId = creditCardId;
         return this;
     }
 }

@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.application.checkout;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
+import com.rafaelsousa.algashop.ordering.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
@@ -36,6 +38,17 @@ public class CheckoutApplicationService {
         Objects.requireNonNull(checkoutInput);
 
         PaymentMethod paymentMethod = PaymentMethod.valueOf(checkoutInput.getPaymentMethod());
+
+        CreditCardId creditCardId = null;
+
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            if (Objects.isNull(checkoutInput.getCreditCardId())) {
+                throw new DomainException("Credit card is required");
+            }
+
+            creditCardId = new CreditCardId(checkoutInput.getCreditCardId());
+        }
+
         ShoppingCartId shoppingCartId = new ShoppingCartId(checkoutInput.getShoppingCartId());
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
@@ -50,7 +63,7 @@ public class CheckoutApplicationService {
         Billing billing = billingInputDisassembler.toDomain(checkoutInput.getBilling());
         Shipping shipping = shippingInputDisassembler.toDomain(checkoutInput.getShipping(), calculationResponse);
 
-        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
+        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId);
 
         orders.add(order);
         shoppingCarts.add(shoppingCart);

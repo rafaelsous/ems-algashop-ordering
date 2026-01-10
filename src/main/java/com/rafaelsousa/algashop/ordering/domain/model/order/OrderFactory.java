@@ -1,8 +1,9 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 
 import java.util.Objects;
 
@@ -17,7 +18,8 @@ public class OrderFactory {
             Billing billing,
             PaymentMethod paymentMethod,
             Product product,
-            Quantity productQuantity
+            Quantity productQuantity,
+            CreditCardId creditCardId
     ) {
         Objects.requireNonNull(customerId);
         Objects.requireNonNull(shipping);
@@ -30,7 +32,7 @@ public class OrderFactory {
 
         order.changeShipping(shipping);
         order.changeBilling(billing);
-        order.changePaymentMethod(paymentMethod);
+        order.changePaymentMethod(paymentMethod, creditCardId);
         order.addItem(product, productQuantity);
 
         return order;

@@ -5,12 +5,15 @@ import com.rafaelsousa.algashop.ordering.application.order.query.BillingData;
 import com.rafaelsousa.algashop.ordering.application.order.query.RecipientData;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 
+import java.util.UUID;
+
 public class CheckoutInputTestDataBuilder {
 
     public static CheckoutInput.CheckoutInputBuilder aCheckoutInput() {
         return CheckoutInput.builder()
                 .shoppingCartId(ShoppingCartTestDataBuilder.DEFAULT_SHOPPING_CART_ID.value())
                 .paymentMethod("CREDIT_CARD")
+                .creditCardId(UUID.randomUUID())
                 .shipping(buildShipping())
                 .billing(buildBilling());
     }

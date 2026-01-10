@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
@@ -17,7 +18,7 @@ public class CheckoutService {
     private final CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification;
 
     public Order checkout(Customer customer, ShoppingCart shoppingCart, Billing billing,
-                          Shipping shipping, PaymentMethod paymentMethod) {
+                          Shipping shipping, PaymentMethod paymentMethod, CreditCardId creditCardId) {
         if (shoppingCart.isEmpty() || shoppingCart.containsUnavailableItems()) {
             throw new ShoppingCartCantProceedToCheckoutException(shoppingCart.id());
         }
@@ -32,7 +33,7 @@ public class CheckoutService {
             order.changeShipping(shipping);
         }
 
-        order.changePaymentMethod(paymentMethod);
+        order.changePaymentMethod(paymentMethod, creditCardId);
 
         addShoppingCartItemsToOrder(shoppingCart.items(), order);
 

@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
@@ -15,6 +16,7 @@ class OrderChangingTest {
     private Billing billing;
     private Shipping shipping;
     private PaymentMethod paymentMethod;
+    private CreditCardId creditCardId;
 
     private Order order;
     private OrderItemId orderItemId;
@@ -26,6 +28,8 @@ class OrderChangingTest {
         billing = OrderTestDataBuilder.aBilling();
         shipping = OrderTestDataBuilder.aShipping();
         paymentMethod = PaymentMethod.CREDIT_CARD;
+
+        creditCardId = new CreditCardId();
 
         order = OrderTestDataBuilder.anOrder().build();
         orderItemId = order.items().iterator().next().id();
@@ -86,7 +90,7 @@ class OrderChangingTest {
                 () -> order.changeBilling(billing),
                 () -> order.changeShipping(shipping),
                 () -> order.changeItemQuantity(orderItemId, quantity),
-                () -> order.changePaymentMethod(paymentMethod)
+                () -> order.changePaymentMethod(paymentMethod, creditCardId)
         );
     }
 

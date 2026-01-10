@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.domain.model.order;
 
 import com.rafaelsousa.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.rafaelsousa.algashop.ordering.domain.model.AggregateRoot;
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
@@ -39,10 +40,13 @@ public class Order
 
     private Long version;
 
+    private CreditCardId creditCardId;
+
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existing")
     public Order(OrderId id, CustomerId customerId, Money totalAmount, Quantity totalItems, OffsetDateTime placedAt,
                  OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, OrderStatus status,
-                 PaymentMethod paymentMethod, Billing billing, Shipping shipping, Set<OrderItem> items, Long version) {
+                 PaymentMethod paymentMethod, Billing billing, Shipping shipping, Set<OrderItem> items, Long version,
+                 CreditCardId creditCardId) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -57,6 +61,7 @@ public class Order
         this.setShipping(shipping);
         this.setItems(items);
         this.setVersion(version);
+        this.setCreditCardId(creditCardId);
     }
 
     public static Order draft(CustomerId customerId) {
@@ -74,7 +79,9 @@ public class Order
                 null,
                 null,
                 new HashSet<>(),
-                null);
+                null,
+                null
+        );
     }
 
     public void addItem(Product product, Quantity quantity) {
@@ -158,8 +165,14 @@ public class Order
                 .build());
     }
 
-    public void changePaymentMethod(PaymentMethod paymentMethod) {
+    public void changePaymentMethod(PaymentMethod paymentMethod, CreditCardId creditCardId) {
         Objects.requireNonNull(paymentMethod);
+
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            Objects.requireNonNull(creditCardId);
+
+            this.setCreditCardId(creditCardId);
+        }
 
         this.verifyChangeable();
 
@@ -273,6 +286,10 @@ public class Order
 
     public Long version() {
         return version;
+    }
+
+    public CreditCardId creditCardId() {
+        return creditCardId;
     }
 
     private void recalculateTotals() {
@@ -404,6 +421,10 @@ public class Order
 
     private void setVersion(Long version) {
         this.version = version;
+    }
+
+    private void setCreditCardId(CreditCardId creditCardId) {
+        this.creditCardId = creditCardId;
     }
 
     @Override

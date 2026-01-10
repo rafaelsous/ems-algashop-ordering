@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
@@ -53,7 +54,7 @@ class CheckoutServiceTest {
 
         Customer customer = CustomerTestDataBuilder.existingCustomer().build();
 
-        assertThatThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod))
+        assertThatThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, new CreditCardId()))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);
 
         assertThat(shoppingCart).satisfies(
@@ -79,7 +80,7 @@ class CheckoutServiceTest {
 
         shoppingCart.refreshItem(mousePadUnavailable);
 
-        assertThatThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod))
+        assertThatThrownBy(() -> checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, new CreditCardId()))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class);
 
         Money expectedTotalAmountWithoutShippingCost = mousePadAvailable.price();
@@ -112,7 +113,7 @@ class CheckoutServiceTest {
         Money expectedTotalAmount = shoppingCart.totalAmount().add(shipping.cost());
         Quantity expectedTotalItems = shoppingCart.totalItems();
 
-        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
+        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, new CreditCardId());
 
         assertThat(shoppingCartItem).satisfies(
                 sci -> assertThat(sci.productId()).isEqualTo(mousePad.id()),
@@ -163,7 +164,7 @@ class CheckoutServiceTest {
         Money expectedTotalAmount = shoppingCart.totalAmount();
         Quantity expectedTotalItems = shoppingCart.totalItems();
 
-        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod);
+        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, new CreditCardId());
 
         assertThat(shoppingCartItem).satisfies(
                 sci -> assertThat(sci.productId()).isEqualTo(mousePad.id()),

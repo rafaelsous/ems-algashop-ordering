@@ -1,10 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
-import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderItem;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Billing;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Recipient;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Shipping;
+import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
@@ -42,6 +38,10 @@ public class OrderPersistenceAssembler {
         orderPersistence.setVersion(aggregateRoot.version());
         orderPersistence.setBilling(this.buildBilling(aggregateRoot.billing()));
         orderPersistence.setShipping(this.buildShipping(aggregateRoot.shipping()));
+
+        if (Objects.nonNull(aggregateRoot.creditCardId())) {
+            orderPersistence.setCreditCardId(aggregateRoot.creditCardId().id());
+        }
 
         CustomerPersistence customerPersistence = customerPersistenceRepository.getReferenceById(aggregateRoot.customerId().value());
         orderPersistence.setCustomer(customerPersistence);

@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
@@ -118,7 +119,7 @@ class OrderTest {
                 .paymentMethod(PaymentMethod.GATEWAY_BALANCE)
                 .build();
 
-        order.changePaymentMethod(PaymentMethod.CREDIT_CARD);
+        order.changePaymentMethod(PaymentMethod.CREDIT_CARD, new CreditCardId());
 
         Assertions.assertThat(order.paymentMethod()).isEqualTo(PaymentMethod.CREDIT_CARD);
     }

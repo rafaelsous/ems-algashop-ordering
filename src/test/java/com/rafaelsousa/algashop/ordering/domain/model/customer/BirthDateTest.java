@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 class BirthDateTest {
 
@@ -32,9 +33,12 @@ class BirthDateTest {
 
     @Test
     void given_validBirthDate_whenCallAge_shouldReturnAgeInYears() {
-        BirthDate birthDate = BirthDate.of(LocalDate.of(1990, 1, 1));
+        LocalDate birthDateLocalDate = LocalDate.of(1990, 1, 1);
+        BirthDate birthDate = BirthDate.of(birthDateLocalDate);
 
-        Assertions.assertThat(birthDate.age()).isEqualTo(35);
+        Period expectedAge = Period.between(birthDateLocalDate, LocalDate.now());
+
+        Assertions.assertThat(birthDate.age()).isEqualTo(expectedAge.getYears());
     }
 
     @Test

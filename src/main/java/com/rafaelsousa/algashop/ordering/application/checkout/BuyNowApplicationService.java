@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.application.checkout;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
+import com.rafaelsousa.algashop.ordering.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
@@ -42,6 +44,16 @@ public class BuyNowApplicationService {
         PaymentMethod paymentMethod = PaymentMethod.valueOf(buyNowInput.getPaymentMethod());
         ProductId productId = new ProductId(buyNowInput.getProductId());
 
+        CreditCardId creditCardId = null;
+
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            if (Objects.isNull(buyNowInput.getCreditCardId())) {
+                throw new DomainException("Credit card is required");
+            }
+
+            creditCardId = new CreditCardId(buyNowInput.getCreditCardId());
+        }
+
         Customer customer = customers.ofId(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
         Product product = productCatalogService.ofId(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         CalculationResponse calculationResponse = calculateShippingCost(buyNowInput.getShipping());
@@ -49,7 +61,7 @@ public class BuyNowApplicationService {
         Billing billing = billingInputDisassembler.toDomain(buyNowInput.getBilling());
         Shipping shipping = shippingInputDisassembler.toDomain(buyNowInput.getShipping(), calculationResponse);
 
-        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod);
+        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod, creditCardId);
 
         orders.add(order);
 

@@ -28,4 +28,6 @@ public class CheckoutInput {
 
     @NotNull @Valid
     private BillingData billing;
+
+    private UUID creditCardId;
 }

@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
+import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
@@ -52,7 +53,7 @@ class BuyNowServiceTest {
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         assertThatThrownBy(() -> buyNowService.buyNow(productUnavailable, customer, billing,
-                shipping, quantity, paymentMethod)).isInstanceOf(ProductOutOfStockException.class);
+                shipping, quantity, paymentMethod, new CreditCardId())).isInstanceOf(ProductOutOfStockException.class);
     }
 
     @Test
@@ -65,7 +66,7 @@ class BuyNowServiceTest {
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         assertThatThrownBy(() -> buyNowService.buyNow(product, customer, billing, shipping,
-                invalidQuantity, paymentMethod)).isInstanceOf(IllegalArgumentException.class);
+                invalidQuantity, paymentMethod, new CreditCardId())).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -77,7 +78,7 @@ class BuyNowServiceTest {
         Quantity quantity = Quantity.of(1);
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
-        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod);
+        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod, new CreditCardId());
 
         OrderItem orderItem = order.items().iterator().next();
         Quantity expectedTotalItems = orderItem.quantity();
@@ -116,7 +117,7 @@ class BuyNowServiceTest {
         Quantity quantity = Quantity.of(1);
         PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
-        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod);
+        Order order = buyNowService.buyNow(product, customer, billing, shipping, quantity, paymentMethod, new CreditCardId());
 
         OrderItem orderItem = order.items().iterator().next();
         Quantity expectedTotalItems = orderItem.quantity();

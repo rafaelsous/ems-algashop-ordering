@@ -18,7 +18,8 @@ class OrderFactoryTest {
         Product product = ProductTestDataBuilder.aProduct().build();
         Quantity productQuantity = Quantity.of(1);
 
-        Order order = OrderFactory.filled(customerId, shipping, billing, paymentMethod, product, productQuantity);
+        Order order = OrderFactory.filled(customerId, shipping, billing,
+                paymentMethod, product, productQuantity, null);
 
         Assertions.assertWith(order,
                 o -> Assertions.assertThat(o.customerId()).isEqualTo(customerId),
