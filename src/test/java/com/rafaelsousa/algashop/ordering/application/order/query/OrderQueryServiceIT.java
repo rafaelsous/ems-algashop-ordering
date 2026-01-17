@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.order.query;
 
+import com.rafaelsousa.algashop.ordering.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
@@ -7,16 +8,12 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.domain.model.order.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
-@SpringBootTest
-class OrderQueryServiceIT {
+class OrderQueryServiceIT extends AbstractApplicationIT {
     private final OrderQueryService orderQueryService;
     private final Orders orders;
     private final Customers customers;

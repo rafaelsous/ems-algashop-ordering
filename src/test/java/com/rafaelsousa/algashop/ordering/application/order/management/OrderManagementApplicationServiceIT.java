@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.order.management;
 
+import com.rafaelsousa.algashop.ordering.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerLoyaltyPointsApplicationService;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
@@ -9,9 +10,7 @@ import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEven
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,9 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-@Transactional
-@SpringBootTest
-class OrderManagementApplicationServiceIT {
+class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
     private final Orders orders;
     private final Customers customers;
     private final OrderManagementApplicationService orderManagementApplicationService;

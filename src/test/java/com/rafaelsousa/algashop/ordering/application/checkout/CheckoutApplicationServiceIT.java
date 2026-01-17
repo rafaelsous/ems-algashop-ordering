@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.checkout;
 
+import com.rafaelsousa.algashop.ordering.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
@@ -19,10 +20,8 @@ import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEven
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -32,9 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Transactional
-@SpringBootTest
-class CheckoutApplicationServiceIT {
+class CheckoutApplicationServiceIT extends AbstractApplicationIT {
     private final Orders orders;
     private final Customers customers;
     private final ShoppingCarts shoppingCarts;
