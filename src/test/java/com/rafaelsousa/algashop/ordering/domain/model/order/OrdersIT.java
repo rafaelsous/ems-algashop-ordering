@@ -1,21 +1,20 @@
 package com.rafaelsousa.algashop.ordering.domain.model.order;
 
-import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.AbstractDomainIT;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrdersPersistenceProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
@@ -25,7 +24,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DataJpaTest
 @Import({
         OrdersPersistenceProvider.class,
         OrderPersistenceAssembler.class,
@@ -35,8 +33,7 @@ import static org.assertj.core.api.Assertions.*;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class OrdersIT {
+class OrdersIT extends AbstractDomainIT {
     private final Orders orders;
     private final Customers customers;
 

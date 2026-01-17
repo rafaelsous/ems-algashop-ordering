@@ -10,9 +10,9 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderReadyEvent;
+import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -23,8 +23,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-class CustomerEventListenerIT {
+class CustomerEventListenerIT extends AbstractInfrastructureIT {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired

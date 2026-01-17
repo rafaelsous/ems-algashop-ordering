@@ -1,16 +1,15 @@
 package com.rafaelsousa.algashop.ordering.domain.model.customer;
 
+import com.rafaelsousa.algashop.ordering.domain.model.AbstractDomainIT;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class CustomerRegistrationServiceIT {
+class CustomerRegistrationServiceIT extends AbstractDomainIT {
     private final CustomerRegistrationService customerRegistrationService;
 
     @Autowired

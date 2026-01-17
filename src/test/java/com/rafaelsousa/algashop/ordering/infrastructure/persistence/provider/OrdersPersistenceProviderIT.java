@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderStatus;
 import com.rafaelsousa.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
@@ -12,8 +13,6 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.Cus
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-@DataJpaTest
 @Import({
         OrdersPersistenceProvider.class,
         OrderPersistenceAssembler.class,
@@ -33,9 +31,8 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
-class OrdersPersistenceProviderIT {
+class OrdersPersistenceProviderIT extends AbstractInfrastructureIT {
     private final OrdersPersistenceProvider ordersPersistenceProvider;
     private final OrderPersistenceRepository orderPersistenceRepository;
 

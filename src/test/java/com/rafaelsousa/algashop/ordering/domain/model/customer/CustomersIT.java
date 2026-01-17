@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.domain.model.customer;
 
+import com.rafaelsousa.algashop.ordering.domain.model.AbstractDomainIT;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.FullName;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Phone;
@@ -9,8 +10,6 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.Cus
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
@@ -20,15 +19,13 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DataJpaTest
 @Import({
         CustomersPersistenceProvider.class,
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class,
         HibernateConfig.class
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CustomersIT {
+class CustomersIT extends AbstractDomainIT {
     private final Customers customers;
 
     @Autowired

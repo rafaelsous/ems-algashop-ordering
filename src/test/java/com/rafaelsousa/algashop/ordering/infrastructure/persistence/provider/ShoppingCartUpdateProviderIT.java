@@ -9,6 +9,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBui
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
@@ -21,8 +22,6 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
 @Import({
         ShoppingCartUpdateProvider.class,
         ShoppingCartsPersistenceProvider.class,
@@ -42,9 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         CustomerPersistenceAssembler.class,
         CustomerPersistenceDisassembler.class
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class ShoppingCartUpdateProviderIT {
+class ShoppingCartUpdateProviderIT extends AbstractInfrastructureIT {
     private final ShoppingCartUpdateProvider shoppingCartUpdateProvider;
     private final ShoppingCartsPersistenceProvider shoppingCartsPersistenceProvider;
     private final CustomersPersistenceProvider customersPersistenceProvider;
