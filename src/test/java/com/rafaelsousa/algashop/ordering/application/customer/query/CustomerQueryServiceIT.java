@@ -1,15 +1,13 @@
 package com.rafaelsousa.algashop.ordering.application.customer.query;
 
+import com.rafaelsousa.algashop.ordering.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.domain.model.commons.FullName;
 import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,11 +15,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
-@SpringBootTest
-//@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-//@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class CustomerQueryServiceIT {
+class CustomerQueryServiceIT extends AbstractApplicationIT {
     private final Customers customers;
     private final CustomerQueryService customerQueryService;
 

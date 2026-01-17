@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.application.customer.management;
 
+import com.rafaelsousa.algashop.ordering.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
@@ -10,13 +11,7 @@ import com.rafaelsousa.algashop.ordering.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.UUID;
 
@@ -25,10 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-@Transactional
-@SpringBootTest
-@Testcontainers
-class CustomerManagementApplicationServiceIT {
+class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
     private final CustomerManagementApplicationService customerManagementApplicationService;
     private final CustomerQueryService customerQueryService;
 
@@ -43,18 +35,6 @@ class CustomerManagementApplicationServiceIT {
 
     @MockitoSpyBean
     private CustomerNotificationApplicationService customerNotificationApplicationService;
-
-    @Container
-    @ServiceConnection
-    @SuppressWarnings("resource")
-    static PostgreSQLContainer<?> postgreSQLContainer
-            = new PostgreSQLContainer<>("postgres:17-alpine")
-            .withDatabaseName("ordering_test");
-
-    @Test
-    void shouldVerifyConnection() {
-        assertThat(postgreSQLContainer.isRunning()).isTrue();
-    }
 
     @Test
     void shouldRegisterAndFindCustomer() {
