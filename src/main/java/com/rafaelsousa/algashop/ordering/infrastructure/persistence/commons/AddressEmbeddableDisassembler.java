@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons;
 
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Address;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.ZipCode;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Address;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.ZipCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

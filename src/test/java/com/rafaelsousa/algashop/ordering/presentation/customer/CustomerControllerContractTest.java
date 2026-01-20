@@ -1,13 +1,17 @@
 package com.rafaelsousa.algashop.ordering.presentation.customer;
 
-import com.rafaelsousa.algashop.ordering.application.commons.AddressData;
-import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerInput;
-import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.application.customer.query.*;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import com.rafaelsousa.algashop.ordering.domain.model.DomainException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerEmailAlreadyExistsException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerInput;
+import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.*;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerFilter;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;

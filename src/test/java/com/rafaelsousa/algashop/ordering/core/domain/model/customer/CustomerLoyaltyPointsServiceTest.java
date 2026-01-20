@@ -1,0 +1,46 @@
+package com.rafaelsousa.algashop.ordering.core.domain.model.customer;
+
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderStatus;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class CustomerLoyaltyPointsServiceTest {
+    CustomerLoyaltyPointsService customerLoyaltyPointsService = new CustomerLoyaltyPointsService();
+
+    @Test
+    void givenValidCustomerAndOrder_whenAddingPoints_shouldAccumulate() {
+        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+        Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.READY).build();
+
+        customerLoyaltyPointsService.addPoints(customer, order);
+
+        LoyaltyPoints expectedLoyaltyPointsTotal = customerLoyaltyPointsService.getCalculatedPoints(order);
+
+        assertThat(customer.loyaltyPoints()).isEqualTo(expectedLoyaltyPointsTotal);
+    }
+
+    @Test
+    void givenValidCustomerAndOrderWithLowTotalAmount_whenAddingPoints_shouldNotAccumulate() {
+        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+        Product mousePad = ProductTestDataBuilder.aProductAltMousePad().build();
+        Order order = OrderTestDataBuilder.anOrder()
+                .status(OrderStatus.DRAFT)
+                .withItems(false)
+                .build();
+
+        order.addItem(mousePad, Quantity.of(1));
+
+        order.place();
+        order.markAsPaid();
+        order.markAsReady();
+        customerLoyaltyPointsService.addPoints(customer, order);
+
+        assertThat(customer.loyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO);
+    }
+}

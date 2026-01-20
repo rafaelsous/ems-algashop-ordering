@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Email;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customer;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;

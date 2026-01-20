@@ -1,14 +1,14 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItem;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;

@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.order.Order;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderStatus;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.Order;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderStatus;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;

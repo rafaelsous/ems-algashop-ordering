@@ -1,13 +1,13 @@
 package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartInput;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartItemOutput;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartInput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartItemOutput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

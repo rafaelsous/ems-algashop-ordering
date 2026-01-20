@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.beans;
 
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.LoyaltyPoints;
-import com.rafaelsousa.algashop.ordering.domain.model.order.CustomerHaveFreeShippingSpecification;
-import com.rafaelsousa.algashop.ordering.domain.model.order.Orders;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.LoyaltyPoints;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.CustomerHaveFreeShippingSpecification;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.Orders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.product.client.fake;
 
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductCatalogService;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductName;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductCatalogService;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
 
 import java.util.Optional;
 

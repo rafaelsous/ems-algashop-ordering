@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.shipping.client.fake;
 
-import com.rafaelsousa.algashop.ordering.domain.model.order.shipping.ShippingCostService;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.ShippingCostService;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 

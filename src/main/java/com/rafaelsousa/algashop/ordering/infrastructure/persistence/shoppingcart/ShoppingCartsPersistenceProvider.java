@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCarts;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

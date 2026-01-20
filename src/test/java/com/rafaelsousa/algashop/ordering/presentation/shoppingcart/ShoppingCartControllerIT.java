@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartInput;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartItemInput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartInput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.presentation.AbstractPresentationIT;

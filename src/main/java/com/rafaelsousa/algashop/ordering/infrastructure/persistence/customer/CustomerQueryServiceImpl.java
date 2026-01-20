@@ -1,11 +1,11 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer;
 
-import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerFilter;
-import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutput;
-import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerQueryService;
-import com.rafaelsousa.algashop.ordering.application.customer.query.CustomerSummaryOutput;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerFilter;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -29,7 +29,7 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
     private final EntityManager entityManager;
 
     private static final String FIND_BY_ID_AS_OUTPUT_JPQL = """
-            SELECT new com.rafaelsousa.algashop.ordering.application.customer.query.CustomerOutput(
+            SELECT new com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput(
                 c.id,
                 c.firstName,
                 c.lastName,
@@ -42,7 +42,7 @@ public class CustomerQueryServiceImpl implements CustomerQueryService {
                 c.archivedAt,
                 c.promotionNotificationsAllowed,
                 c.archived,
-                new com.rafaelsousa.algashop.ordering.application.commons.AddressData(
+                new com.rafaelsousa.algashop.ordering.core.application.commons.AddressData(
                     c.address.street,
                     c.address.number,
                     c.address.complement,

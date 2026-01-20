@@ -1,13 +1,12 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
-import com.rafaelsousa.algashop.ordering.domain.model.CreditCardId;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.*;
-import com.rafaelsousa.algashop.ordering.domain.model.order.*;
-import com.rafaelsousa.algashop.ordering.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductName;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.ShippingEmbeddable;

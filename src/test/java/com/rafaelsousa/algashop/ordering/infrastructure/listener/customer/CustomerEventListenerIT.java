@@ -1,15 +1,15 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.listener.customer;
 
-import com.rafaelsousa.algashop.ordering.application.customer.management.CustomerLoyaltyPointsApplicationService;
-import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
-import com.rafaelsousa.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Email;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.FullName;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerArchivedEvent;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderReadyEvent;
+import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerLoyaltyPointsApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Email;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.FullName;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerArchivedEvent;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerRegisteredEvent;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderReadyEvent;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

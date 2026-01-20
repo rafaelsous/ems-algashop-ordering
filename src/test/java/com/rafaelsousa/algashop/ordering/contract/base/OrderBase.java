@@ -1,15 +1,15 @@
 package com.rafaelsousa.algashop.ordering.contract.base;
 
-import com.rafaelsousa.algashop.ordering.application.checkout.BuyNowApplicationService;
-import com.rafaelsousa.algashop.ordering.application.checkout.BuyNowInput;
-import com.rafaelsousa.algashop.ordering.application.checkout.CheckoutApplicationService;
-import com.rafaelsousa.algashop.ordering.application.checkout.CheckoutInput;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderDetailOutputTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderFilter;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderQueryService;
-import com.rafaelsousa.algashop.ordering.application.order.query.OrderSummaryOutputTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.domain.model.order.OrderNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.BuyNowApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.BuyNowInput;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.CheckoutApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.CheckoutInput;
+import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderDetailOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderFilter;
+import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderQueryService;
+import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderSummaryOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;

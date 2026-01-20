@@ -1,14 +1,14 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductName;
-import com.rafaelsousa.algashop.ordering.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerId;
-import com.rafaelsousa.algashop.ordering.domain.model.product.ProductId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItem;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartItemId;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

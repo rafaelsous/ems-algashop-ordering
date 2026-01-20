@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.provider;
 
-import com.rafaelsousa.algashop.ordering.domain.model.customer.Customer;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customer;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;

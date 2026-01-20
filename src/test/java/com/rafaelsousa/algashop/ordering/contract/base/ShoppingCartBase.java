@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.contract.base;
 
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.rafaelsousa.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,8 +1,8 @@
 package com.rafaelsousa.algashop.ordering.presentation;
 
-import com.rafaelsousa.algashop.ordering.domain.model.DomainEntityNotFoundException;
-import com.rafaelsousa.algashop.ordering.domain.model.DomainException;
-import com.rafaelsousa.algashop.ordering.domain.model.customer.CustomerEmailAlreadyExistsException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
