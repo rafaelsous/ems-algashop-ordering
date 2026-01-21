@@ -1,10 +1,6 @@
-package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
+package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemOutput;
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
@@ -20,8 +16,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/shopping-carts")
 public class ShoppingCartController {
-    private final ShoppingCartManagementApplicationService shoppingCartManagementApplicationService;
-    private final ForQueryingShoppingCarts shoppingCartQueryService;
+    private final ForManagingShoppingCarts forManagingShoppingCarts;
+    private final ForQueryingShoppingCarts forQueryingShoppingCarts;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -29,34 +25,34 @@ public class ShoppingCartController {
         UUID shoppingCartId;
 
         try {
-            shoppingCartId = shoppingCartManagementApplicationService.createNew(shoppingCartInput.getCustomerId());
+            shoppingCartId = forManagingShoppingCarts.createNew(shoppingCartInput.getCustomerId());
         } catch (CustomerNotFoundException ex) {
             throw new UnprocessableEntityException(ex.getMessage(), ex);
         }
 
-        return shoppingCartQueryService.findById(shoppingCartId);
+        return forQueryingShoppingCarts.findById(shoppingCartId);
     }
 
     @GetMapping("/{shoppingCartId}")
     public ShoppingCartOutput findById(@PathVariable("shoppingCartId") UUID shoppingCartId) {
-        return shoppingCartQueryService.findById(shoppingCartId);
+        return forQueryingShoppingCarts.findById(shoppingCartId);
     }
 
     @GetMapping("/{shoppingCartId}/items")
     public List<ShoppingCartItemOutput> findShoppingCartItems(@PathVariable("shoppingCartId") UUID shoppingCartId) {
-        return shoppingCartQueryService.findById(shoppingCartId).getItems();
+        return forQueryingShoppingCarts.findById(shoppingCartId).getItems();
     }
 
     @DeleteMapping("/{shoppingCartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable("shoppingCartId") UUID shoppingCartId) {
-        shoppingCartManagementApplicationService.delete(shoppingCartId);
+        forManagingShoppingCarts.delete(shoppingCartId);
     }
 
     @DeleteMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeItems(@PathVariable("shoppingCartId") UUID shoppingCartId) {
-        shoppingCartManagementApplicationService.empty(shoppingCartId);
+        forManagingShoppingCarts.empty(shoppingCartId);
     }
 
     @PostMapping("/{shoppingCartId}/items")
@@ -65,7 +61,7 @@ public class ShoppingCartController {
         shoppingCartItemInput.setShoppingCartId(shoppingCartId);
 
         try {
-            shoppingCartManagementApplicationService.addItem(shoppingCartItemInput);
+            forManagingShoppingCarts.addItem(shoppingCartItemInput);
         } catch (ProductNotFoundException ex) {
             throw new UnprocessableEntityException(ex.getMessage(), ex);
         }
@@ -74,6 +70,6 @@ public class ShoppingCartController {
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeItemById(@PathVariable("shoppingCartId") UUID shoppingCartId, @PathVariable("itemId") UUID itemId) {
-        shoppingCartManagementApplicationService.removeItem(shoppingCartId, itemId);
+        forManagingShoppingCarts.removeItem(shoppingCartId, itemId);
     }
 }
