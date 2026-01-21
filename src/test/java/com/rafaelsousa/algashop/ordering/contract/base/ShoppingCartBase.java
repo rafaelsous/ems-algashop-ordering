@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.contract.base;
 
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;

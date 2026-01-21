@@ -1,8 +1,7 @@
 package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartInput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartItemInput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management.ShoppingCartManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartItemOutput;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;

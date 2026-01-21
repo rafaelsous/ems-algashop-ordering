@@ -1,12 +1,14 @@
 package com.rafaelsousa.algashop.ordering.core.application.shoppingcart.management;
 
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
+import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.*;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.listener.shoppingcart.ShoppingCartEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
