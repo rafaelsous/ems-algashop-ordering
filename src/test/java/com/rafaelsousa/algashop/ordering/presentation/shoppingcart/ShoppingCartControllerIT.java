@@ -2,8 +2,8 @@ package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartInput;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.ShoppingCartPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.presentation.AbstractPresentationIT;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;

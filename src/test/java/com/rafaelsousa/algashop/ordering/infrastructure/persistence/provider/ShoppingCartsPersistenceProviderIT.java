@@ -6,12 +6,12 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.Shopping
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomersPersistenceProvider;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;

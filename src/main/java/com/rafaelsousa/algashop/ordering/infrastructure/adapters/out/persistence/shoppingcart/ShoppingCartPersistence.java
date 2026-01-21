@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
+package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
+package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ShoppingCartQueryServiceImpl implements ForQueryingShoppingCarts {
+public class ForObtainingShoppingCarsJpaRepositoryImpl implements ForQueryingShoppingCarts {
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
     private final Mapper mapper;
 
