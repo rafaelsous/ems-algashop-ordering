@@ -1,10 +1,11 @@
 package com.rafaelsousa.algashop.ordering.core.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
+import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerLoyaltyPointsApplicationService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
-import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;

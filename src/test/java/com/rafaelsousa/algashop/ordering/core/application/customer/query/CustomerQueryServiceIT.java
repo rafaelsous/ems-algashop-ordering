@@ -4,6 +4,10 @@ import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.FullName;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.*;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerFilter;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +21,10 @@ import static org.assertj.core.api.Assertions.*;
 
 class CustomerQueryServiceIT extends AbstractApplicationIT {
     private final Customers customers;
-    private final CustomerQueryService customerQueryService;
+    private final ForQueryingCustomers customerQueryService;
 
     @Autowired
-    CustomerQueryServiceIT(Customers customers, CustomerQueryService customerQueryService) {
+    CustomerQueryServiceIT(Customers customers, ForQueryingCustomers customerQueryService) {
         this.customers = customers;
         this.customerQueryService = customerQueryService;
     }

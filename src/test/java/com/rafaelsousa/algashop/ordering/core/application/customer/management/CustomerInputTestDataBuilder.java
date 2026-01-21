@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.application.customer.management;
 
-import com.rafaelsousa.algashop.ordering.core.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.ports.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerInput;
 
 import java.time.LocalDate;
 

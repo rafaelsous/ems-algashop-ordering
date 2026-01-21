@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.presentation.customer;
 
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.presentation.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;

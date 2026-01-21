@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.ShippingEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;

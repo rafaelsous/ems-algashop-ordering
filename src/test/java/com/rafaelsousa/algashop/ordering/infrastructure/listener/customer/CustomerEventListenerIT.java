@@ -1,8 +1,8 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.listener.customer;
 
-import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerLoyaltyPointsApplicationService;
-import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService;
-import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
+import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerLoyaltyPointsApplicationService;
+import com.rafaelsousa.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
+import com.rafaelsousa.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers.NotifyNewRegistrationInput;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.FullName;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerArchivedEvent;
@@ -11,6 +11,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerRegi
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderReadyEvent;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,7 +36,7 @@ class CustomerEventListenerIT extends AbstractInfrastructureIT {
     private CustomerEventListener customerEventListener;
 
     @MockitoBean
-    private CustomerNotificationApplicationService customerNotificationApplicationService;
+    private ForNotifyingCustomers customerNotificationApplicationService;
 
     @MockitoBean
     private CustomerLoyaltyPointsApplicationService customerLoyaltyPointsApplicationService;

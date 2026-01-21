@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistence;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;

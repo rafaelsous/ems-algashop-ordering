@@ -1,14 +1,17 @@
 package com.rafaelsousa.algashop.ordering.core.application.customer.management;
 
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
-import com.rafaelsousa.algashop.ordering.core.application.commons.AddressData;
-import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService;
-import com.rafaelsousa.algashop.ordering.core.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
+import com.rafaelsousa.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers.NotifyNewRegistrationInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.*;
-import com.rafaelsousa.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerUpdateInput;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.customer.CustomerEventListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -22,10 +25,10 @@ import static org.mockito.Mockito.verify;
 
 class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
     private final CustomerManagementApplicationService customerManagementApplicationService;
-    private final CustomerQueryService customerQueryService;
+    private final ForQueryingCustomers customerQueryService;
 
     @Autowired
-    CustomerManagementApplicationServiceIT(CustomerManagementApplicationService customerManagementApplicationService, CustomerQueryService customerQueryService) {
+    CustomerManagementApplicationServiceIT(CustomerManagementApplicationService customerManagementApplicationService, ForQueryingCustomers customerQueryService) {
         this.customerManagementApplicationService = customerManagementApplicationService;
         this.customerQueryService = customerQueryService;
     }
@@ -34,7 +37,7 @@ class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
     private CustomerEventListener customerEventListener;
 
     @MockitoSpyBean
-    private CustomerNotificationApplicationService customerNotificationApplicationService;
+    private ForNotifyingCustomers customerNotificationApplicationService;
 
     @Test
     void shouldRegisterAndFindCustomer() {

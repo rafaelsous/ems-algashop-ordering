@@ -1,12 +1,12 @@
 package com.rafaelsousa.algashop.ordering.core.application.order.management;
 
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
-import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerLoyaltyPointsApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerLoyaltyPointsApplicationService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customers;
-import com.rafaelsousa.algashop.ordering.infrastructure.listener.order.OrderEventListener;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

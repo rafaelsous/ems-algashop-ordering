@@ -1,17 +1,18 @@
 package com.rafaelsousa.algashop.ordering.presentation.customer;
 
-import com.rafaelsousa.algashop.ordering.core.application.commons.AddressData;
-import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerInput;
-import com.rafaelsousa.algashop.ordering.core.application.customer.management.CustomerManagementApplicationService;
+import com.rafaelsousa.algashop.ordering.core.ports.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerInput;
+import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.*;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerFilter;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
-import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerFilter;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
+import com.rafaelsousa.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.customer.CustomerController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class CustomerControllerContractTest {
     private CustomerManagementApplicationService customerManagementApplicationService;
 
     @MockitoBean
-    private CustomerQueryService customerQueryService;
+    private ForQueryingCustomers customerQueryService;
 
     @MockitoBean
     private ForQueryingShoppingCarts shoppingCartQueryService;

@@ -2,8 +2,8 @@ package com.rafaelsousa.algashop.ordering.infrastructure.persistence.order;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.shipping.ShippingEmbeddable;
 import lombok.RequiredArgsConstructor;

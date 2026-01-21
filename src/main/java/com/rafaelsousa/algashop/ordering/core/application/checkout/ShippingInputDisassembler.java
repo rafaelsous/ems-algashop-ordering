@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
-import com.rafaelsousa.algashop.ordering.core.application.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.ports.commons.AddressData;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.Recipient;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.Shipping;
