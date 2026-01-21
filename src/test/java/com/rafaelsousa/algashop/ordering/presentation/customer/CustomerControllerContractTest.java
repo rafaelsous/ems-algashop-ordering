@@ -8,7 +8,7 @@ import com.rafaelsousa.algashop.ordering.core.application.customer.query.Custome
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
@@ -52,7 +52,7 @@ class CustomerControllerContractTest {
     private CustomerQueryService customerQueryService;
 
     @MockitoBean
-    private ShoppingCartQueryService shoppingCartQueryService;
+    private ForQueryingShoppingCarts shoppingCartQueryService;
 
     @BeforeEach
     void setup() {

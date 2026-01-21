@@ -7,8 +7,8 @@ import com.rafaelsousa.algashop.ordering.core.application.customer.query.Custome
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerOutput;
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerQueryService;
 import com.rafaelsousa.algashop.ordering.core.application.customer.query.CustomerSummaryOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.presentation.PageModel;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 public class CustomerController {
     private final CustomerManagementApplicationService customerManagementApplicationService;
     private final CustomerQueryService customerQueryService;
-    private final ShoppingCartQueryService shoppingCartQueryService;
+    private final ForQueryingShoppingCarts shoppingCartQueryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

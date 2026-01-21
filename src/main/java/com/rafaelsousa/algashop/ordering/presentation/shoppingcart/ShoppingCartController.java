@@ -2,9 +2,9 @@ package com.rafaelsousa.algashop.ordering.presentation.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartItemOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/shopping-carts")
 public class ShoppingCartController {
     private final ShoppingCartManagementApplicationService shoppingCartManagementApplicationService;
-    private final ShoppingCartQueryService shoppingCartQueryService;
+    private final ForQueryingShoppingCarts shoppingCartQueryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

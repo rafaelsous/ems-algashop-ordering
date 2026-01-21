@@ -2,7 +2,7 @@ package com.rafaelsousa.algashop.ordering.contract.base;
 
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutputTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.presentation.shoppingcart.ShoppingCartController;
@@ -29,7 +29,7 @@ class ShoppingCartBase {
     private WebApplicationContext webApplicationContext;
 
     @MockitoBean
-    private ShoppingCartQueryService shoppingCartQueryService;
+    private ForQueryingShoppingCarts shoppingCartQueryService;
 
     @MockitoBean
     private ShoppingCartManagementApplicationService shoppingCartManagementApplicationService;

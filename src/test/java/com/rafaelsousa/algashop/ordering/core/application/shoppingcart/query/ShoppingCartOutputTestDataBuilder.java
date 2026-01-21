@@ -1,5 +1,8 @@
 package com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query;
 
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.query.ShoppingCartQueryService;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.application.utility.Mapper;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ShoppingCartQueryServiceImpl implements ShoppingCartQueryService {
+public class ShoppingCartQueryServiceImpl implements ForQueryingShoppingCarts {
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
     private final Mapper mapper;
 
