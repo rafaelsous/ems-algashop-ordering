@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderItemPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistence.OrderPersistenceBuilder;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderItemPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistence.OrderPersistenceBuilder;
 
 import java.math.BigDecimal;
 import java.util.Set;

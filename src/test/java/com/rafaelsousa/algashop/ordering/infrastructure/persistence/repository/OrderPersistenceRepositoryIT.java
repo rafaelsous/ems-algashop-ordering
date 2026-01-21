@@ -8,8 +8,8 @@ import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

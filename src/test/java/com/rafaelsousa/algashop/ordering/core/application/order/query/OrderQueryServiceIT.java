@@ -6,6 +6,10 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customers;
+import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.order.OrderFilter;
+import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForQueryingOrders;
+import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderSummaryOutput;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,12 +18,12 @@ import org.springframework.data.domain.Sort;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderQueryServiceIT extends AbstractApplicationIT {
-    private final OrderQueryService orderQueryService;
+    private final ForQueryingOrders orderQueryService;
     private final Orders orders;
     private final Customers customers;
 
     @Autowired
-    OrderQueryServiceIT(OrderQueryService orderQueryService, Orders orders, Customers customers) {
+    OrderQueryServiceIT(ForQueryingOrders orderQueryService, Orders orders, Customers customers) {
         this.orderQueryService = orderQueryService;
         this.orders = orders;
         this.customers = customers;

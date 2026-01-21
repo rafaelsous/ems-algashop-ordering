@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.core.application.order.management;
 
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.core.application.customer.CustomerLoyaltyPointsApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.order.OrderManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;

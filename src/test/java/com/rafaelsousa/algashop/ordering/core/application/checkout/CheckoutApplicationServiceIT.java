@@ -16,6 +16,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.Shippi
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

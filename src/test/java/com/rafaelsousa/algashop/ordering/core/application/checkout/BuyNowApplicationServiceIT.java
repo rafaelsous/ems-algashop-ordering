@@ -11,6 +11,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.Shippi
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.BuyNowInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

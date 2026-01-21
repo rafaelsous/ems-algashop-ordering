@@ -17,6 +17,11 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductCatalogService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.BuyNowInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ForBuyingProduct;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.BillingInputDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.ShippingInputDisassembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +30,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class BuyNowApplicationService {
+public class BuyNowApplicationService implements ForBuyingProduct {
     private final BuyNowService buyNowService;
     private final ProductCatalogService productCatalogService;
     private final ShippingCostService shippingCostService;
@@ -35,6 +40,7 @@ public class BuyNowApplicationService {
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
 
+    @Override
     @Transactional
     public String buyNow(BuyNowInput buyNowInput) {
         Objects.requireNonNull(buyNowInput);

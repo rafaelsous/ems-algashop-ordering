@@ -7,9 +7,9 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistence;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceDisassembler;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.presentation.order;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.presentation.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;

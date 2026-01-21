@@ -9,9 +9,9 @@ import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateCon
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomersPersistenceProvider;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceAssembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceDisassembler;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrdersPersistenceProvider;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrdersPersistenceProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

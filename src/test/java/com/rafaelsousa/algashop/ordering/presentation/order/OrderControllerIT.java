@@ -1,10 +1,10 @@
 package com.rafaelsousa.algashop.ordering.presentation.order;
 
-import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderDetailOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceTestDataBuilder;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.order.OrderPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.presentation.AbstractPresentationIT;

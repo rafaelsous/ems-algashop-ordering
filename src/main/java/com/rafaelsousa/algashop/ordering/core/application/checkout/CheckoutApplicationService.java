@@ -15,6 +15,11 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.Shopping
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCarts;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ForBuyingWithShoppingCart;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.BillingInputDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.ShippingInputDisassembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +28,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class CheckoutApplicationService {
+public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
     private final Orders orders;
     private final Customers customers;
     private final ShoppingCarts shoppingCarts;
@@ -34,6 +39,7 @@ public class CheckoutApplicationService {
     private final ShippingInputDisassembler shippingInputDisassembler;
 
     @Transactional
+    @Override
     public String checkout(CheckoutInput checkoutInput) {
         Objects.requireNonNull(checkoutInput);
 
