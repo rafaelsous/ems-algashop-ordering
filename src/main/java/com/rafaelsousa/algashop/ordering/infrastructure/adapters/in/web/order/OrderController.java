@@ -10,8 +10,8 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFou
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderSummaryOutput;
-import com.rafaelsousa.algashop.ordering.presentation.PageModel;
-import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.PageModel;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

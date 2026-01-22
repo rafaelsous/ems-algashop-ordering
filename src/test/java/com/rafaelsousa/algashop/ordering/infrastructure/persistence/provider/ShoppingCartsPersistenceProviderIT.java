@@ -7,8 +7,8 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.Shopping
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.AbstractInfrastructureIT;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.*;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.SpringDataAuditingConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.hibernate.HibernateConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.auditing.SpringDataAuditingConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomersPersistenceProvider;

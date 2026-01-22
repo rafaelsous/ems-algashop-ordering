@@ -3,7 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.custome
 import com.rafaelsousa.algashop.ordering.core.ports.in.customer.*;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
-import com.rafaelsousa.algashop.ordering.presentation.PageModel;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.PageModel;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

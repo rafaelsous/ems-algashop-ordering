@@ -5,7 +5,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customers;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.hibernate.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomersPersistenceProvider;

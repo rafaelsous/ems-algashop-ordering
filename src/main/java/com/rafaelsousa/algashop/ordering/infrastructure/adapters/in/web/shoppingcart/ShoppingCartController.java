@@ -3,7 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppin
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
-import com.rafaelsousa.algashop.ordering.presentation.UnprocessableEntityException;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

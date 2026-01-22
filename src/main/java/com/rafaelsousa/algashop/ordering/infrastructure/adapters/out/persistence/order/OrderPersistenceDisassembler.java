@@ -7,7 +7,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableDisassembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.commons.AddressEmbeddableDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.shipping.RecipientEmbeddable;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.shipping.ShippingEmbeddable;
 import org.springframework.stereotype.Component;

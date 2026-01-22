@@ -4,7 +4,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.AbstractDomainIT;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Email;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.FullName;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Phone;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.HibernateConfig;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.hibernate.HibernateConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceAssembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomersPersistenceProvider;

@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customer;
-import com.rafaelsousa.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddableAssembler;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.commons.AddressEmbeddableAssembler;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
