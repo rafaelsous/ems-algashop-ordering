@@ -1,11 +1,11 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.application.utility.Mapper;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.out.shoppingcart.ForObtainingShoppingCarts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ForObtainingShoppingCartsJpaRepositoryImpl implements ForQueryingShoppingCarts {
+public class ForObtainingShoppingCartsJpaRepositoryImpl implements ForObtainingShoppingCarts {
     private final ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
     private final Mapper mapper;
 

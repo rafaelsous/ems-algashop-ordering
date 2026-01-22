@@ -4,10 +4,10 @@ import com.rafaelsousa.algashop.ordering.core.application.checkout.BuyNowApplica
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.BuyNowInput;
 import com.rafaelsousa.algashop.ordering.core.application.checkout.CheckoutApplicationService;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
-import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderDetailOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.application.order.OrderDetailOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.OrderFilter;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForQueryingOrders;
-import com.rafaelsousa.algashop.ordering.core.application.order.query.OrderSummaryOutputTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.application.order.OrderSummaryOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderNotFoundException;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
