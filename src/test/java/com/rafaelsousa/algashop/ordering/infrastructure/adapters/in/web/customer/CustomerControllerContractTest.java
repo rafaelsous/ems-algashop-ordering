@@ -13,14 +13,13 @@ import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShopp
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.customer.CustomerController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -259,9 +258,9 @@ class CustomerControllerContractTest {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value())
                 .body(
-                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_ENTITY.value()),
+                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_CONTENT.value()),
                         "type", Matchers.is("/errors/unprocessable-entity"),
                         "title", Matchers.is("Unprocessable entity"),
                         "instance", Matchers.notNullValue(),
@@ -671,9 +670,9 @@ class CustomerControllerContractTest {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value())
                 .body(
-                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_ENTITY.value()),
+                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_CONTENT.value()),
                         "type", Matchers.is("/errors/unprocessable-entity"),
                         "title", Matchers.is("Unprocessable entity"),
                         "instance", Matchers.notNullValue(),
@@ -787,9 +786,9 @@ class CustomerControllerContractTest {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value())
                 .body(
-                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_ENTITY.value()),
+                        "status", Matchers.is(HttpStatus.UNPROCESSABLE_CONTENT.value()),
                         "type", Matchers.is("/errors/unprocessable-entity"),
                         "title", Matchers.is("Unprocessable entity"),
                         "instance", Matchers.notNullValue(),

@@ -1,7 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static io.restassured.config.JsonConfig.jsonConfig;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
@@ -9,9 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
-
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static io.restassured.config.JsonConfig.jsonConfig;
 
 @Import(TestcontainerPostgreSQLConfig.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,13 +34,13 @@ public abstract class AbstractPresentationIT {
     protected static void initWireMock() {
         wireMockRapidex = new WireMockServer(options()
                 .port(8780)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
-                .extensions(new ResponseTemplateTransformer(true)));
+		        .templatingEnabled(true)
+                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex"));
 
         wireMockProductCatalog = new WireMockServer(options()
                 .port(8781)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog")
-                .extensions(new ResponseTemplateTransformer(true)));
+		        .templatingEnabled(true)
+                .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog"));
 
         wireMockRapidex.start();
         wireMockProductCatalog.start();

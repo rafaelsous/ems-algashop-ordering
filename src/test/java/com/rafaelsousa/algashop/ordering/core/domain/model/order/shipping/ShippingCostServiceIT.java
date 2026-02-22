@@ -1,20 +1,18 @@
 package com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.rafaelsousa.algashop.ordering.core.domain.model.AbstractDomainIT;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.ZipCode;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.ShippingCostService.CalculationRequest;
+import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDate;
-
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ShippingCostServiceIT extends AbstractDomainIT {
     private final ShippingCostService shippingCostService;
@@ -32,8 +30,8 @@ class ShippingCostServiceIT extends AbstractDomainIT {
     void setUp() {
         wireMockRapidex = new WireMockServer(options()
                 .port(8780)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex")
-                .extensions(new ResponseTemplateTransformer(true)));
+		        .templatingEnabled(true)
+                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex"));
 
         wireMockRapidex.start();
     }
