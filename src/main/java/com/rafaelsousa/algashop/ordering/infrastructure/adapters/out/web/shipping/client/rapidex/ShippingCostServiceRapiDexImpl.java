@@ -29,13 +29,13 @@ public class ShippingCostServiceRapiDexImpl implements ShippingCostService {
 	                .destinationZipCode(request.destination().value())
 	                .build());
 	    } catch (ResourceAccessException ex) {
-            throw new GatewayTimeoutException("Rapidex API timeout", ex);
+            throw new GatewayTimeoutException("Rapidex API Timeout", ex);
 	    } catch (RestClientException ex) {
 			if (ex.getCause() instanceof SocketTimeoutException) {
-				throw new GatewayTimeoutException("Rapidex API timeout", ex);
+				throw new GatewayTimeoutException("Rapidex API Timeout", ex);
 			}
 
-			throw new BadGatewayException("Rapidex API bad gateway", ex);
+			throw new BadGatewayException("Rapidex API Bad Gateway", ex);
 	    }
 
 	    LocalDate expectedDeliveryDate = LocalDate.now().plusDays(deliveryCostResponse.estimatedDaysToDeliver());

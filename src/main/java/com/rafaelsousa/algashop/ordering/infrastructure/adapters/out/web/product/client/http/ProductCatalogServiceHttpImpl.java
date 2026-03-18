@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 
 import java.util.Optional;
 
@@ -30,7 +31,11 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
             throw new GatewayTimeoutException("Product Catalog API Timeout", ex);
         } catch (HttpClientErrorException.NotFound ex) {
             return Optional.empty();
-        } catch (HttpClientErrorException ex) {
+        } catch (RestClientException ex) {
+			if (ex.getCause() instanceof ResourceAccessException) {
+				throw new GatewayTimeoutException("Product Catalog API Timeout", ex);
+			}
+
             throw new BadGatewayException("Product Catalog API Bad Gateway");
         }
 
