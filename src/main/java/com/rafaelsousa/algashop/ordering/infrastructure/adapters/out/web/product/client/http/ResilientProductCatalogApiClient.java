@@ -9,9 +9,10 @@ import org.springframework.resilience.annotation.ConcurrencyLimit;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 
+import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,22 +24,36 @@ public class ResilientProductCatalogApiClient {
 
 	@Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId")
 	@ConcurrencyLimit(10)
-	@Retryable(maxRetries = 3, delayString = "3s", multiplier = 2, includes = {GatewayTimeoutException.class, BadGatewayException.class})
+	@Retryable(
+			maxRetries = 3,
+			delayString = "3s",
+			multiplier = 2, includes = {GatewayTimeoutException.class, BadGatewayException.ServerErrorException.class}
+	)
 	public Optional<ProductResponse> getById(UUID productId) {
         log.info("Getting product by id {}", productId);
 
 		try {
 			return Optional.ofNullable(productCatalogApiClient.getById(productId));
-		} catch (ResourceAccessException ex) {
-			throw new GatewayTimeoutException("Product Catalog API Timeout", ex);
 		} catch (HttpClientErrorException.NotFound ex) {
 			return Optional.empty();
 		} catch (RestClientException ex) {
-			if (ex.getCause() instanceof ResourceAccessException) {
-				throw new GatewayTimeoutException("Product Catalog API Timeout", ex);
-			}
-
-			throw new BadGatewayException("Product Catalog API Bad Gateway");
+			throw translateException(ex);
 		}
+	}
+
+	private RuntimeException translateException(RestClientException ex) {
+		if (ex.getCause() instanceof SocketTimeoutException) {
+			return new GatewayTimeoutException("Product Catalog API Timeout", ex);
+		}
+
+		if (ex instanceof HttpClientErrorException) {
+			return new BadGatewayException.ClientErrorException("Product Catalog Bad Gateway", ex);
+		}
+
+		if (ex instanceof HttpServerErrorException) {
+			return new BadGatewayException.ServerErrorException("Product Catalog Bad Gateway", ex);
+		}
+
+		return new BadGatewayException("Product Catalog Bad Gateway", ex);
 	}
 }
