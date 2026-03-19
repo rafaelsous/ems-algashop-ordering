@@ -8,6 +8,8 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.BadGatewayException;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.GatewayTimeoutException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
@@ -22,8 +25,11 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
 
 
     @Override
+    @Retryable(maxRetries = 3, delayString = "3s", multiplier = 2, includes = {GatewayTimeoutException.class, BadGatewayException.class})
     public Optional<Product> ofId(ProductId productId) {
         ProductResponse productResponse;
+
+        log.info("Loading product with id {}", productId);
 
         try {
             productResponse = productCatalogApiClient.getById(productId.value());
