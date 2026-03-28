@@ -30,7 +30,7 @@ public class ResilientProductCatalogApiClient {
 	                                        FrameworkRetryConfigBuilder> circuitBreakerFactory,
 	                                        ProductCatalogApiClient productCatalogApiClient) {
 		this.productCatalogApiClient = productCatalogApiClient;
-		this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create("productCatalogCB");
+		this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create("productCatalogAPICB");
 	}
 
 	@Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId")

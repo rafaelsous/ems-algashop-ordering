@@ -22,12 +22,22 @@ public class SpringCircuitBreakerConfig {
 		        .includes(GatewayTimeoutException.class, BadGatewayException.ServerErrorException.class)
 		        .build();
 
-	    return factory -> factory
-		    .configure(builder -> builder
-                .retryPolicy(retryPolicy)
-                .openTimeout(Duration.ofSeconds(30))
-                .resetTimeout(Duration.ofSeconds(60))
-                .build(), "productCatalogCB"
-        );
+	    return factory -> {
+			factory
+				    .configure(builder -> builder
+						    .retryPolicy(retryPolicy)
+						    .openTimeout(Duration.ofSeconds(30))
+						    .resetTimeout(Duration.ofSeconds(60))
+						    .build(), "productCatalogAPICB"
+				    );
+
+		    factory
+				    .configure(builder -> builder
+						    .retryPolicy(retryPolicy)
+						    .openTimeout(Duration.ofSeconds(30))
+						    .resetTimeout(Duration.ofSeconds(60))
+						    .build(), "rapidexAPICB"
+				    );
+	    };
 	}
 }

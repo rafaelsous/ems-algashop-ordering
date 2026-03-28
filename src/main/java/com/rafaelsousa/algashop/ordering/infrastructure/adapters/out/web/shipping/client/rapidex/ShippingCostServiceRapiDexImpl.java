@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "algashop.integrations.shipping.provider", havingValue = "RAPIDEX")
 public class ShippingCostServiceRapiDexImpl implements ShippingCostService {
-    private final RapiDexApiClient rapiDexApiClient;
+    private final ResilientRapiDexApiClient rapiDexApiClient;
 
     @Override
     public CalculationResponse calculate(CalculationRequest request) {
