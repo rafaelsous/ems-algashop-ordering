@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ShippingData {
     private BigDecimal cost;
-    private LocalDate expectedDeliveryDate;
+    private LocalDate expectedDate;
     private RecipientData recipient;
     private AddressData address;
 }

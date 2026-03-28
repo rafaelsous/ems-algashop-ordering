@@ -42,7 +42,7 @@ public class OrderDetailOutputTestDataBuilder {
                 .paymentMethod("GATEWAY_BALANCE")
                 .shipping(ShippingData.builder()
                         .cost(BigDecimal.valueOf(20.50))
-                        .expectedDeliveryDate(LocalDate.now().plusDays(2))
+                        .expectedDate(LocalDate.now().plusDays(2))
                         .recipient(RecipientData.builder()
                                 .firstName("John")
                                 .lastName("Doe")

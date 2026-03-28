@@ -39,13 +39,10 @@ public class ResilientRapiDexApiClient {
 		);
 
 		try {
-			DeliveryCostResponse deliveryCostResponse = circuitBreaker.run(() -> processCalculation(deliveryCostRequest));
-
-			if (deliveryCostResponse == null) {
-				throw new BadGatewayException.ClientErrorException("Invalid zip code");
-			}
-
-			return deliveryCostResponse;
+			return circuitBreaker.run(
+					() -> processCalculation(deliveryCostRequest),
+					ex -> doInternalFallback(deliveryCostRequest, ex)
+			);
 		} catch (NoFallbackAvailableException ex) {
 			throw unwrapException(ex);
 		}
@@ -64,6 +61,16 @@ public class ResilientRapiDexApiClient {
 		} catch (RestClientException ex) {
 			throw translateException(ex);
 		}
+	}
+
+	private DeliveryCostResponse doInternalFallback(DeliveryCostRequest deliveryCostRequest, Throwable ex) {
+		log.info("Rapidex API fallback for request {}", deliveryCostRequest);
+
+		// Alternative logic
+		return DeliveryCostResponse.builder()
+				.deliveryCost("20.0")
+				.estimatedDaysToDeliver(10L)
+				.build();
 	}
 
 	private RuntimeException unwrapException(NoFallbackAvailableException ex) {
