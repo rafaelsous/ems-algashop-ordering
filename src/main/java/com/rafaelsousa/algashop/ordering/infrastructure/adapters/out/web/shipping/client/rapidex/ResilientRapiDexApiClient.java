@@ -39,10 +39,16 @@ public class ResilientRapiDexApiClient {
 		);
 
 		try {
-			return circuitBreaker.run(
+			DeliveryCostResponse response = circuitBreaker.run(
 					() -> processCalculation(deliveryCostRequest),
 					ex -> doInternalFallback(deliveryCostRequest, ex)
 			);
+
+			if (response == null) {
+				throw new BadGatewayException.ClientErrorException("Invalid zip code");
+			}
+
+			return response;
 		} catch (NoFallbackAvailableException ex) {
 			throw unwrapException(ex);
 		}
