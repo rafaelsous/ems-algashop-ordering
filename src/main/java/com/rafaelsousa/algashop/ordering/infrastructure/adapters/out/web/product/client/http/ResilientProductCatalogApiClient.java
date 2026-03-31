@@ -5,6 +5,8 @@ import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptio
 import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.rafaelsousa.algashop.ordering.infrastructure.config.resilience.SpringCircuitBreakerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryCircuitBreaker;
@@ -30,7 +32,8 @@ public class ResilientProductCatalogApiClient {
 	                                        FrameworkRetryConfigBuilder> circuitBreakerFactory,
 	                                        ProductCatalogApiClient productCatalogApiClient) {
 		this.productCatalogApiClient = productCatalogApiClient;
-		this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create("productCatalogAPICB");
+		this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory
+				.create(SpringCircuitBreakerConfig.PRODUCT_CATALOG_API_CB_ID);
 	}
 
 	@Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId")
