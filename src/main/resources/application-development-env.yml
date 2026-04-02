@@ -1,6 +1,5 @@
 spring:
   cache:
-#    type: none
     type: redis
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering
