@@ -3,22 +3,23 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.excepti
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerEmailAlreadyExistsException;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -30,9 +31,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatusCode status,
-                                                                  WebRequest request) {
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatusCode status,
+                                                                  @NonNull WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setTitle("Invalid fields");
         problemDetail.setDetail("One or more fields are invalid");
@@ -63,7 +64,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({DomainException.class, UnprocessableEntityException.class})
     public ProblemDetail handleUnprocessableEntityException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         problemDetail.setTitle("Unprocessable entity");
         problemDetail.setType(URI.create("/errors/unprocessable-entity"));
         problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
@@ -104,6 +105,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return problemDetail;
     }
+
+	@ExceptionHandler(AuthorizationDeniedException.class)
+	public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+		problemDetail.setType(URI.create("/errors/forbidden"));
+		problemDetail.setTitle("Forbidden");
+		problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+		return problemDetail;
+	}
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex) {

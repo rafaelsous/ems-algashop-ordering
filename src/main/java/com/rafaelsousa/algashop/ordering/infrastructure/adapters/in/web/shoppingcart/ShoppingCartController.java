@@ -1,16 +1,17 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
-import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.UnprocessableEntityException;
+import com.rafaelsousa.algashop.ordering.infrastructure.security.SecurityAnnotations.CanReadShoppingCarts;
+import com.rafaelsousa.algashop.ordering.infrastructure.security.SecurityAnnotations.CanWriteShoppingCarts;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class ShoppingCartController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @CanWriteShoppingCarts
     public ShoppingCartOutput create(@Valid @RequestBody ShoppingCartInput shoppingCartInput) {
         UUID shoppingCartId;
 
@@ -34,29 +36,34 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/{shoppingCartId}")
+    @CanReadShoppingCarts
     public ShoppingCartOutput findById(@PathVariable("shoppingCartId") UUID shoppingCartId) {
         return forQueryingShoppingCarts.findById(shoppingCartId);
     }
 
     @GetMapping("/{shoppingCartId}/items")
+    @CanReadShoppingCarts
     public List<ShoppingCartItemOutput> findShoppingCartItems(@PathVariable("shoppingCartId") UUID shoppingCartId) {
         return forQueryingShoppingCarts.findById(shoppingCartId).getItems();
     }
 
     @DeleteMapping("/{shoppingCartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CanWriteShoppingCarts
     public void remove(@PathVariable("shoppingCartId") UUID shoppingCartId) {
         forManagingShoppingCarts.delete(shoppingCartId);
     }
 
     @DeleteMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CanWriteShoppingCarts
     public void removeItems(@PathVariable("shoppingCartId") UUID shoppingCartId) {
         forManagingShoppingCarts.empty(shoppingCartId);
     }
 
     @PostMapping("/{shoppingCartId}/items")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CanWriteShoppingCarts
     public void addItem(@PathVariable("shoppingCartId") UUID shoppingCartId, @Valid @RequestBody ShoppingCartItemInput shoppingCartItemInput) {
         shoppingCartItemInput.setShoppingCartId(shoppingCartId);
 
@@ -69,6 +76,7 @@ public class ShoppingCartController {
 
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CanWriteShoppingCarts
     public void removeItemById(@PathVariable("shoppingCartId") UUID shoppingCartId, @PathVariable("itemId") UUID itemId) {
         forManagingShoppingCarts.removeItem(shoppingCartId, itemId);
     }
