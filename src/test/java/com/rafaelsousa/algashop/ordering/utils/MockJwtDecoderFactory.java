@@ -1,0 +1,73 @@
+package com.rafaelsousa.algashop.ordering.utils;
+
+import org.mockito.Mockito;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.when;
+
+public class MockJwtDecoderFactory {
+	public static final String DEFAULT_SUBJECT = "user-test";
+	public static final String DEFAULT_TOKEN_VALUE = "fake.jwt.token";
+	public static final String DEFAULT_ISSUER_URI = "http://algashop-authorization-server:8081";
+	public static final String[] DEFAULT_SCOPES = new String[] {
+		"products:read",
+		"products:write",
+		"products:stock:write",
+		"categories:read",
+		"categories:write",
+		"invoices:read",
+		"invoices:write",
+		"credit-cards:read",
+		"credit-cards:write",
+		"orders:read",
+		"orders:write",
+		"customers:read",
+		"customers:write",
+		"shopping-carts:read",
+		"shopping-carts:write"
+	};
+
+	public static JwtDecoder createMockJwtDecoder() {
+		JwtDecoder jwtDecoder = Mockito.mock(JwtDecoder.class);
+		when(jwtDecoder.decode(Mockito.anyString()))
+				.thenReturn(buildJwt(DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES));
+
+		return jwtDecoder;
+	}
+
+	public static JwtDecoder createMockJwtDecoder(String subject, String issuer, String[] scopes) {
+		JwtDecoder jwtDecoder = Mockito.mock(JwtDecoder.class);
+		when(jwtDecoder.decode(Mockito.anyString()))
+				.thenReturn(buildJwt(subject, issuer, scopes));
+
+		return jwtDecoder;
+	}
+
+	public static Jwt buildJwt(String subject, String issuer, String[] scopes) {
+		Instant now = Instant.now();
+		Instant expires = now.plusSeconds(600);
+
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("sub", subject);
+		claims.put("iss", issuer);
+		claims.put("exp", expires);
+
+		if (scopes != null) {
+			claims.put("scopes", String.join(" ", scopes));
+		}
+
+		return Jwt.withTokenValue(DEFAULT_TOKEN_VALUE)
+				.issuedAt(now)
+				.expiresAt(expires)
+				.issuer(issuer)
+				.subject(subject)
+				.claims(c -> c.putAll(claims))
+				.headers(h -> h.put("alg", "none"))
+				.build();
+	}
+}
