@@ -57,7 +57,7 @@ class BuyNowApplicationServiceIT extends AbstractApplicationIT {
         when(shippingCostService.calculate(any(CalculationRequest.class)))
                 .thenReturn(ShippingCostService.CalculationResponse.builder()
                         .cost(Money.of("19.99"))
-                        .expectedDeliveryDate(LocalDate.now().plusDays(7))
+                        .expectedDate(LocalDate.now().plusDays(7))
                         .build());
 
         BuyNowInput buyNowInput = BuyNowInputTestDataBuilder.aBuyNowInput().build();

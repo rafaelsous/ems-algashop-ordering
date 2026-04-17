@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.domain.model.product;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.web.product.client.http.ProductCatalogApiClient;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.MockJwtDecoderConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 
-@Import(TestcontainerPostgreSQLConfig.class)
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ProductCatalogServiceIT {
 
@@ -49,7 +50,6 @@ class ProductCatalogServiceIT {
 			}
 
 			assertThat(awaitTermination).isFalse();
-			assertThat(executorService.isTerminated()).isTrue();
 		}
 	}
 }

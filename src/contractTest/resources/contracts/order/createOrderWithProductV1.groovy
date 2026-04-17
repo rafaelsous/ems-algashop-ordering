@@ -74,7 +74,7 @@ Contract.make {
                 paymentMethod: "GATEWAY_BALANCE",
                 shipping     : [
                         cost        : 20.5,
-                        expectedDeliveryDate: anyDate(),
+                        expectedDate: anyDate(),
                         recipient   : [
                                 firstName: "John",
                                 lastName : "Doe",

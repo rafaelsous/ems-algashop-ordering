@@ -64,7 +64,7 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
         when(shippingCostService.calculate(any(CalculationRequest.class)))
                 .thenReturn(ShippingCostService.CalculationResponse.builder()
                         .cost(Money.of("19.99"))
-                        .expectedDeliveryDate(LocalDate.now().plusDays(7))
+                        .expectedDate(LocalDate.now().plusDays(7))
                         .build());
 
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
@@ -116,7 +116,7 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
         when(shippingCostService.calculate(any(CalculationRequest.class)))
                 .thenReturn(ShippingCostService.CalculationResponse.builder()
                         .cost(Money.of("19.99"))
-                        .expectedDeliveryDate(LocalDate.now().plusDays(7))
+                        .expectedDate(LocalDate.now().plusDays(7))
                         .build());
 
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
@@ -137,7 +137,7 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
         when(shippingCostService.calculate(any(CalculationRequest.class)))
                 .thenReturn(ShippingCostService.CalculationResponse.builder()
                         .cost(Money.of("19.99"))
-                        .expectedDeliveryDate(LocalDate.now().plusDays(7))
+                        .expectedDate(LocalDate.now().plusDays(7))
                         .build());
 
         Product ramMemoryAvailable = ProductTestDataBuilder.aProductAltRamMemory().build();

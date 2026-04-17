@@ -15,15 +15,6 @@ public class MockJwtDecoderFactory {
 	public static final String DEFAULT_TOKEN_VALUE = "fake.jwt.token";
 	public static final String DEFAULT_ISSUER_URI = "http://algashop-authorization-server:8081";
 	public static final String[] DEFAULT_SCOPES = new String[] {
-		"products:read",
-		"products:write",
-		"products:stock:write",
-		"categories:read",
-		"categories:write",
-		"invoices:read",
-		"invoices:write",
-		"credit-cards:read",
-		"credit-cards:write",
 		"orders:read",
 		"orders:write",
 		"customers:read",
@@ -33,11 +24,7 @@ public class MockJwtDecoderFactory {
 	};
 
 	public static JwtDecoder createMockJwtDecoder() {
-		JwtDecoder jwtDecoder = Mockito.mock(JwtDecoder.class);
-		when(jwtDecoder.decode(Mockito.anyString()))
-				.thenReturn(buildJwt(DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES));
-
-		return jwtDecoder;
+		return createMockJwtDecoder(DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES);
 	}
 
 	public static JwtDecoder createMockJwtDecoder(String subject, String issuer, String[] scopes) {
@@ -57,8 +44,8 @@ public class MockJwtDecoderFactory {
 		claims.put("iss", issuer);
 		claims.put("exp", expires);
 
-		if (scopes != null) {
-			claims.put("scopes", String.join(" ", scopes));
+		if (scopes != null && scopes.length > 0) {
+			claims.put("scope", String.join(" ", scopes));
 		}
 
 		return Jwt.withTokenValue(DEFAULT_TOKEN_VALUE)

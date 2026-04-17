@@ -15,7 +15,7 @@ public class ShippingCostServiceFakeImpl implements ShippingCostService {
     public CalculationResponse calculate(CalculationRequest request) {
         return CalculationResponse.builder()
                 .cost(Money.of("19.90"))
-                .expectedDeliveryDate(LocalDate.now().plusDays(7))
+                .expectedDate(LocalDate.now().plusDays(7))
                 .build();
     }
 }

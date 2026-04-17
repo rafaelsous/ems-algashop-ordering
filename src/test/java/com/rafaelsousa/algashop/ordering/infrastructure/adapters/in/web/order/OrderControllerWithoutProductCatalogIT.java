@@ -5,7 +5,6 @@ import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
+@TestPropertySource(properties = {
+		"algashop.integrations.product-catalog.url=http://localhost:9999"
+})
 class OrderControllerWithoutProductCatalogIT extends AbstractPresentationIT {
 
     @Autowired
@@ -49,10 +52,7 @@ class OrderControllerWithoutProductCatalogIT extends AbstractPresentationIT {
     void shouldNotCreateOrderWithProductWhenProductApiIsUnavailable() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product.json");
 
-        wireMockProductCatalog.stop();
-
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)

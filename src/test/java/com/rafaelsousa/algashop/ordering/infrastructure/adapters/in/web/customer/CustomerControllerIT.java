@@ -3,7 +3,6 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.custome
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
     void shouldCreateCustomer() {
         String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
 
-        String createdCustomerId = RestAssured
-            .given()
+        String createdCustomerId = givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
@@ -58,8 +56,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
     void shouldNotCreateCustomerWithInvalidData() {
         String json = AlgaShopResourceUtils.readContent("json/create-customer-with-invalid-data.json");
 
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
@@ -73,8 +70,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
 
     @Test
     void shouldArchiveCustomer() {
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
@@ -90,8 +86,7 @@ class CustomerControllerIT extends AbstractPresentationIT {
 
     @Test
     void shouldNotArchiveInexistentCustomer() {
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()

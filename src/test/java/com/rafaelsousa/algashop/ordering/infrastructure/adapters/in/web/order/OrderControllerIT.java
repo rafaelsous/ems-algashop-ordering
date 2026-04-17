@@ -9,7 +9,6 @@ import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,8 +55,7 @@ class OrderControllerIT extends AbstractPresentationIT {
     void shouldCreateOrderWithProduct() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product.json");
 
-        String createdOrderId = RestAssured
-            .given()
+        String createdOrderId = givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
@@ -81,8 +79,7 @@ class OrderControllerIT extends AbstractPresentationIT {
     void shouldNotCreateOrderWithProductWhenProductNotExists() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-invalid-product.json");
 
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
@@ -91,15 +88,14 @@ class OrderControllerIT extends AbstractPresentationIT {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 
     @Test
     void shouldNotCreateOrderWithProductWhenCustomerWasNotFound() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-product-and-invalid-customer.json");
 
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
@@ -108,7 +104,7 @@ class OrderControllerIT extends AbstractPresentationIT {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 
     @Test
@@ -122,8 +118,7 @@ class OrderControllerIT extends AbstractPresentationIT {
 
         shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
-        String createdOrderId = RestAssured
-            .given()
+        String createdOrderId = givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-shopping-cart.v1+json")
                 .body(json)
@@ -150,8 +145,7 @@ class OrderControllerIT extends AbstractPresentationIT {
     void shouldNotCreateOrderWithInexistentShoppingCart() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-invalid-shopping-cart.json");
 
-        RestAssured
-            .given()
+	    givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-shopping-cart.v1+json")
                 .body(json)
@@ -160,6 +154,6 @@ class OrderControllerIT extends AbstractPresentationIT {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 }

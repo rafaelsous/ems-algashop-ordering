@@ -16,7 +16,7 @@ public class ShippingInputDisassembler {
         AddressData address = shippingInput.getAddress();
         return Shipping.builder()
                 .cost(calculationResponse.cost())
-                .expectedDate(calculationResponse.expectedDeliveryDate())
+                .expectedDate(calculationResponse.expectedDate())
                 .recipient(Recipient.builder()
                         .fullName(new FullName(
                                 shippingInput.getRecipient().getFirstName(),

@@ -1,11 +1,9 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistence;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
-import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -49,8 +47,7 @@ class ShoppingCartControllerIT extends AbstractPresentationIT {
         ShoppingCartInput shoppingCartInput = ShoppingCartInput.builder()
                 .customerId(UUID.fromString("5f6b7d8e-9c0a-1b2d-3c4a-5f6b7d8e9c0a")).build();
 
-        String createdShoppingCartId = RestAssured
-            .given()
+        String createdShoppingCartId = givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(shoppingCartInput)
@@ -74,8 +71,7 @@ class ShoppingCartControllerIT extends AbstractPresentationIT {
     void shouldNotCreateShoppingCartWithInvalidData() {
         ShoppingCartInput shoppingCartInput = ShoppingCartInput.builder().build();
 
-        RestAssured
-            .given()
+        givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(shoppingCartInput)
@@ -99,8 +95,7 @@ class ShoppingCartControllerIT extends AbstractPresentationIT {
                 .quantity(addedQuantity)
                 .build();
 
-        RestAssured
-            .given()
+            givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(shoppingCartItemInput)
@@ -128,8 +123,7 @@ class ShoppingCartControllerIT extends AbstractPresentationIT {
                 .quantity(2)
                 .build();
 
-        RestAssured
-            .given()
+            givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(shoppingCartItemInput)

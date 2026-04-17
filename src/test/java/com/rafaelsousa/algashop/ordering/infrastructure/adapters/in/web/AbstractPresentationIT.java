@@ -4,15 +4,19 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static io.restassured.config.JsonConfig.jsonConfig;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.MockJwtDecoderConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
+import com.rafaelsousa.algashop.ordering.utils.MockJwtDecoderFactory;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
+import io.restassured.specification.RequestSpecification;
+import org.apache.http.HttpHeaders;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
-@Import(TestcontainerPostgreSQLConfig.class)
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
@@ -30,6 +34,14 @@ public abstract class AbstractPresentationIT {
 
         RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
     }
+
+	protected RequestSpecification givenAuthenticatedRequest() {
+        return RestAssured.given()
+		        .header(
+						HttpHeaders.AUTHORIZATION,
+				        String.join(" ", "Bearer", MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE)
+		        );
+	}
 
     protected static void initWireMock() {
         wireMockRapidex = new WireMockServer(options()

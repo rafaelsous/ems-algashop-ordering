@@ -42,7 +42,7 @@ public class ShippingCostServiceRapiDexImpl implements ShippingCostService {
 
         return CalculationResponse.builder()
                 .cost(Money.of(deliveryCostResponse.deliveryCost()))
-                .expectedDeliveryDate(expectedDeliveryDate)
+                .expectedDate(expectedDeliveryDate)
                 .build();
     }
 }

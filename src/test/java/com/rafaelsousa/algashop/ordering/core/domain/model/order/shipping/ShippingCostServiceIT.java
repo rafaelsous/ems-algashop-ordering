@@ -55,7 +55,7 @@ class ShippingCostServiceIT extends AbstractDomainIT {
 
         assertThat(response).satisfies(
                 r -> assertThat(r.cost()).isEqualByComparingTo(Money.of("35.00")),
-                r -> assertThat(r.expectedDeliveryDate()).isEqualTo(LocalDate.now().plusDays(7))
+                r -> assertThat(r.expectedDate()).isEqualTo(LocalDate.now().plusDays(7))
         );
     }
 }

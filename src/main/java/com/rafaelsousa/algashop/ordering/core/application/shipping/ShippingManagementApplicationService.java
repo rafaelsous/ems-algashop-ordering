@@ -24,7 +24,7 @@ public class ShippingManagementApplicationService {
 
 		return ShippingCostPreviewOutput.builder()
 				.cost(calculationResponse.cost().value())
-				.expectedDate(calculationResponse.expectedDeliveryDate())
+				.expectedDate(calculationResponse.expectedDate())
 				.build();
 	}
 }
