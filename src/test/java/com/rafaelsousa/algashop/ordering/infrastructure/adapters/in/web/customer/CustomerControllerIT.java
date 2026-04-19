@@ -17,11 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CustomerControllerIT extends AbstractPresentationIT {
 
-    @Autowired
-    private CustomerPersistenceRepository customerPersistenceRepository;
+    @Autowired private CustomerPersistenceRepository customerPersistenceRepository;
 
-    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
-    private static final UUID INVALID_CUSTOMER_ID = UUID.fromString("019b7504-4e4f-741c-99a7-84d3c651ea19");
+    private static final UUID VALID_CUSTOMER_ID =
+            UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+    private static final UUID INVALID_CUSTOMER_ID =
+            UUID.fromString("019b7504-4e4f-741c-99a7-84d3c651ea19");
 
     @BeforeEach
     void setUp() {
@@ -32,37 +33,39 @@ class CustomerControllerIT extends AbstractPresentationIT {
     void shouldCreateCustomer() {
         String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
 
-        String createdCustomerId = givenAuthenticatedRequest()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(json)
-            .when()
-                .post("/api/v1/customers")
-            .then()
-                .assertThat()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .statusCode(HttpStatus.CREATED.value())
-                .body(
-                        "id", Matchers.not(Matchers.emptyString())
-                )
-            .extract()
-                .jsonPath().getString("id");
+        String createdCustomerId =
+                givenAuthenticatedRequest()
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(json)
+                        .when()
+                        .post("/api/v1/customers")
+                        .then()
+                        .assertThat()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .statusCode(HttpStatus.CREATED.value())
+                        .body("id", Matchers.not(Matchers.emptyString()))
+                        .extract()
+                        .jsonPath()
+                        .getString("id");
 
-        boolean customerExists = customerPersistenceRepository.existsById(UUID.fromString(createdCustomerId));
+        boolean customerExists =
+                customerPersistenceRepository.existsById(UUID.fromString(createdCustomerId));
         assertThat(customerExists).isTrue();
     }
 
     @Test
     void shouldNotCreateCustomerWithInvalidData() {
-        String json = AlgaShopResourceUtils.readContent("json/create-customer-with-invalid-data.json");
+        String json =
+                AlgaShopResourceUtils.readContent("json/create-customer-with-invalid-data.json");
 
-	    givenAuthenticatedRequest()
+        givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
-            .when()
+                .when()
                 .post("/api/v1/customers")
-            .then()
+                .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -70,29 +73,69 @@ class CustomerControllerIT extends AbstractPresentationIT {
 
     @Test
     void shouldArchiveCustomer() {
-	    givenAuthenticatedRequest()
+        givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
+                .when()
                 .delete(URI.create("api/v1/customers/" + VALID_CUSTOMER_ID))
-            .then()
+                .then()
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(customerPersistenceRepository.existsById(VALID_CUSTOMER_ID)).isTrue();
-        assertThat(customerPersistenceRepository.findById(VALID_CUSTOMER_ID).orElseThrow().getArchived()).isTrue();
-        assertThat(customerPersistenceRepository.findById(VALID_CUSTOMER_ID).orElseThrow().getArchivedAt()).isNotNull();
+        assertThat(
+                        customerPersistenceRepository
+                                .findById(VALID_CUSTOMER_ID)
+                                .orElseThrow()
+                                .getArchived())
+                .isTrue();
+        assertThat(
+                        customerPersistenceRepository
+                                .findById(VALID_CUSTOMER_ID)
+                                .orElseThrow()
+                                .getArchivedAt())
+                .isNotNull();
     }
 
     @Test
     void shouldNotArchiveInexistentCustomer() {
-	    givenAuthenticatedRequest()
+        givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
+                .when()
                 .delete(URI.create("api/v1/customers/" + INVALID_CUSTOMER_ID))
-            .then()
+                .then()
                 .assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void shouldReturnUnauthorizedWhenTokenHasExpired() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
+        givenAuthenticatedWithExpiredTokenRequest()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+            .when()
+                .post("/api/v1/customers")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+@Test
+    void shouldReturnForbidenWhenCreatingCustomerWithoutScope() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
+        givenAuthenticatedWithNoScopeTokenRequest()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+        .when()
+                .post("/api/v1/customers")
+        .then()
+                .assertThat()
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 }

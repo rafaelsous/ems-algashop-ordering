@@ -18,12 +18,15 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "classpath:db/testdata/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = "classpath:db/clean/afterMigrate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(
+        scripts = "classpath:db/testdata/afterMigrate.sql",
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(
+        scripts = "classpath:db/clean/afterMigrate.sql",
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 public abstract class AbstractPresentationIT {
 
-    @LocalServerPort
-    protected int port;
+    @LocalServerPort protected int port;
 
     protected static WireMockServer wireMockRapidex;
     protected static WireMockServer wireMockProductCatalog;
@@ -32,27 +35,43 @@ public abstract class AbstractPresentationIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
 
-        RestAssured.config().jsonConfig(jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
+        RestAssured.config()
+                .jsonConfig(
+                        jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL));
     }
 
-	protected RequestSpecification givenAuthenticatedRequest() {
+    protected RequestSpecification givenAuthenticatedRequest(String tokenValue) {
         return RestAssured.given()
-		        .header(
-						HttpHeaders.AUTHORIZATION,
-				        String.join(" ", "Bearer", MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE)
-		        );
-	}
+                .header(HttpHeaders.AUTHORIZATION, String.join(" ", "Bearer", tokenValue));
+    }
+
+    protected RequestSpecification givenAuthenticatedRequest() {
+        return givenAuthenticatedRequest(MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenAuthenticatedWithExpiredTokenRequest() {
+        return givenAuthenticatedRequest(MockJwtDecoderFactory.EXPIRED_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenAuthenticatedWithNoScopeTokenRequest() {
+        return givenAuthenticatedRequest(MockJwtDecoderFactory.NO_SCOPE_TOKEN_VALUE);
+    }
 
     protected static void initWireMock() {
-        wireMockRapidex = new WireMockServer(options()
-                .port(8780)
-		        .templatingEnabled(true)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex"));
+        wireMockRapidex =
+                new WireMockServer(
+                        options()
+                                .port(8780)
+                                .templatingEnabled(true)
+                                .usingFilesUnderDirectory("src/test/resources/wiremock/rapidex"));
 
-        wireMockProductCatalog = new WireMockServer(options()
-                .port(8781)
-		        .templatingEnabled(true)
-                .usingFilesUnderDirectory("src/test/resources/wiremock/product-catalog"));
+        wireMockProductCatalog =
+                new WireMockServer(
+                        options()
+                                .port(8781)
+                                .templatingEnabled(true)
+                                .usingFilesUnderDirectory(
+                                        "src/test/resources/wiremock/product-catalog"));
 
         wireMockRapidex.start();
         wireMockProductCatalog.start();
