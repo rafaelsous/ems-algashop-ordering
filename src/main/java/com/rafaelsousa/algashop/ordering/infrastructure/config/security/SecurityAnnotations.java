@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.infrastructure.security;
+package com.rafaelsousa.algashop.ordering.infrastructure.config.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.infrastructure.security;
+package com.rafaelsousa.algashop.ordering.infrastructure.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,8 @@ public class OrderingSecurityConfig {
 				.requestMatchers("/actuator/health/**", "/api/v1/shipping-cost-previews").permitAll()
 				.anyRequest().authenticated())
 			.oauth2ResourceServer(oauth2 ->
-				oauth2.jwt(Customizer.withDefaults()));
+				oauth2.jwt(Customizer.withDefaults()))
+			.oauth2Client(Customizer.withDefaults());
 
 		return http.build();
 	}

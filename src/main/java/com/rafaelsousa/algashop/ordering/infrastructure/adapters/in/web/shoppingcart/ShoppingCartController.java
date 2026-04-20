@@ -4,8 +4,8 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerNotF
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.*;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.UnprocessableEntityException;
-import com.rafaelsousa.algashop.ordering.infrastructure.security.SecurityAnnotations.CanReadShoppingCarts;
-import com.rafaelsousa.algashop.ordering.infrastructure.security.SecurityAnnotations.CanWriteShoppingCarts;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanReadShoppingCarts;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanWriteShoppingCarts;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
