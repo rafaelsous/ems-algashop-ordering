@@ -36,7 +36,7 @@ public class ResilientProductCatalogApiClient {
 				.create(SpringCircuitBreakerConfig.PRODUCT_CATALOG_API_CB_ID);
 	}
 
-	@Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId")
+	@Cacheable(cacheNames = "algashop:product-catalog-api:v1", key = "#productId", unless="#result == null")
 	@ConcurrencyLimit(10)
 	public Optional<ProductResponse> getById(UUID productId) {
 		log.info("Trying to load product by id {}", productId);
@@ -57,11 +57,7 @@ public class ResilientProductCatalogApiClient {
 
 		try {
 			return Optional.ofNullable(productCatalogApiClient.getById(productId));
-		} catch (HttpClientErrorException ex) {
-			if (!(ex instanceof HttpClientErrorException.NotFound)) {
-				log.error("Client HTTP error when loading product by id {}", productId, ex);
-			}
-
+		} catch (HttpClientErrorException.NotFound ex) {
 			return Optional.empty();
 		} catch (RestClientException ex) {
 			throw translateException(ex);

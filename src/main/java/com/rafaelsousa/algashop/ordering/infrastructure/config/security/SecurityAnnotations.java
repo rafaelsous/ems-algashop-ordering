@@ -37,4 +37,9 @@ public class SecurityAnnotations {
 	@Target({ElementType.METHOD, ElementType.TYPE})
 	@PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
 	public @interface CanWriteShoppingCarts {}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.METHOD, ElementType.TYPE})
+	@PreAuthorize("hasAuthority('SCOPE_shipping-costs:preview')")
+	public @interface CanPreviewShippingCosts {}
 }
