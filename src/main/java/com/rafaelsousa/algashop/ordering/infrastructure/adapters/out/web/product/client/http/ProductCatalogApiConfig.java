@@ -4,13 +4,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.client.OAuth2ClientHttpRequestInterceptor;
+import org.springframework.security.oauth2.client.web.client.RequestAttributePrincipalResolver;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import java.time.Duration;
+import java.util.Collections;
 
 @Configuration
 public class ProductCatalogApiConfig {
@@ -23,6 +27,9 @@ public class ProductCatalogApiConfig {
 
         OAuth2ClientHttpRequestInterceptor interceptor = new OAuth2ClientHttpRequestInterceptor(manager);
         interceptor.setClientRegistrationIdResolver(_ -> properties.getOauth2ClientRegistrationId());
+        interceptor.setPrincipalResolver(_ -> generatePrincipal(properties.getOauth2ClientRegistrationId()));
+
+        interceptor.setPrincipalResolver(new RequestAttributePrincipalResolver());
 
         RestClient restClient = builder.baseUrl(properties.getUrl())
                     .requestFactory(generateClientHttpRequestFactory())
@@ -41,5 +48,19 @@ public class ProductCatalogApiConfig {
         factory.setConnectTimeout(Duration.ofSeconds(2));
 
         return factory;
+    }
+
+    private Authentication generatePrincipal(String principalName) {
+        return new AbstractAuthenticationToken(Collections.emptySet()) {
+            @Override
+            public Object getPrincipal() {
+                return principalName;
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+        };
     }
 }
