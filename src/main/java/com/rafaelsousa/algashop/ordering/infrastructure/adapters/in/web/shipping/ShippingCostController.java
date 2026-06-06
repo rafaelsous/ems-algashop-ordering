@@ -3,7 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shippin
 import com.rafaelsousa.algashop.ordering.core.application.shipping.ShippingCostPreviewInput;
 import com.rafaelsousa.algashop.ordering.core.application.shipping.ShippingCostPreviewOutput;
 import com.rafaelsousa.algashop.ordering.core.application.shipping.ShippingManagementApplicationService;
-import com.rafaelsousa.algashop.ordering.infrastructure.config.security.SecurityAnnotations.CanPreviewShippingCosts;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.security.check.SecurityAnnotations.CanPreviewShippingCosts;
 
 import jakarta.validation.Valid;
 

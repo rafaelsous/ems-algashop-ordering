@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.auditing;
 
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityCheckApplicationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
@@ -21,7 +22,13 @@ public class SpringDataAuditingConfig {
     }
 
     @Bean
-    public AuditorAware<UUID> auditorProvider() {
-        return () -> Optional.of(UUID.randomUUID());
+    public AuditorAware<UUID> auditorProvider(SecurityCheckApplicationService securityCheckApplicationService) {
+        return () -> {
+            if (!securityCheckApplicationService.isAuthenticated() || securityCheckApplicationService.isMachineAuthenticated()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(securityCheckApplicationService.getAuthenticatedUserId());
+        };
     }
 }
