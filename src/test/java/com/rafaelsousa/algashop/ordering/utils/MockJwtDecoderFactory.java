@@ -16,7 +16,7 @@ public class MockJwtDecoderFactory {
     public static final String DEFAULT_TOKEN_VALUE = "fake.jwt.token";
     public static final String NO_SCOPE_TOKEN_VALUE = "fake.jwt.no-scope";
     public static final String EXPIRED_TOKEN_VALUE = "fake.jwt.expired";
-    public static final String DEFAULT_ISSUER_URI = "http://algashop-authorization-server:8081";
+    public static final String DEFAULT_ISSUER_URI = "http://auth.algashop.local:8081";
     public static final String[] DEFAULT_SCOPES =
             new String[] {
                 "orders:read",

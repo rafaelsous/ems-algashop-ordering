@@ -44,7 +44,7 @@ spring:
 algashop:
   integrations:
     authorization-server:
-      url: http://algashop-authorization-server:8081
+      url: http://auth.algashop.local:8081
     shipping.provider: RAPIDEX
     rapidex.url: http://localhost:8787
     product-catalog:
