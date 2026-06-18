@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Slf4j
 @Service("securityCheck")
 public class OAuth2SecurityCheckApplicationServiceImpl implements SecurityCheckApplicationService {
+	private static final String ROLE_CUSTOMER = "ROLE_CUSTOMER";
 
     @Override
     public UUID getAuthenticatedUserId() {
@@ -56,6 +58,23 @@ public class OAuth2SecurityCheckApplicationServiceImpl implements SecurityCheckA
 
         return jwt.getAudience().contains(jwt.getSubject());
     }
+
+	@Override
+	public boolean isCustomer() {
+		return hasAuthority(ROLE_CUSTOMER);
+	}
+
+	private boolean hasAuthority(String rawAuthority) {
+		Authentication authentication;
+		try {
+			authentication = getAuthentication();
+		} catch (IllegalStateException ex) {
+			log.debug(ex.getMessage(), ex);
+			return false;
+		}
+
+		return authentication.getAuthorities().contains(new SimpleGrantedAuthority(rawAuthority));
+	}
 
     private Authentication getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

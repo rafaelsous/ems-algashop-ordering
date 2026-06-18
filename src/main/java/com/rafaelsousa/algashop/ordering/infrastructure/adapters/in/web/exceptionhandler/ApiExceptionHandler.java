@@ -13,6 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -115,6 +116,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 		return problemDetail;
 	}
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setType(URI.create("/errors/forbidden"));
+        problemDetail.setTitle("Forbidden");
+        problemDetail.setProperty(TIMESTAMP_PROPERTY_NAME, OffsetDateTime.now());
+
+        return problemDetail;
+    }
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex) {
