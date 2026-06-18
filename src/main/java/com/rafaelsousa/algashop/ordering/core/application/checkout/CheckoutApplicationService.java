@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityCheckApplicationService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.ZipCode;
@@ -20,11 +21,14 @@ import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ForBuyingWithShoppingCart;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.BillingInputDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.ShippingInputDisassembler;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +41,7 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
     private final OriginAddressService originAddressService;
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
+    private final SecurityCheckApplicationService securityCheckApplicationService;
 
     @Transactional
     @Override
@@ -61,6 +66,9 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
         CustomerId customerId = shoppingCart.customerId();
+
+        verifyCanOrderFor(customerId.value());
+
         Customer customer = customers.ofId(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
@@ -83,5 +91,11 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
 
         return shippingCostService.calculate(ShippingCostService.CalculationRequest.builder()
                 .origin(originZipCode).destination(destinationZipCode).build());
+    }
+
+    private void verifyCanOrderFor(@NotNull UUID customerId) {
+        if (!(securityCheckApplicationService.isCustomer() && securityCheckApplicationService.getAuthenticatedUserId().equals(customerId))) {
+            throw new AccessDeniedException("Cannot order for customer " + customerId);
+        }
     }
 }
