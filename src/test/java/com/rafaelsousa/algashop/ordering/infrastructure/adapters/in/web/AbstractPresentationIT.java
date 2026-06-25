@@ -6,7 +6,7 @@ import static io.restassured.config.JsonConfig.jsonConfig;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.MockJwtDecoderConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
-import com.rafaelsousa.algashop.ordering.utils.MockJwtDecoderFactory;
+import com.rafaelsousa.algashop.ordering.utils.MockJwtFactory;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
@@ -46,15 +46,15 @@ public abstract class AbstractPresentationIT {
     }
 
     protected RequestSpecification givenAuthenticatedRequest() {
-        return givenAuthenticatedRequest(MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+        return givenAuthenticatedRequest(MockJwtFactory.DEFAULT_TOKEN_VALUE);
     }
 
     protected RequestSpecification givenAuthenticatedWithExpiredTokenRequest() {
-        return givenAuthenticatedRequest(MockJwtDecoderFactory.EXPIRED_TOKEN_VALUE);
+        return givenAuthenticatedRequest(MockJwtFactory.EXPIRED_TOKEN_VALUE);
     }
 
     protected RequestSpecification givenAuthenticatedWithNoScopeTokenRequest() {
-        return givenAuthenticatedRequest(MockJwtDecoderFactory.NO_SCOPE_TOKEN_VALUE);
+        return givenAuthenticatedRequest(MockJwtFactory.NO_SCOPE_TOKEN_VALUE);
     }
 
     protected static void initWireMock() {
