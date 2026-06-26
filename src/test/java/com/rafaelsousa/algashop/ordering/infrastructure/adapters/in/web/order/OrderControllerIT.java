@@ -2,11 +2,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.order;
 
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceRepository;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistence;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceRepository;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
 import org.hamcrest.Matchers;
@@ -25,16 +21,9 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class OrderControllerIT extends AbstractPresentationIT {
 
     @Autowired
-    private CustomerPersistenceRepository customerPersistenceRepository;
-
-    @Autowired
     private OrderPersistenceRepository orderPersistenceRepository;
 
-    @Autowired
-    private ShoppingCartPersistenceRepository shoppingCartPersistenceRepository;
-
-    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("9a0b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d");
-    private static final UUID VALID_SHOPPING_CART_ID = UUID.fromString("28fcd9fb-4ce7-44d6-9583-14d8b3dc5aff");
+    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
     @BeforeEach
     void setUp() {
@@ -104,19 +93,12 @@ class OrderControllerIT extends AbstractPresentationIT {
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
     void shouldCreateOrderWithShoppingCart() {
         String json = AlgaShopResourceUtils.readContent("json/create-order-with-shopping-cart.json");
-
-        ShoppingCartPersistence shoppingCartPersistence = ShoppingCartPersistenceTestDataBuilder.existingShoppingCart()
-                .id(VALID_SHOPPING_CART_ID)
-                .customer(customerPersistenceRepository.getReferenceById(VALID_CUSTOMER_ID))
-                .build();
-
-        shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
         String createdOrderId = givenAuthenticatedRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

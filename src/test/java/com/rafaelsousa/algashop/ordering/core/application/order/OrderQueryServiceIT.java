@@ -10,6 +10,7 @@ import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.OrderFilter;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForQueryingOrders;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderSummaryOutput;
+import com.rafaelsousa.algashop.ordering.utils.WithMockJwt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -152,6 +153,7 @@ class OrderQueryServiceIT extends AbstractApplicationIT {
     }
 
     @Test
+    @WithMockJwt(role = "", audiences = "machine-client-web", subject = "machine-client-web")
     void shouldOrderByStatus() {
         Customer customer1 = CustomerTestDataBuilder.existingCustomer().build();
         customers.add(customer1);

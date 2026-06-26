@@ -14,6 +14,8 @@ import org.apache.http.HttpHeaders;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.client.web.client.OAuth2ClientHttpRequestInterceptor;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
@@ -30,6 +32,9 @@ public abstract class AbstractPresentationIT {
 
     protected static WireMockServer wireMockRapidex;
     protected static WireMockServer wireMockProductCatalog;
+
+    @MockitoBean("productCatalogApiClientInterceptor")
+    protected OAuth2ClientHttpRequestInterceptor productCatalogApiClientInterceptor;
 
     protected void beforeEach() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();

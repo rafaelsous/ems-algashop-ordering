@@ -31,6 +31,7 @@ class OrderPersistenceRepositoryIT extends AbstractInfrastructureIT {
 
     @BeforeEach
     void setUp() {
+        super.setup();
         UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
 
         if (!customerPersistenceRepository.existsById(customerId)) {
