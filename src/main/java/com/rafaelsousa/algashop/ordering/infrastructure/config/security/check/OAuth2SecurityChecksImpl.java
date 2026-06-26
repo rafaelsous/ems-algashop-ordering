@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.security.check;
 
-import com.rafaelsousa.algashop.ordering.core.application.security.SecurityCheckApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Slf4j
-@Service("securityCheck")
-public class OAuth2SecurityCheckApplicationServiceImpl implements SecurityCheckApplicationService {
+@Service("securityChecks")
+public class OAuth2SecurityChecksImpl implements SecurityChecks {
 	private static final String ROLE_CUSTOMER = "ROLE_CUSTOMER";
 
     @Override
@@ -62,6 +62,13 @@ public class OAuth2SecurityCheckApplicationServiceImpl implements SecurityCheckA
 	@Override
 	public boolean isCustomer() {
 		return hasAuthority(ROLE_CUSTOMER);
+	}
+
+	@Override
+	public boolean canOrderFor(UUID customerId) {
+		if (customerId == null) return false;
+
+		return isCustomer() && getAuthenticatedUserId().equals(customerId);
 	}
 
 	private boolean hasAuthority(String rawAuthority) {

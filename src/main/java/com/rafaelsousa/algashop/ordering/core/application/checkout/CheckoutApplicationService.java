@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
-import com.rafaelsousa.algashop.ordering.core.application.security.SecurityCheckApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.ZipCode;
@@ -41,7 +41,7 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
     private final OriginAddressService originAddressService;
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
-    private final SecurityCheckApplicationService securityCheckApplicationService;
+    private final SecurityChecks securityChecks;
 
     @Transactional
     @Override
@@ -94,7 +94,7 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
     }
 
     private void verifyCanOrderFor(@NotNull UUID customerId) {
-        if (!(securityCheckApplicationService.isCustomer() && securityCheckApplicationService.getAuthenticatedUserId().equals(customerId))) {
+        if (!securityChecks.canOrderFor(customerId)) {
             throw new AccessDeniedException("Cannot order for customer " + customerId);
         }
     }

@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.order;
 
-import com.rafaelsousa.algashop.ordering.core.application.security.SecurityCheckApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForQueryingOrders;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.OrderFilter;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderQueryService implements ForQueryingOrders {
     private final ForObtainingOrders forObtainingOrders;
-    private final SecurityCheckApplicationService securityCheckApplicationService;
+    private final SecurityChecks securityChecks;
 
     @Override
     public OrderDetailOutput findById(String id) {
@@ -30,19 +30,19 @@ public class OrderQueryService implements ForQueryingOrders {
 
     @Override
     public Page<OrderSummaryOutput> filter(OrderFilter filter) {
-        if (securityCheckApplicationService.isCustomer()) {
-            filter.setCustomerId(securityCheckApplicationService.getAuthenticatedUserId());
+        if (securityChecks.isCustomer()) {
+            filter.setCustomerId(securityChecks.getAuthenticatedUserId());
         }
 
         return forObtainingOrders.filter(filter);
     }
 
     private boolean canAccess(OrderDetailOutput order) {
-        if (!securityCheckApplicationService.isCustomer() && securityCheckApplicationService.isAuthenticated()) {
+        if (!securityChecks.isCustomer() && securityChecks.isAuthenticated()) {
             return true;
         }
 
-        return securityCheckApplicationService.isCustomer()
-            && securityCheckApplicationService.getAuthenticatedUserId().equals(order.getCustomer().getId());
+        return securityChecks.isCustomer()
+            && securityChecks.getAuthenticatedUserId().equals(order.getCustomer().getId());
     }
 }
