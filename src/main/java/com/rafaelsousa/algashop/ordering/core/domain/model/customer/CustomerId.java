@@ -15,6 +15,10 @@ public record CustomerId(UUID value) {
         this(IdGenerator.generateTimeBasedUUID());
     }
 
+    public static CustomerId of(UUID customerId) {
+        return new CustomerId(customerId);
+    }
+
     @Override
     public String toString() {
         return this.value.toString();
