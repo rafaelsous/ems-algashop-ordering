@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.ports.in.checkout;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.BillingData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BuyNowInput {
 
-    @NotNull
+    @JsonIgnore
     private UUID customerId;
 
     @NotNull

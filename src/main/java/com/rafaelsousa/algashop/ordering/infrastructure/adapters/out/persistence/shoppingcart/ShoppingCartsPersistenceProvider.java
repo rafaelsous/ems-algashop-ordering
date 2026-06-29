@@ -27,7 +27,7 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @Override
     public Optional<ShoppingCart> ofCustomer(CustomerId customerId) {
         Optional<ShoppingCartPersistence> shoppingCartPersistenceOptional = shoppingCartPersistenceRepository
-                .findByCustomerId(customerId.value());
+                .findByCustomer_Id(customerId.value());
 
         return shoppingCartPersistenceOptional.map(disassembler::toDomain);
     }

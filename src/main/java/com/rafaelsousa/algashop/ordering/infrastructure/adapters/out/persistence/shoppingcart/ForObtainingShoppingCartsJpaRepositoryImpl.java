@@ -29,7 +29,7 @@ public class ForObtainingShoppingCartsJpaRepositoryImpl implements ForObtainingS
 
     @Override
     public ShoppingCartOutput findByCustomerId(UUID customerId) {
-        ShoppingCartPersistence shoppingCartPersistence = shoppingCartPersistenceRepository.findByCustomerId(customerId)
+        ShoppingCartPersistence shoppingCartPersistence = shoppingCartPersistenceRepository.findByCustomer_Id(customerId)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(new CustomerId(customerId)));
 
         return mapper.convert(shoppingCartPersistence, ShoppingCartOutput.class);

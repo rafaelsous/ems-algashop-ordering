@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -38,8 +39,10 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
     @Override
     public OrderDetailOutput findById(String id) {
         OrderId orderId = new OrderId(id);
-        OrderPersistence orderPersistence = orderPersistenceRepository.findById(orderId.value().toLong())
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+        OrderPersistence orderPersistence =
+                orderPersistenceRepository
+                        .findById(orderId.value().toLong())
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         return mapper.convert(orderPersistence, OrderDetailOutput.class);
     }
@@ -55,6 +58,17 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
         }
 
         return filterQuery(filter, totalQueryResults);
+    }
+
+    @Override
+    public OrderDetailOutput findByIdAndCustomerId(String id, UUID customerId) {
+        OrderId orderId = new OrderId(id);
+        OrderPersistence orderPersistence =
+            orderPersistenceRepository
+                .findByIdAndCustomerId(orderId.value().toLong(), customerId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        return mapper.convert(orderPersistence, OrderDetailOutput.class);
     }
 
     private Long countTotalQueryResults(OrderFilter filter) {
@@ -75,12 +89,15 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
 
     private Page<OrderSummaryOutput> filterQuery(OrderFilter filter, Long totalQueryResults) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<OrderSummaryOutput> criteriaQuery = criteriaBuilder.createQuery(OrderSummaryOutput.class);
+        CriteriaQuery<OrderSummaryOutput> criteriaQuery =
+                criteriaBuilder.createQuery(OrderSummaryOutput.class);
         Root<OrderPersistence> root = criteriaQuery.from(OrderPersistence.class);
 
         Path<Object> customer = root.get("customer");
 
-        criteriaQuery.select(criteriaBuilder.construct(OrderSummaryOutput.class,
+        criteriaQuery.select(
+                criteriaBuilder.construct(
+                        OrderSummaryOutput.class,
                         root.get("id"),
                         root.get("totalItems"),
                         root.get(TOTAL_AMOUNT_ATTRIBUTE),
@@ -90,16 +107,14 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
                         root.get("readyAt"),
                         root.get("status"),
                         root.get("paymentMethod"),
-                        criteriaBuilder.construct(CustomerMinimalOutput.class,
+                        criteriaBuilder.construct(
+                                CustomerMinimalOutput.class,
                                 customer.get("id"),
                                 customer.get("firstName"),
                                 customer.get("lastName"),
                                 customer.get("document"),
                                 customer.get("email"),
-                                customer.get("phone")
-                        )
-                )
-        );
+                                customer.get("phone"))));
 
         Predicate[] predicates = toPredicates(criteriaBuilder, root, filter);
         Order sortOrder = toSortOrder(criteriaBuilder, root, filter);
@@ -120,27 +135,35 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResults);
     }
 
-    private Order toSortOrder(CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
+    private Order toSortOrder(
+            CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
         Order order = null;
 
         if (filter.getSortDirectionOrDefault() == Sort.Direction.ASC)
-            order = criteriaBuilder.asc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+            order =
+                    criteriaBuilder.asc(
+                            root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
 
         if (filter.getSortDirectionOrDefault() == Sort.Direction.DESC)
-            order = criteriaBuilder.desc(root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
+            order =
+                    criteriaBuilder.desc(
+                            root.get(filter.getSortByPropertyOrDefault().getPropertyName()));
 
         return order;
     }
 
-    private Predicate[] toPredicates(CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
+    private Predicate[] toPredicates(
+            CriteriaBuilder criteriaBuilder, Root<OrderPersistence> root, OrderFilter filter) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (Objects.nonNull(filter.getCustomerId())) {
-            predicates.add(criteriaBuilder.equal(root.get("customer").get("id"), filter.getCustomerId()));
+            predicates.add(
+                    criteriaBuilder.equal(root.get("customer").get("id"), filter.getCustomerId()));
         }
 
         if (Objects.nonNull(filter.getStatus()) && StringUtils.hasText(filter.getStatus())) {
-            predicates.add(criteriaBuilder.equal(root.get("status"), filter.getStatus().toUpperCase()));
+            predicates.add(
+                    criteriaBuilder.equal(root.get("status"), filter.getStatus().toUpperCase()));
         }
 
         if (Objects.nonNull(filter.getOrderId()) && StringUtils.hasText(filter.getOrderId())) {
@@ -157,19 +180,27 @@ public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
         }
 
         if (Objects.nonNull(filter.getPlacedAtFrom())) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtFrom()));
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtFrom()));
         }
 
         if (Objects.nonNull(filter.getPlacedAtTo())) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtTo()));
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get(PLACED_AT_ATTRIBUTE), filter.getPlacedAtTo()));
         }
 
         if (Objects.nonNull(filter.getTotalAmountFrom())) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountFrom()));
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountFrom()));
         }
 
         if (Objects.nonNull(filter.getTotalAmountTo())) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountTo()));
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get(TOTAL_AMOUNT_ATTRIBUTE), filter.getTotalAmountTo()));
         }
 
         return predicates.toArray(new Predicate[0]);

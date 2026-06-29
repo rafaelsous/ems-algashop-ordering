@@ -13,16 +13,18 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.Origin
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.ShippingCostService;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.ShippingCostService.CalculationResponse;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
-import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCarts;
-import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ForBuyingWithShoppingCart;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.BillingInputDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.ShippingInputDisassembler;
+
 import jakarta.validation.constraints.NotNull;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,9 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
         Objects.requireNonNull(checkoutInput);
 
         PaymentMethod paymentMethod = PaymentMethod.valueOf(checkoutInput.getPaymentMethod());
+        CustomerId customerId = CustomerId.of(checkoutInput.getCustomerId());
+        Customer customer = customers.ofId(customerId)
+                        .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
         CreditCardId creditCardId = null;
 
@@ -60,24 +65,21 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
             creditCardId = new CreditCardId(checkoutInput.getCreditCardId());
         }
 
-        ShoppingCartId shoppingCartId = new ShoppingCartId(checkoutInput.getShoppingCartId());
-
-        ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
-
-        CustomerId customerId = shoppingCart.customerId();
+        ShoppingCart shoppingCart = shoppingCarts.ofCustomer(customerId)
+                        .orElseThrow(() -> new ShoppingCartNotFoundException(customerId));
 
         verifyCanOrderFor(customerId.value());
 
-        Customer customer = customers.ofId(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException(customerId));
-
-        CalculationResponse calculationResponse = calculateShippingCost(checkoutInput.getShipping());
+        CalculationResponse calculationResponse =
+                calculateShippingCost(checkoutInput.getShipping());
 
         Billing billing = billingInputDisassembler.toDomain(checkoutInput.getBilling());
-        Shipping shipping = shippingInputDisassembler.toDomain(checkoutInput.getShipping(), calculationResponse);
+        Shipping shipping =
+                shippingInputDisassembler.toDomain(
+                        checkoutInput.getShipping(), calculationResponse);
 
-        Order order = checkoutService.checkout(customer, shoppingCart, billing, shipping, paymentMethod, creditCardId);
+        Order order = checkoutService.checkout(
+                        customer, shoppingCart, billing, shipping, paymentMethod, creditCardId);
 
         orders.add(order);
         shoppingCarts.add(shoppingCart);
@@ -89,8 +91,11 @@ public class CheckoutApplicationService implements ForBuyingWithShoppingCart {
         ZipCode originZipCode = originAddressService.originAddress().zipCode();
         ZipCode destinationZipCode = ZipCode.of(shippingInput.getAddress().getZipCode());
 
-        return shippingCostService.calculate(ShippingCostService.CalculationRequest.builder()
-                .origin(originZipCode).destination(destinationZipCode).build());
+        return shippingCostService.calculate(
+                ShippingCostService.CalculationRequest.builder()
+                        .origin(originZipCode)
+                        .destination(destinationZipCode)
+                        .build());
     }
 
     private void verifyCanOrderFor(@NotNull UUID customerId) {

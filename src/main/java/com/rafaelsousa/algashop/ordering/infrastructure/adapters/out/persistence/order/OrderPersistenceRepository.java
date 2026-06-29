@@ -12,17 +12,18 @@ import java.util.UUID;
 
 public interface OrderPersistenceRepository extends JpaRepository<OrderPersistence, Long> {
 
-    @Query("""
+    @Query(
+            """
             SELECT o
             FROM OrderPersistence o
             WHERE o.customer.id = :customerId
             AND YEAR(o.placedAt) = :year
     """)
     List<OrderPersistence> placedByCustomerIdInYear(
-            @Param("customerId") UUID customerId,
-            @Param("year") Integer year);
+            @Param("customerId") UUID customerId, @Param("year") Integer year);
 
-    @Query("""
+    @Query(
+            """
             SELECT COUNT(o)
             FROM OrderPersistence o
             WHERE o.customer.id = :customerId
@@ -31,10 +32,10 @@ public interface OrderPersistenceRepository extends JpaRepository<OrderPersisten
             AND o.canceledAt IS NULL
     """)
     long salesQuantityByCustomerIdInYear(
-            @Param("customerId") UUID customerId,
-            @Param("year") Integer year);
+            @Param("customerId") UUID customerId, @Param("year") Integer year);
 
-    @Query("""
+    @Query(
+            """
             SELECT COALESCE(SUM(o.totalAmount), 0)
             FROM OrderPersistence o
             WHERE o.customer.id = :customerId
@@ -46,4 +47,7 @@ public interface OrderPersistenceRepository extends JpaRepository<OrderPersisten
     @Override
     @EntityGraph(attributePaths = {"customer", "items"})
     Optional<OrderPersistence> findById(Long id);
+
+    @EntityGraph(attributePaths = {"customer", "items"})
+    Optional<OrderPersistence> findByIdAndCustomerId(Long orderId, UUID customerId);
 }

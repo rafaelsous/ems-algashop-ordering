@@ -12,12 +12,12 @@ import java.util.UUID;
 
 public interface ShoppingCartPersistenceRepository extends JpaRepository<ShoppingCartPersistence, UUID> {
 
-    @Query("""
+    /*@Query("""
             SELECT sc
             FROM ShoppingCartPersistence sc
             WHERE sc.customer.id = :customerId
-    """)
-    Optional<ShoppingCartPersistence> findByCustomerId(@Param("customerId") UUID customerId);
+    """)*/
+    Optional<ShoppingCartPersistence> findByCustomer_Id(UUID customerId);
 
     @Modifying
     @Transactional
