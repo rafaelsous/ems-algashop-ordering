@@ -1,11 +1,11 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
+import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.ports.commons.AddressData;
+import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.BillingData;
-import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.RecipientData;
-import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ public class CheckoutInputTestDataBuilder {
 
     public static CheckoutInput.CheckoutInputBuilder aCheckoutInput() {
         return CheckoutInput.builder()
-                .shoppingCartId(ShoppingCartTestDataBuilder.DEFAULT_SHOPPING_CART_ID.value())
+                .customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value())
                 .paymentMethod("CREDIT_CARD")
                 .creditCardId(UUID.randomUUID())
                 .shipping(buildShipping())

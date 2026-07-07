@@ -1,10 +1,15 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.rafaelsousa.algashop.ordering.core.application.AbstractApplicationIT;
 import com.rafaelsousa.algashop.ordering.core.domain.model.ErrorMessages;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
-import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.Customers;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.Order;
@@ -16,8 +21,10 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.order.shipping.Shippi
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDataBuilder;
+import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.order.OrderEventListener;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +33,22 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 class CheckoutApplicationServiceIT extends AbstractApplicationIT {
     private final Orders orders;
     private final Customers customers;
     private final ShoppingCarts shoppingCarts;
     private final CheckoutApplicationService checkoutApplicationService;
 
-    @MockitoBean
-    private ShippingCostService shippingCostService;
+    @MockitoBean private ShippingCostService shippingCostService;
 
-    @MockitoSpyBean
-    private OrderEventListener orderEventListener;
+    @MockitoSpyBean private OrderEventListener orderEventListener;
 
     @Autowired
-    CheckoutApplicationServiceIT(Orders orders, Customers customers, ShoppingCarts shoppingCarts, CheckoutApplicationService checkoutApplicationService) {
+    CheckoutApplicationServiceIT(
+            Orders orders,
+            Customers customers,
+            ShoppingCarts shoppingCarts,
+            CheckoutApplicationService checkoutApplicationService) {
         this.orders = orders;
         this.customers = customers;
         this.shoppingCarts = shoppingCarts;
@@ -54,6 +57,13 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
     @BeforeEach
     void setUp() {
+        when(shippingCostService.calculate(any(CalculationRequest.class)))
+                .thenReturn(
+                        ShippingCostService.CalculationResponse.builder()
+                                .cost(Money.of("19.99"))
+                                .expectedDate(LocalDate.now().plusDays(7))
+                                .build());
+
         if (!customers.exists(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID)) {
             customers.add(CustomerTestDataBuilder.existingCustomer().build());
         }
@@ -61,17 +71,11 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
     @Test
     void shouldCheckoutSuccessfully() {
-        when(shippingCostService.calculate(any(CalculationRequest.class)))
-                .thenReturn(ShippingCostService.CalculationResponse.builder()
-                        .cost(Money.of("19.99"))
-                        .expectedDate(LocalDate.now().plusDays(7))
-                        .build());
-
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
+        ShoppingCart shoppingCart =
+                ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
         shoppingCarts.add(shoppingCart);
 
-        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder
-                .aCheckoutInput().shoppingCartId(shoppingCart.id().value()).build();
+        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder.aCheckoutInput().build();
 
         String orderIdString = checkoutApplicationService.checkout(checkoutInput);
 
@@ -82,12 +86,14 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
         Order order = orders.ofId(orderId).orElseThrow();
 
-        assertThat(order).satisfies(
-                o -> assertThat(order.id()).isEqualTo(orderId),
-                o -> assertThat(order.customerId()).isEqualTo(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID),
-                o -> assertThat(order.isPlaced()).isTrue(),
-                o -> assertThat(order.placedAt()).isNotNull()
-        );
+        assertThat(order)
+                .satisfies(
+                        o -> assertThat(o.id()).isEqualTo(orderId),
+                        o ->
+                                assertThat(o.customerId())
+                                        .isEqualTo(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID),
+                        o -> assertThat(o.isPlaced()).isTrue(),
+                        o -> assertThat(o.placedAt()).isNotNull());
 
         ShoppingCart updatedShoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
 
@@ -98,53 +104,37 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
     @Test
     void shouldThrowExceptionWhenTryingToCheckoutNonExistentShoppingCart() {
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
-
-        ShoppingCartId shoppingCartId = shoppingCart.id();
-        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder
-                .aCheckoutInput().shoppingCartId(shoppingCartId.value()).build();
-
-        assertThat(shoppingCarts.exists(shoppingCartId)).isFalse();
+        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder.aCheckoutInput().build();
 
         assertThatThrownBy(() -> checkoutApplicationService.checkout(checkoutInput))
-                .isInstanceOf(ShoppingCartNotFoundException.class)
-                .hasMessageContaining(ErrorMessages.ERROR_SHOPPING_CART_NOT_FOUND.formatted(shoppingCartId.value()));
+                .isInstanceOf(ShoppingCartNotFoundException.class);
     }
 
     @Test
     void shouldThrowExceptionWhenTryingToCheckoutWithEmptyShoppingCart() {
-        when(shippingCostService.calculate(any(CalculationRequest.class)))
-                .thenReturn(ShippingCostService.CalculationResponse.builder()
-                        .cost(Money.of("19.99"))
-                        .expectedDate(LocalDate.now().plusDays(7))
-                        .build());
-
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
+        ShoppingCart shoppingCart =
+                ShoppingCartTestDataBuilder.aShoppingCart().withItems(false).build();
         shoppingCarts.add(shoppingCart);
 
         ShoppingCartId shoppingCartId = shoppingCart.id();
-        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder
-                .aCheckoutInput().shoppingCartId(shoppingCartId.value()).build();
+        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder.aCheckoutInput().build();
 
-        assertThatThrownBy(() ->  checkoutApplicationService.checkout(checkoutInput))
+        assertThatThrownBy(() -> checkoutApplicationService.checkout(checkoutInput))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class)
-                .hasMessageContaining(ErrorMessages.ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT
-                        .formatted(shoppingCartId.value()));
+                .hasMessageContaining(
+                        ErrorMessages.ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT.formatted(
+                                shoppingCartId.value()));
     }
 
     @Test
     void shouldThrowExceptionWhenTryingToCheckoutShoppingCartContainingUnavailableItems() {
-        when(shippingCostService.calculate(any(CalculationRequest.class)))
-                .thenReturn(ShippingCostService.CalculationResponse.builder()
-                        .cost(Money.of("19.99"))
-                        .expectedDate(LocalDate.now().plusDays(7))
-                        .build());
-
         Product ramMemoryAvailable = ProductTestDataBuilder.aProductAltRamMemory().build();
-        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
+        ShoppingCart shoppingCart =
+                ShoppingCartTestDataBuilder.aShoppingCart().withItems(true).build();
         shoppingCart.addItem(ramMemoryAvailable, Quantity.of(1));
 
-        Product unavailableRamMemory = ProductTestDataBuilder.aProductAltRamMemory().inStock(false).build();
+        Product unavailableRamMemory =
+                ProductTestDataBuilder.aProductAltRamMemory().inStock(false).build();
 
         ProductId productId = shoppingCart.findItem(unavailableRamMemory.id()).productId();
         assertThat(unavailableRamMemory.id()).isEqualTo(productId);
@@ -153,12 +143,12 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
         shoppingCarts.add(shoppingCart);
 
         ShoppingCartId shoppingCartId = shoppingCart.id();
-        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder
-                .aCheckoutInput().shoppingCartId(shoppingCartId.value()).build();
+        CheckoutInput checkoutInput = CheckoutInputTestDataBuilder.aCheckoutInput().build();
 
-        assertThatThrownBy(() ->  checkoutApplicationService.checkout(checkoutInput))
+        assertThatThrownBy(() -> checkoutApplicationService.checkout(checkoutInput))
                 .isInstanceOf(ShoppingCartCantProceedToCheckoutException.class)
-                .hasMessageContaining(ErrorMessages.ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT
-                        .formatted(shoppingCartId.value()));
+                .hasMessageContaining(
+                        ErrorMessages.ERROR_SHOPPING_CART_CANT_PROCEED_TO_CHECKOUT.formatted(
+                                shoppingCartId.value()));
     }
 }

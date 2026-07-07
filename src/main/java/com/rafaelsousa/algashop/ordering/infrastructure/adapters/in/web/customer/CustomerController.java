@@ -18,7 +18,7 @@ public class CustomerController {
 
     @GetMapping
     @CanReadCustomers
-    public PageModel<CustomerSummaryOutput> findAll(CustomerFilter customerFilter) {
+    public PageModel<CustomerSummaryOutput> filter(CustomerFilter customerFilter) {
         return PageModel.of(forQueryingCustomers.filter(customerFilter));
     }
 

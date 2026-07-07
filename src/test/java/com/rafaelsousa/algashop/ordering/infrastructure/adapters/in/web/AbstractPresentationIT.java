@@ -54,6 +54,14 @@ public abstract class AbstractPresentationIT {
         return givenAuthenticatedRequest(MockJwtFactory.DEFAULT_TOKEN_VALUE);
     }
 
+    protected RequestSpecification givenAuthenticatedManagerRequest() {
+        return givenAuthenticatedRequest(MockJwtFactory.MANAGER_TOKEN_VALUE);
+    }
+
+    protected RequestSpecification givenAuthenticatedAltCustomer() {
+        return givenAuthenticatedRequest(MockJwtFactory.ALT_TOKEN_VALUE);
+    }
+
     protected RequestSpecification givenAuthenticatedWithExpiredTokenRequest() {
         return givenAuthenticatedRequest(MockJwtFactory.EXPIRED_TOKEN_VALUE);
     }

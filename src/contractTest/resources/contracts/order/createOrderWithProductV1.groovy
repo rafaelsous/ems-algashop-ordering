@@ -10,9 +10,8 @@ Contract.make {
         headers {
             contentType("application/vnd.order-with-product.v1+json")
         }
-        urlPath("/api/v1/orders") {
+        urlPath("/api/v1/customers/me/orders") {
             body([
-                    customerId   : value(test(anyUuid()), stub(anyUuid())),
                     productId    : value(test(anyUuid()), stub(anyUuid())),
                     quantity     : value(test(1), stub(anyPositiveInt())),
                     paymentMethod: "GATEWAY_BALANCE",

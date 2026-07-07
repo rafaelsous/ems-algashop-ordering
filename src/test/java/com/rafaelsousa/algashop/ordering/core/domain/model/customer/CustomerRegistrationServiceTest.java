@@ -1,7 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.domain.model.customer;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
-import com.rafaelsousa.algashop.ordering.core.domain.model.customer.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +28,7 @@ class CustomerRegistrationServiceTest {
         when(customers.isEmailUnique(any(Email.class), any(CustomerId.class))).thenReturn(true);
 
         Customer customer = customerRegistrationService.register(
+                CustomerId.of(UUID.randomUUID()),
                 FullName.of("John", "Doe"),
                 BirthDate.of(LocalDate.of(1990, 1, 1)),
                 Email.of("john.doe@email.com"),

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +21,7 @@ class CustomerRegistrationServiceIT extends AbstractDomainIT {
     @Test
     void shouldRegister() {
         Customer customer = customerRegistrationService.register(
+                CustomerId.of(UUID.randomUUID()),
                 FullName.of("John", "Doe"),
                 BirthDate.of(LocalDate.of(1990, 1, 1)),
                 Email.of("john.doe@email.com"),

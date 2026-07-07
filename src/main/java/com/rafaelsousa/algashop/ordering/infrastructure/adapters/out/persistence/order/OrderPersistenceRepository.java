@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,8 +47,9 @@ public interface OrderPersistenceRepository extends JpaRepository<OrderPersisten
 
     @Override
     @EntityGraph(attributePaths = {"customer", "items"})
-    Optional<OrderPersistence> findById(Long id);
+    Optional<OrderPersistence> findById(@NonNull Long id);
 
     @EntityGraph(attributePaths = {"customer", "items"})
-    Optional<OrderPersistence> findByIdAndCustomerId(Long orderId, UUID customerId);
+    @Query("SELECT o FROM OrderPersistence o WHERE o.id = :orderId AND o.customer.id = :customerId")
+    Optional<OrderPersistence> findByIdAndCustomerId(@Param("orderId") Long orderId, @Param("customerId") UUID customerId);
 }

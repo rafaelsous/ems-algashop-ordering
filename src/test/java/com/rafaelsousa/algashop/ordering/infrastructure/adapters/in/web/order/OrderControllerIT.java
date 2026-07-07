@@ -1,29 +1,17 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.order;
 
-import com.rafaelsousa.algashop.ordering.core.ports.out.order.OrderDetailOutput;
-import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceRepository;
+import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
-import com.rafaelsousa.algashop.ordering.utils.AlgaShopResourceUtils;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.UUID;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
 class OrderControllerIT extends AbstractPresentationIT {
-
-    @Autowired
-    private OrderPersistenceRepository orderPersistenceRepository;
-
-    private static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
     @BeforeEach
     void setUp() {
@@ -41,101 +29,55 @@ class OrderControllerIT extends AbstractPresentationIT {
     }
 
     @Test
-    void shouldCreateOrderWithProduct() {
-        String json = AlgaShopResourceUtils.readContent("json/create-order-with-product.json");
+    void shouldFindOrderByIdWhenAuthenticatedAsManager() {
+        String orderId = "00001J8JEEVR1";
 
-        String createdOrderId = givenAuthenticatedRequest()
+        givenAuthenticatedManagerRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-product.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
+                .when()
+                .get("/api/v1/orders/{orderId}", orderId)
+                .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .statusCode(HttpStatus.CREATED.value())
-                .body(
-                        "id", Matchers.not(Matchers.emptyString()),
-                        "customer.id", Matchers.is(VALID_CUSTOMER_ID.toString()))
-            .extract()
-                .jsonPath().getString("id");
-
-        boolean orderExists = orderPersistenceRepository.existsById(new OrderId(createdOrderId).value().toLong());
-        assertThat(orderExists).isTrue();
+                .statusCode(HttpStatus.OK.value())
+                .body("id", Matchers.is(orderId));
     }
 
     @Test
-    void shouldNotCreateOrderWithProductWhenProductNotExists() {
-        String json = AlgaShopResourceUtils.readContent("json/create-order-with-invalid-product.json");
+    void shouldNotFoundOrderWhenOrderNotExists() {
+        String inexistentOrderId = IdGenerator.generateTSID().toString();
 
-	    givenAuthenticatedRequest()
+        givenAuthenticatedManagerRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-product.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
+                .when()
+                .get("/api/v1/orders/{orderId}", inexistentOrderId)
+                .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
-    void shouldNotCreateOrderWithProductWhenCustomerWasNotFound() {
-        String json = AlgaShopResourceUtils.readContent("json/create-order-with-product-and-invalid-customer.json");
-
-	    givenAuthenticatedRequest()
+    void shouldListOrdersWhenAuthenticatedAsManager() {
+        givenAuthenticatedManagerRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-product.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
+                .when()
+                .get("/api/v1/orders")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void shouldNotListAdministrativeOrdersWhenAuthenticatedAsCustomer() {
+        givenAuthenticatedRequest()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v1/orders")
+                .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
                 .statusCode(HttpStatus.FORBIDDEN.value());
-    }
-
-    @Test
-    void shouldCreateOrderWithShoppingCart() {
-        String json = AlgaShopResourceUtils.readContent("json/create-order-with-shopping-cart.json");
-
-        String createdOrderId = givenAuthenticatedRequest()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-shopping-cart.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
-                .assertThat()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .statusCode(HttpStatus.CREATED.value())
-                .body(
-                        "id", Matchers.not(Matchers.emptyString()),
-                        "customer.firstName", Matchers.not(Matchers.emptyString()),
-                        "customer.lastName", Matchers.not(Matchers.emptyString()),
-                        "customer.document", Matchers.not(Matchers.emptyString()),
-                        "customer.phone", Matchers.not(Matchers.emptyString()))
-            .extract()
-                .body().as(OrderDetailOutput.class).getId();
-
-        boolean orderExists = orderPersistenceRepository.existsById(new OrderId(createdOrderId).value().toLong());
-        assertThat(orderExists).isTrue();
-    }
-
-    @Test
-    void shouldNotCreateOrderWithInexistentShoppingCart() {
-        String json = AlgaShopResourceUtils.readContent("json/create-order-with-invalid-shopping-cart.json");
-
-	    givenAuthenticatedRequest()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType("application/vnd.order-with-shopping-cart.v1+json")
-                .body(json)
-            .when()
-                .post("/api/v1/orders")
-            .then()
-                .assertThat()
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
-                .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value());
     }
 }

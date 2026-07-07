@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.utils;
 
+import static org.mockito.Mockito.when;
+
 import org.mockito.Mockito;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -10,15 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.when;
-
 public class MockJwtFactory {
     public static final String DEFAULT_SUBJECT = "6e148bd5-47f6-4022-b9da-07cfaa294f7a";
+    public static final String ALT_CUSTOMER_SUBJECT = "019f18ee-f840-728c-889f-aa1a6e5dc8cd";
     public static final String DEFAULT_TOKEN_VALUE = "fake.jwt.token";
+    public static final String MANAGER_TOKEN_VALUE = "fake.jwt.manager";
+    public static final String ALT_TOKEN_VALUE = "fake.jwt.alt-customer";
     public static final String NO_SCOPE_TOKEN_VALUE = "fake.jwt.no-scope";
     public static final String EXPIRED_TOKEN_VALUE = "fake.jwt.expired";
     public static final String DEFAULT_ISSUER_URI = "http://auth.algashop.local:8081";
     public static final String DEFAULT_ROLE = "CUSTOMER";
+    public static final String MANAGER_ROLE = "MANAGER";
     public static final String[] DEFAULT_AUDIENCES = new String[] { "ecommerce-web-app" };
     public static final String[] DEFAULT_SCOPES = new String[] {
         "orders:read",
@@ -33,8 +37,12 @@ public class MockJwtFactory {
         JwtDecoder jwtDecoder = Mockito.mock(JwtDecoder.class);
 
         when(jwtDecoder.decode(DEFAULT_TOKEN_VALUE)).thenReturn(buildDefaultJwt());
+        
+        when(jwtDecoder.decode(MANAGER_TOKEN_VALUE)).thenReturn(buildManagerJwt());
 
         when(jwtDecoder.decode(NO_SCOPE_TOKEN_VALUE)).thenReturn(buildNoScopeJwt());
+        
+        when(jwtDecoder.decode(ALT_TOKEN_VALUE)).thenReturn(buildAltCustomerJwt());
 
         when(jwtDecoder.decode(EXPIRED_TOKEN_VALUE))
                 .thenThrow(new JwtException("Token is expired"));
@@ -67,6 +75,16 @@ public class MockJwtFactory {
 
     public static Jwt buildDefaultJwt() {
         return buildJwt(DEFAULT_TOKEN_VALUE, DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES,
+            DEFAULT_ROLE, DEFAULT_AUDIENCES);
+    }
+    
+    public static Jwt buildManagerJwt() {
+        return buildJwt(MANAGER_TOKEN_VALUE, DEFAULT_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES,
+            MANAGER_ROLE, DEFAULT_AUDIENCES);
+    }
+    
+    public static Jwt buildAltCustomerJwt() {
+        return buildJwt(ALT_TOKEN_VALUE, ALT_CUSTOMER_SUBJECT, DEFAULT_ISSUER_URI, DEFAULT_SCOPES,
             DEFAULT_ROLE, DEFAULT_AUDIENCES);
     }
 

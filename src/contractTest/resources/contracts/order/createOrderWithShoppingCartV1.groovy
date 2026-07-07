@@ -10,9 +10,8 @@ Contract.make {
         headers {
             contentType("application/vnd.order-with-shopping-cart.v1+json")
         }
-        urlPath("/api/v1/orders") {
+        urlPath("/api/v1/customers/me/orders") {
             body([
-                    shoppingCartId: value(test(anyUuid()), stub(anyUuid())),
                     paymentMethod : "GATEWAY_BALANCE",
                     shipping      : [
                             recipient: [

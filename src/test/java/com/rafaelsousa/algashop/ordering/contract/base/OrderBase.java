@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.contract.base;
 
 import com.rafaelsousa.algashop.ordering.core.application.checkout.BuyNowApplicationService;
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.BuyNowInput;
 import com.rafaelsousa.algashop.ordering.core.application.checkout.CheckoutApplicationService;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
@@ -10,6 +11,9 @@ import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForQueryingOrders;
 import com.rafaelsousa.algashop.ordering.core.application.order.OrderSummaryOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartOutput;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.order.MyOrdersController;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,14 +26,17 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(controllers = OrderController.class)
+@WebMvcTest(controllers = {OrderController.class, MyOrdersController.class})
 class OrderBase {
     private static final String NOT_FOUND_ORDER_ID = "0N8N9TJWPSBWK";
     public static final String VALID_ORDER_ID = "0N7ZHVJXN94S6";
+    public static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+    public static final UUID VALID_SHOPPING_CART_ID = UUID.fromString("4f31582a-66e6-4601-a9d3-ff608c2d4461");
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -43,6 +50,12 @@ class OrderBase {
     @MockitoBean
     private CheckoutApplicationService checkoutApplicationService;
 
+    @MockitoBean
+    private ForQueryingShoppingCarts shoppingCartQueryService;
+
+    @MockitoBean
+    private SecurityChecks securityChecks;
+
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.mockMvc(MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -50,11 +63,27 @@ class OrderBase {
 
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        mockValidOrderById();
-        mockInvalidOrderById();
         mockValidBuyNow();
         mockValidCheckout();
+        mockAuthenticatedUserId();
+        mockValidShoppingCart();
+        mockValidOrderById();
+        mockValidOrderByIdAndCustomerId();
+        mockInvalidOrderById();
+        mockInvalidMyOrderById();
         mockFilterOrders();
+    }
+
+    private void mockAuthenticatedUserId() {
+        when(securityChecks.getAuthenticatedUserId()).thenReturn(VALID_CUSTOMER_ID);
+    }
+
+    private void mockValidShoppingCart() {
+        when(shoppingCartQueryService.findById(VALID_SHOPPING_CART_ID))
+                .thenReturn(ShoppingCartOutput.builder()
+                    .id(VALID_SHOPPING_CART_ID)
+                    .customerId(VALID_CUSTOMER_ID)
+                    .build());
     }
 
     private void mockValidBuyNow() {
@@ -72,9 +101,19 @@ class OrderBase {
                 .thenReturn(OrderDetailOutputTestDataBuilder.placedOrder(VALID_ORDER_ID).build());
     }
 
+    private void mockValidOrderByIdAndCustomerId() {
+        when(orderQueryService.findByIdAndCustomerId(VALID_ORDER_ID, VALID_CUSTOMER_ID))
+                .thenReturn(OrderDetailOutputTestDataBuilder.placedOrder(VALID_ORDER_ID).build());
+    }
+
     private void mockInvalidOrderById() {
         when(orderQueryService.findById(NOT_FOUND_ORDER_ID))
-                .thenThrow(new OrderNotFoundException(new OrderId(NOT_FOUND_ORDER_ID)));
+            .thenThrow(new OrderNotFoundException(new OrderId(NOT_FOUND_ORDER_ID)));
+    }
+
+    private void mockInvalidMyOrderById() {
+        when(orderQueryService.findByIdAndCustomerId(NOT_FOUND_ORDER_ID, VALID_CUSTOMER_ID))
+            .thenThrow(new OrderNotFoundException(new OrderId(NOT_FOUND_ORDER_ID)));
     }
 
     private void mockFilterOrders() {

@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.core.domain.model.customer;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -15,8 +16,8 @@ public class CustomerTestDataBuilder {
     public static Customer.BrandNewCustomerBuild brandNewCustomer() {
         return Customer.brandNew()
                 .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1990, 9, 18)))
-                .email(new Email("john.doe_" + UUID.randomUUID() +"@email.com"))
+                .birthDate(new BirthDate(LocalDate.of(1990, Month.SEPTEMBER, 18)))
+                .email(new Email("john.doe_" + UUID.randomUUID() + "@email.com"))
                 .phone(new Phone("123-456-7890"))
                 .document(new Document("123-45-6789"))
                 .promotionNotificationsAllowed(false)
@@ -60,8 +61,8 @@ public class CustomerTestDataBuilder {
         return Customer.existing()
                 .id(DEFAULT_CUSTOMER_ID)
                 .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1990, 9, 18)))
-                .email(new Email("john.doe_" + UUID.randomUUID() +"@email.com"))
+                .birthDate(new BirthDate(LocalDate.of(1990, Month.SEPTEMBER, 18)))
+                .email(new Email("john.doe_" + UUID.randomUUID() + "@email.com"))
                 .phone(new Phone("123-456-7890"))
                 .document(new Document("123-45-6789"))
                 .promotionNotificationsAllowed(false)

@@ -8,8 +8,6 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductTestDa
 import static com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class ShoppingCartTestDataBuilder {
-    public static final ShoppingCartId DEFAULT_SHOPPING_CART_ID = new ShoppingCartId();
-
     private boolean withItems = true;
     private CustomerId customerId = DEFAULT_CUSTOMER_ID;
 
