@@ -49,7 +49,7 @@ public class ShoppingCartPersistenceAssembler {
                                        ShoppingCartItem shoppingCartItem) {
         shoppingCartItemPersistence.setId(shoppingCartItem.id().value());
         shoppingCartItemPersistence.setProductId(shoppingCartItem.productId().value());
-        shoppingCartItemPersistence.setProductName(shoppingCartItem.productName().value());
+        shoppingCartItemPersistence.setName(shoppingCartItem.name().value());
         shoppingCartItemPersistence.setPrice(shoppingCartItem.price().value());
         shoppingCartItemPersistence.setQuantity(shoppingCartItem.quantity().value());
         shoppingCartItemPersistence.setTotalAmount(shoppingCartItem.totalAmount().value());

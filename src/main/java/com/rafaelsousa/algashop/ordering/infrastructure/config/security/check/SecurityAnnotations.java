@@ -1,10 +1,11 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.security.check;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 public class SecurityAnnotations {
 
@@ -17,16 +18,6 @@ public class SecurityAnnotations {
     @Target({ElementType.METHOD, ElementType.TYPE})
     @PreAuthorize("hasAuthority('SCOPE_customers:read') and not hasRole('CUSTOMER')")
     public @interface CanReadCustomers {}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD, ElementType.TYPE})
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read')")
-    public @interface CanReadShoppingCarts {}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD, ElementType.TYPE})
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
-    public @interface CanWriteShoppingCarts {}
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD, ElementType.TYPE})
@@ -52,4 +43,14 @@ public class SecurityAnnotations {
     @Target({ElementType.METHOD, ElementType.TYPE})
     @PreAuthorize("hasAuthority('SCOPE_orders:write') and hasRole('CUSTOMER')")
     public @interface CanWriteMyOrders {}
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read') and hasRole('CUSTOMER')")
+    public @interface CanReadMyShoppingCart {}
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write') and hasRole('CUSTOMER')")
+    public @interface CanWriteMyShoppingCart {}
 }

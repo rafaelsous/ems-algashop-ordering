@@ -32,7 +32,7 @@ class MyCustomerControllerIT extends AbstractPresentationIT {
         String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
 
         UUID createdCustomerId =
-                givenAuthenticatedAltCustomer()
+                givenAuthenticatedAltCustomerRequest()
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(json)

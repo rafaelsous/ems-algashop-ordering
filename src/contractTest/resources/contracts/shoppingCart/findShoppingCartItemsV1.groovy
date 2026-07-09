@@ -10,7 +10,7 @@ Contract.make {
         headers {
             contentType MediaType.APPLICATION_JSON_VALUE
         }
-        url("/api/v1/shopping-carts/019b3d31-f100-78c7-b442-7ac8b336927c/items")
+        url("/api/v1/customers/me/shopping-cart/items")
     }
     response {
         status HttpStatus.OK.value()

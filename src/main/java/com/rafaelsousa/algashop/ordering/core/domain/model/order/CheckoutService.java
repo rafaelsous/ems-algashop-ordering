@@ -50,7 +50,7 @@ public class CheckoutService {
     private void addShoppingCartItemToOrder(ShoppingCartItem item, Order order) {
         Product product = Product.builder()
                 .id(item.productId())
-                .name(item.productName())
+                .name(item.name())
                 .price(item.price())
                 .inStock(item.isAvailable())
                 .build();

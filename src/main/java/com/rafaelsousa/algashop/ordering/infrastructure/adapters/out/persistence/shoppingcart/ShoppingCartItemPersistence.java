@@ -20,7 +20,7 @@ public class ShoppingCartItemPersistence {
     private UUID id;
 
     private UUID productId;
-    private String productName;
+    private String name;
     private BigDecimal price;
     private Integer quantity;
     private BigDecimal totalAmount;

@@ -1,19 +1,15 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
-import jakarta.validation.constraints.NotNull;
+import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemOutput;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
+import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShoppingCartInput {
-
-    @NotNull
-    private UUID customerId;
+public class ShoppingCartItemList {
+	private List<ShoppingCartItemOutput> items;
 }

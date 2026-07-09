@@ -19,7 +19,7 @@ class ShoppingCartItemTest {
                 sci -> Assertions.assertThat(sci.id()).isNotNull(),
                 sci -> Assertions.assertThat(sci.shoppingCartId()).isNotNull(),
                 sci -> Assertions.assertThat(sci.productId()).isNotNull(),
-                sci -> Assertions.assertThat(sci.productName()).isEqualTo(ProductName.of("Notebook")),
+                sci -> Assertions.assertThat(sci.name()).isEqualTo(ProductName.of("Notebook")),
                 sci -> Assertions.assertThat(sci.price()).isEqualTo(Money.of("1000.00")),
                 sci -> Assertions.assertThat(sci.quantity()).isEqualTo(Quantity.of(1)),
                 sci -> Assertions.assertThat(sci.isAvailable()).isTrue()
@@ -122,7 +122,7 @@ class ShoppingCartItemTest {
                 .id(shoppingCartItemId)
                 .shoppingCartId(shoppingCartId)
                 .productId(productId)
-                .productName(ProductName.of("Notebook"))
+                .name(ProductName.of("Notebook"))
                 .price(Money.of("1700.00"))
                 .quantity(Quantity.of(1))
                 .build();
@@ -130,7 +130,7 @@ class ShoppingCartItemTest {
                 .id(shoppingCartItemId)
                 .shoppingCartId(shoppingCartId)
                 .productId(productId)
-                .productName(ProductName.of("Monitor 32 inch"))
+                .name(ProductName.of("Monitor 32 inch"))
                 .price(Money.of("1110.00"))
                 .quantity(Quantity.of(2))
                 .build();

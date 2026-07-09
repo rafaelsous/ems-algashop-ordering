@@ -188,7 +188,7 @@ class MyOrdersControllerIT extends AbstractPresentationIT {
                 AlgaShopResourceUtils.readContent(
                         "json/create-order-with-invalid-shopping-cart.json");
 
-        givenAuthenticatedAltCustomer()
+        givenAuthenticatedAltCustomerRequest()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-shopping-cart.v1+json")
                 .body(json)

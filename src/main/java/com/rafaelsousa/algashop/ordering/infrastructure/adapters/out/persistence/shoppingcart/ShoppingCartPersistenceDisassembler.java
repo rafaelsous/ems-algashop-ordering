@@ -44,7 +44,7 @@ public class ShoppingCartPersistenceDisassembler {
                 .id(new ShoppingCartItemId(shoppingCartItemPersistence.getId()))
                 .shoppingCartId(new ShoppingCartId(shoppingCartItemPersistence.getShoppingCardId()))
                 .productId(new ProductId(shoppingCartItemPersistence.getProductId()))
-                .productName(ProductName.of(shoppingCartItemPersistence.getProductName()))
+                .name(ProductName.of(shoppingCartItemPersistence.getName()))
                 .price(Money.of(shoppingCartItemPersistence.getPrice()))
                 .available(shoppingCartItemPersistence.getAvailable())
                 .quantity(Quantity.of(shoppingCartItemPersistence.getQuantity()))

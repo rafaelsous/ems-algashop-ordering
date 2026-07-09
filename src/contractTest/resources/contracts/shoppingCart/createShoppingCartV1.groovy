@@ -10,11 +10,7 @@ Contract.make {
         headers {
             contentType MediaType.APPLICATION_JSON_VALUE
         }
-        urlPath("/api/v1/shopping-carts") {
-            body([
-                    customerId: value(test(anyUuid()), stub(anyUuid()))
-            ])
-        }
+        urlPath("/api/v1/customers/me/shopping-cart")
     }
     response {
         status HttpStatus.CREATED.value()

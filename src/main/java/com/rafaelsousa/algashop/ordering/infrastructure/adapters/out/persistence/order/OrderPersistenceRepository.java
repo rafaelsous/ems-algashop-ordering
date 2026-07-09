@@ -50,6 +50,6 @@ public interface OrderPersistenceRepository extends JpaRepository<OrderPersisten
     Optional<OrderPersistence> findById(@NonNull Long id);
 
     @EntityGraph(attributePaths = {"customer", "items"})
-    @Query("SELECT o FROM OrderPersistence o WHERE o.id = :orderId AND o.customer.id = :customerId")
-    Optional<OrderPersistence> findByIdAndCustomerId(@Param("orderId") Long orderId, @Param("customerId") UUID customerId);
+//    @Query("SELECT o FROM OrderPersistence o WHERE o.id = :orderId AND o.customer.id = :customerId")
+    Optional<OrderPersistence> findByIdAndCustomer_Id(@Param("orderId") Long orderId, @Param("customerId") UUID customerId);
 }

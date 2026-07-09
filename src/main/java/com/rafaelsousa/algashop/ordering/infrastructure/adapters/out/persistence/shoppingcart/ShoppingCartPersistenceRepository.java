@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -62,4 +63,8 @@ public interface ShoppingCartPersistenceRepository extends JpaRepository<Shoppin
                     AND sci2.productId = :productId)
     """)
     void recalculateTotalForCartsWithProduct(@Param("productId") UUID productId);
+
+    @Override
+    @EntityGraph(attributePaths = "items")
+    Optional<ShoppingCartPersistence> findById(UUID id);
 }

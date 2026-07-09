@@ -117,7 +117,7 @@ class CheckoutServiceTest {
 
         assertThat(shoppingCartItem).satisfies(
                 sci -> assertThat(sci.productId()).isEqualTo(mousePad.id()),
-                sci -> assertThat(sci.productName()).isEqualTo(mousePad.name()),
+                sci -> assertThat(sci.name()).isEqualTo(mousePad.name()),
                 sci -> assertThat(sci.quantity()).isEqualTo(quantity),
                 sci -> assertThat(sci.price()).isEqualTo(mousePad.price())
         );
@@ -168,7 +168,7 @@ class CheckoutServiceTest {
 
         assertThat(shoppingCartItem).satisfies(
                 sci -> assertThat(sci.productId()).isEqualTo(mousePad.id()),
-                sci -> assertThat(sci.productName()).isEqualTo(mousePad.name()),
+                sci -> assertThat(sci.name()).isEqualTo(mousePad.name()),
                 sci -> assertThat(sci.quantity()).isEqualTo(quantity),
                 sci -> assertThat(sci.price()).isEqualTo(mousePad.price())
         );

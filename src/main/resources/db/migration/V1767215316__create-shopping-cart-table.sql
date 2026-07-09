@@ -24,7 +24,7 @@ CREATE TABLE public.shopping_cart_item (
   created_by_user_id uuid,
   last_modified_at TIMESTAMP WITH TIME ZONE,
   last_modified_by_user_id uuid,
-  product_name VARCHAR(255),
+  name VARCHAR(255),
   price NUMERIC(38, 2),
   product_id uuid,
   quantity INTEGER,

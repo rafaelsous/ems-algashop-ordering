@@ -1,12 +1,16 @@
 package com.rafaelsousa.algashop.ordering.contract.base;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.rafaelsousa.algashop.ordering.core.application.shoppingcart.ShoppingCartOutputTestDataBuilder;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForQueryingShoppingCarts;
-import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
-import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
+import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.MyShoppingCartController;
+
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -17,12 +21,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-@WebMvcTest(controllers = ShoppingCartController.class)
+@WebMvcTest(controllers = MyShoppingCartController.class)
 class ShoppingCartBase {
-    public static final UUID NOT_FOUND_SHOPPING_ID = UUID.fromString("019b3d32-83b4-716d-ac5f-2a5042bddb61");
+    public static final UUID VALID_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
     public static final UUID VALID_SHOPPING_ID = UUID.fromString("019b3d31-f100-78c7-b442-7ac8b336927c");
 
     @Autowired
@@ -34,6 +35,9 @@ class ShoppingCartBase {
     @MockitoBean
     private ShoppingCartManagementApplicationService shoppingCartManagementApplicationService;
 
+    @MockitoBean
+    private SecurityChecks securityChecks;
+
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.mockMvc(MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -41,9 +45,13 @@ class ShoppingCartBase {
 
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
+        mockAuthenticatedUserId();
         mockCreate();
         mockFindById();
-        mockFindByIdNotFound();
+    }
+
+    private void mockAuthenticatedUserId() {
+        when(securityChecks.getAuthenticatedUserId()).thenReturn(VALID_CUSTOMER_ID);
     }
 
     private void mockCreate() {
@@ -52,12 +60,10 @@ class ShoppingCartBase {
     }
 
     private void mockFindById() {
-        when(shoppingCartQueryService.findById(VALID_SHOPPING_ID))
-                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(VALID_SHOPPING_ID).build());
-    }
-
-    private void mockFindByIdNotFound() {
-        when(shoppingCartQueryService.findById(NOT_FOUND_SHOPPING_ID))
-                .thenThrow(new ShoppingCartNotFoundException(new ShoppingCartId()));
+        when(shoppingCartQueryService.findByCustomerId(VALID_CUSTOMER_ID))
+                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart()
+                    .id(VALID_SHOPPING_ID)
+                    .customerId(VALID_CUSTOMER_ID)
+                    .build());
     }
 }

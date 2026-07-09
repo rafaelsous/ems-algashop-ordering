@@ -13,19 +13,19 @@ public class ShoppingCartItem {
     private ShoppingCartItemId id;
     private ShoppingCartId shoppingCartId;
     private ProductId productId;
-    private ProductName productName;
+    private ProductName name;
     private Money price;
     private Quantity quantity;
     private Money totalAmount;
     private Boolean available;
 
     @Builder(builderClassName = "ExistingShoppingCartItemBuilder", builderMethodName = "existing")
-    public ShoppingCartItem(ShoppingCartItemId id, ShoppingCartId shoppingCartId, ProductId productId, ProductName productName,
+    public ShoppingCartItem(ShoppingCartItemId id, ShoppingCartId shoppingCartId, ProductId productId, ProductName name,
                             Money price, Quantity quantity, Money totalAmount, Boolean available) {
         this.setId(id);
         this.setShoppingCartId(shoppingCartId);
         this.setProductId(productId);
-        this.setProductName(productName);
+        this.setName(name);
         this.setPrice(price);
         this.setQuantity(quantity);
         this.setTotalAmount(totalAmount);
@@ -54,7 +54,7 @@ public class ShoppingCartItem {
             throw new ShoppingCartItemIncompatibleProductException(this.id(), this.productId());
         }
 
-        this.setProductName(newProduct.name());
+        this.setName(newProduct.name());
         this.setPrice(newProduct.price());
         this.setAvailable(newProduct.inStock());
 
@@ -81,8 +81,8 @@ public class ShoppingCartItem {
         return productId;
     }
 
-    public ProductName productName() {
-        return productName;
+    public ProductName name() {
+        return name;
     }
 
     public Money price() {
@@ -117,8 +117,8 @@ public class ShoppingCartItem {
         this.productId = productId;
     }
 
-    private void setProductName(ProductName productName) {
-        this.productName = productName;
+    private void setName(ProductName name) {
+        this.name = name;
     }
 
     private void setPrice(Money price) {
