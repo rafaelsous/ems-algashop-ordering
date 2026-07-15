@@ -12,7 +12,6 @@ Contract.make {
         }
         urlPath("/api/v1/customers/me/shopping-cart/items") {
             body([
-                    shoppingCartId: value(test(anyUuid()), stub(anyUuid())),
                     productId     : value(test(anyUuid()), stub(anyUuid())),
                     quantity      : value(test(anyPositiveInt()), stub(anyPositiveInt()))
             ])
