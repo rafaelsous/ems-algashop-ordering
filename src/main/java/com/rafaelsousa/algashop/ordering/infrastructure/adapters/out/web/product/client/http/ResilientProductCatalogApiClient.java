@@ -2,12 +2,10 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.web.produc
 
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.BadGatewayException;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web.exceptionhandler.GatewayTimeoutException;
-import java.net.SocketTimeoutException;
-import java.util.Optional;
-import java.util.UUID;
-
 import com.rafaelsousa.algashop.ordering.infrastructure.config.resilience.SpringCircuitBreakerConfig;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryCircuitBreaker;
 import org.springframework.cloud.circuitbreaker.retry.FrameworkRetryConfig;
@@ -20,7 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
+
+import java.net.SocketTimeoutException;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -59,12 +60,12 @@ public class ResilientProductCatalogApiClient {
 			return Optional.ofNullable(productCatalogApiClient.getById(productId));
 		} catch (HttpClientErrorException.NotFound ex) {
 			return Optional.empty();
-		} catch (RestClientException ex) {
+		} catch (Exception ex) {
 			throw translateException(ex);
 		}
 	}
 
-	private RuntimeException translateException(RestClientException ex) {
+	private RuntimeException translateException(Exception ex) {
 		if (ex.getCause() instanceof SocketTimeoutException || ex instanceof ResourceAccessException) {
 			return new GatewayTimeoutException("Product Catalog API Timeout", ex);
 		}

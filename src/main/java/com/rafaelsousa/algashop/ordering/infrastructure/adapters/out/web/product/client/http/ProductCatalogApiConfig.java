@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.web.product.client.http;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -21,7 +22,7 @@ public class ProductCatalogApiConfig {
 
     @Bean
     public ProductCatalogApiClient productCatalogApiClient(
-        RestClient.Builder builder,
+        @LoadBalanced RestClient.Builder builder,
         ProductCatalogIntegrationProperties properties,
         @Qualifier("productCatalogApiClientInterceptor") OAuth2ClientHttpRequestInterceptor interceptor
     ) {
