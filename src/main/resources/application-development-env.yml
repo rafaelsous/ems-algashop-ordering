@@ -8,6 +8,9 @@ spring:
       - aws-secretsmanager:/secret/algashop/ordering/oauth2-client-secret?prefix=ordering.secrets.
   cloud:
     aws:
+      credentials:
+        access-key: test
+        secret-key: test
       region:
         static: us-east-1
       endpoint: http://algashop-localstack:4566
@@ -86,7 +89,7 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://service-registry:8761/eureka/
+      defaultZone: ${shared.params.service-registry-url}/eureka
     healthcheck:
       enabled: true
   instance:
