@@ -20,8 +20,11 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,10 +49,16 @@ public class MyOrdersController {
         return PageModel.of(forQueryingOrders.filter(filter));
     }
 
+    @SneakyThrows
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
     @CanWriteMyOrders
     public OrderDetailOutput create(@RequestBody @Valid BuyNowInput buyNowInput) {
+	    if (Math.random() < 0.7) {
+            Thread.sleep(Duration.ofMillis(100));
+            throw new RuntimeException("Simulated error for order creation");
+        }
+
         String orderId;
         buyNowInput.setCustomerId(securityChecks.getAuthenticatedUserId());
 
