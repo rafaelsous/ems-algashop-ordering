@@ -6,6 +6,7 @@ spring:
       - aws-secretsmanager:/secret/algashop/ordering/redis-password?prefix=ordering.secrets.
       - aws-secretsmanager:/secret/algashop/ordering/database?prefix=ordering.secrets.datasource.
       - aws-secretsmanager:/secret/algashop/ordering/oauth2-client-secret?prefix=ordering.secrets.
+
   cloud:
     aws:
       credentials:
@@ -14,20 +15,25 @@ spring:
       region:
         static: us-east-1
       endpoint: http://algashop-localstack:4566
+
   cache:
     type: redis
+
   datasource:
     url: ${ordering.params.datasource.url}
     username: ${ordering.secrets.datasource.username}
     password: ${ordering.secrets.datasource.password}
+
   jpa:
     show-sql: ${ordering.params.jpa.show-sql}
+
   flyway:
     enabled: true
     locations: classpath:db/migration,classpath:db/testdata
     user: ${ordering.secrets.datasource.username}
     password: ${ordering.secrets.datasource.password}
     url: ${ordering.params.datasource.url}
+
   data:
     redis:
       host: ${ordering.params.redis.host}
@@ -35,9 +41,11 @@ spring:
       password: ${ordering.secrets.redis-password}
       database: ${ordering.params.redis.database}
       timeout: ${ordering.params.redis.timeout}
+
   devtools:
     restart:
       enabled: false
+
   security:
     oauth2:
       resourceserver:
@@ -54,7 +62,15 @@ spring:
             client-secret: ${ordering.secrets.oauth2-client-secret}
             authorization-grant-type: client_credentials
             client-authentication-method: client_secret_basic
-            scope: products:read
+            scope:
+              -  products:read
+
+  kafka:
+    bootstrap-servers: algashop-kafka-1:9092,algashop-kafka-2:9093,algashop-kafka-3:9094
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      group-id: ordering
 
 algashop:
   integrations:
