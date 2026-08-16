@@ -1,15 +1,15 @@
-package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.kafka.product;
+package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Getter
 @Builder
 @ToString
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDelistedIntegrationEvent {
     private UUID productId;
     private OffsetDateTime delistedAt;
