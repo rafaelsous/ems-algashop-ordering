@@ -78,7 +78,8 @@ spring:
         spring.json.value.default.type: java.lang.String
         spring.json.type.mapping:
           ProductCatalog.ProductListedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
-          ProductCatalog.ProductDelistedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent
+          ProductCatalog.ProductDelistedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
+          ProductCatalog.ProductAddedIntegrationEvent:tools.jackson.databind.node.ObjectNode
 
 algashop:
   integrations:
