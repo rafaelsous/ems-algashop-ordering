@@ -97,6 +97,9 @@ algashop:
       rule2:
         active: ${ordering.params.shipping.have-free-shipping.rule2.active}
         min-points: ${ordering.params.shipping.have-free-shipping.rule2.min-points}
+  messaging:
+    kafka:
+      product-event-topic-name: product-catalog.product.events
 
 management:
   info:
