@@ -8,6 +8,7 @@ import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductP
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.config.cache.ProductCacheManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +54,7 @@ public class KafkaProductIntegrationEventListener {
 
     @KafkaHandler
     public void handle(
-            ProductPriceChangedV2IntegrationEvent event,
+            @Valid ProductPriceChangedV2IntegrationEvent event,
             @Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
         log(event, messageKey);
         productCacheManager.evict(event.getProductId());

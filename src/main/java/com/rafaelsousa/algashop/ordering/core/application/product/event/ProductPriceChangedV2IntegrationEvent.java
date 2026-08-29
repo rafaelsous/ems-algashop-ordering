@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -14,11 +15,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
+
+	@NotNull
 	private UUID productId;
+
+	@NotNull
 	private OffsetDateTime changedAt;
+
+	@NotNull
 	private BigDecimal oldRegularPrice;
+
+	@NotNull
 	private BigDecimal oldSalePrice;
+
+	@NotNull
 	private BigDecimal newRegularPrice;
+
+	@NotNull
 	private BigDecimal newSalePrice;
 
 	@Override
