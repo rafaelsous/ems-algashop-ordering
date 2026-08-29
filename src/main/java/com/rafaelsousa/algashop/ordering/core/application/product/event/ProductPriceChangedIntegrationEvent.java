@@ -1,6 +1,8 @@
 package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
+
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -11,15 +13,16 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductListedIntegrationEvent implements IntegrationEvent {
-    private UUID productId;
-    private OffsetDateTime listedAt;
+public class ProductPriceChangedIntegrationEvent implements IntegrationEvent {
+	private UUID productId;
+	private OffsetDateTime changedAt;
 
-    @Override
-    public String getAggregateId() {
-        if (productId == null) {
-            return null;
-        }
-        return productId.toString();
-    }
+	@Override
+	public String getAggregateId() {
+		if (productId == null) {
+			return null;
+		}
+
+		return productId.toString();
+	}
 }

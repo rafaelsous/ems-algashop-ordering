@@ -9,10 +9,13 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductNotFou
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.*;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ShoppingCartItemInput;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -94,5 +97,37 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
         shoppingCarts.remove(shoppingCart);
+    }
+
+    @Override
+    public void changeProductAvailability(UUID productId, boolean available) {
+        List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(new ProductId(productId));
+
+        if (affectedShoppingCarts.isEmpty()) {
+            return;
+        }
+
+        affectedShoppingCarts.forEach(shoppingCart -> {
+            shoppingCart.changeItemAvailability(new ProductId(productId), available);
+            shoppingCarts.add(shoppingCart);
+        });
+    }
+
+    @Override
+    public void refreshProductPrice(UUID rawProductId) {
+        ProductId productId = new ProductId(rawProductId);
+        List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(productId);
+
+        if (affectedShoppingCarts.isEmpty()) {
+            return;
+        }
+
+        Product product = productCatalogService.ofId(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
+
+        affectedShoppingCarts.forEach(shoppingCart -> {
+            shoppingCart.refreshItem(product);
+            shoppingCarts.add(shoppingCart);
+        });
     }
 }

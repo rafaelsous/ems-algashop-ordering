@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCart;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.ShoppingCarts;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,6 +82,14 @@ public class ShoppingCartsPersistenceProvider implements ShoppingCarts {
         shoppingCartPersistenceRepository.saveAndFlush(shoppingCartPersistence);
 
         updateVersion(aggregateRoot, shoppingCartPersistence);
+    }
+
+    @Override
+    public List<ShoppingCart> findAllContainingItem(ProductId productId) {
+        return shoppingCartPersistenceRepository.findAllByItems_productId(productId.value())
+            .stream()
+            .map(disassembler::toDomain)
+            .toList();
     }
 
     private void update(ShoppingCart aggregateRoot, ShoppingCartPersistence shoppingCartPersistence) {

@@ -9,6 +9,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 import java.time.Duration;
 
+import static com.rafaelsousa.algashop.ordering.infrastructure.config.cache.ProductCacheManager.PRODUCT_CATALOG_REDIS_CACHE_NAME;
+
 @Configuration
 @EnableCaching
 @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
@@ -23,7 +25,7 @@ public class RedisCacheConfig {
 
 		return builder -> builder.cacheDefaults(redisCacheConfiguration)
 				.withCacheConfiguration(
-						"algashop:product-catalog-api:v1",
+					PRODUCT_CATALOG_REDIS_CACHE_NAME,
 						redisCacheConfiguration.disableCachingNullValues()
 								.entryTtl(Duration.ofMinutes(5))
 				);

@@ -138,6 +138,11 @@ public class ShoppingCart
         this.recalculateTotals();
     }
 
+    public void changeItemAvailability(ProductId productId, boolean available) {
+        ShoppingCartItem shoppingCartItem = this.findItem(productId);
+        shoppingCartItem.changeAvailability(available);
+    }
+
     public ShoppingCartItem findItem(ShoppingCartItemId shoppingCartItemId) {
         Objects.requireNonNull(shoppingCartItemId);
 

@@ -79,7 +79,8 @@ spring:
         spring.json.value.type.method: com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.KafkaConsumerTypeIdIdentifier.readType
         spring.json.type.mapping:
           ProductCatalog.ProductListedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent,
-          ProductCatalog.ProductDelistedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent
+          ProductCatalog.ProductDelistedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent,
+          ProductCatalog.ProductPriceChangedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent
 
 algashop:
   integrations:

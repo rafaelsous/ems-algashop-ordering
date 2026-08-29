@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -67,4 +68,6 @@ public interface ShoppingCartPersistenceRepository extends JpaRepository<Shoppin
     @Override
     @EntityGraph(attributePaths = "items")
     Optional<ShoppingCartPersistence> findById(UUID id);
+
+    List<ShoppingCartPersistence> findAllByItems_productId(UUID productId);
 }

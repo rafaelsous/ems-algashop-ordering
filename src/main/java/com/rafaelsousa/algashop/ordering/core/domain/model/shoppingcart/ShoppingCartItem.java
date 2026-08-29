@@ -69,6 +69,11 @@ public class ShoppingCartItem {
         this.recalculateTotal();
     }
 
+
+    void changeAvailability(boolean available) {
+        this.setAvailable(available);
+    }
+
     public ShoppingCartItemId id() {
         return id;
     }
