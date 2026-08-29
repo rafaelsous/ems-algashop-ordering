@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
 
 import com.rafaelsousa.algashop.ordering.infrastructure.config.cache.ProductCacheManager;
@@ -52,11 +53,11 @@ public class KafkaProductIntegrationEventListener {
 
     @KafkaHandler
     public void handle(
-            ProductPriceChangedIntegrationEvent event,
+            ProductPriceChangedV2IntegrationEvent event,
             @Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
         log(event, messageKey);
         productCacheManager.evict(event.getProductId());
-        forManagingShoppingCarts.refreshProductPrice(event.getProductId());
+        forManagingShoppingCarts.refreshProductPrice(event.getProductId(), event.getNewSalePrice());
     }
 
     private static void log(IntegrationEvent event, String messageKey) {
