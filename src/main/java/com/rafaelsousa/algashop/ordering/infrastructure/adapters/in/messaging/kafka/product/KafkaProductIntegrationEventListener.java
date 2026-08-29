@@ -3,7 +3,6 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.k
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
 
