@@ -11,11 +11,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -24,6 +27,9 @@ import org.springframework.stereotype.Component;
 public class KafkaProductIntegrationEventListener {
     private final ProductCacheManager productCacheManager;
     private final ForManagingShoppingCarts forManagingShoppingCarts;
+
+    @Value("${slow:false}")
+    private Boolean slowProcessingEnabled;
 
     @KafkaHandler(isDefault = true)
     public void handle(
@@ -56,8 +62,24 @@ public class KafkaProductIntegrationEventListener {
             @Valid ProductPriceChangedV2IntegrationEvent event,
             @Header(value = KafkaHeaders.RECEIVED_KEY) String messageKey) {
         log(event, messageKey);
-        productCacheManager.evict(event.getProductId());
+
+        simulateSlowProcessing();
+
+	    productCacheManager.evict(event.getProductId());
         forManagingShoppingCarts.refreshProductPrice(event.getProductId(), event.getNewSalePrice());
+    }
+
+    public void simulateSlowProcessing() {
+        if (!Boolean.TRUE.equals(slowProcessingEnabled)) {
+            return;
+        }
+
+        log.warn("Simulating slow processing...");
+	    try {
+		    Thread.sleep(Duration.ofSeconds(30));
+	    } catch (InterruptedException _) {
+		    Thread.currentThread().interrupt();
+	    }
     }
 
     private static void log(IntegrationEvent event, String messageKey) {

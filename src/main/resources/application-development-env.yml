@@ -72,6 +72,9 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       group-id: ordering
       properties:
+        max.poll.interval.ms: 30000 # 5min
+        max.poll.records: 500 # quantiade de registros buscados
+        heartbeat.interval.ms: 3000
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
         spring.json.trusted.packages: com.rafaelsousa.algashop.*
         spring.json.key.default.type: java.lang.String
