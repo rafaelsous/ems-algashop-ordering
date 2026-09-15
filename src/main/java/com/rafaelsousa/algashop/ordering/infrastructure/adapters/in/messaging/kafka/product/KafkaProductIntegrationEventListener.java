@@ -81,10 +81,12 @@ public class KafkaProductIntegrationEventListener {
             @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset) {
         log(event, messageKey, partition, offset);
 
-        simulateProcessing();
-
-	    productCacheManager.evict(event.getProductId());
+        productCacheManager.evict(event.getProductId());
         forManagingShoppingCarts.refreshProductPrice(event.getProductId(), event.getNewSalePrice());
+
+        log.warn("Mail send product price on shopping cart was been updated.");
+
+        simulateProcessing();
     }
 
     private void simulateProcessing() {
