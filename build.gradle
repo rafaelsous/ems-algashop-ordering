@@ -67,6 +67,8 @@ dependencies {
     implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}")
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-kafka'
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:7.9.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.9.0'
 
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
