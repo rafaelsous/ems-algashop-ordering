@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.kafka;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
+
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.context.annotation.Bean;
@@ -50,14 +51,12 @@ public class KafkaConfig {
 
 	@Bean
 	public NewTopic productEventsDlt(AlgaShopMessagingKafkaProperties properties) {
-        return TopicBuilder.name(DLT_PREFIX + properties.getProductEventTopicName())
-                .partitions(3)
-                .replicas(3)
-                .configs(Map.of(
-                                "min.insync.replicas", "2",
-                                "retention.ms", String.valueOf(Duration.ofDays(30).toMillis())
-                ))
-                .build();
+		return createDeadLetterTopic(properties.getProductEventTopicName());
+	}
+	
+	@Bean
+	public NewTopic orderEventsDlt(AlgaShopMessagingKafkaProperties properties) {
+		return createDeadLetterTopic(properties.getOrderEventTopicName());
 	}
 
 	@Bean
@@ -67,5 +66,16 @@ public class KafkaConfig {
                 .replicas(3)
                 .configs(Map.of("min.insync.replicas", "2"))
                 .build();
+	}
+
+	private NewTopic createDeadLetterTopic(String originTopicName) {
+		return TopicBuilder.name(DLT_PREFIX + originTopicName)
+			.partitions(3)
+			.replicas(3)
+			.configs(Map.of(
+				"min.insync.replicas", "2",
+				"retention.ms", String.valueOf(Duration.ofDays(30).toMillis())
+			))
+			.build();
 	}
 }
