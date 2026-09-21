@@ -21,7 +21,7 @@ public class ProcessedMessage implements Persistable<UUID> {
 		this.idempotencyKey = idempotencyKey;
 	}
 
-@Override
+	@Override
 	public @Nullable UUID getId() {
 		return idempotencyKey;
 	}
