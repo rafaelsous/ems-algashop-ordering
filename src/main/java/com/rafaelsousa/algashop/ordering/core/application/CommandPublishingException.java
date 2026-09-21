@@ -1,0 +1,32 @@
+package com.rafaelsousa.algashop.ordering.core.application;
+
+import lombok.Getter;
+
+@Getter
+public class CommandPublishingException extends RuntimeException {
+	private IntegrationCommand command;
+
+	public CommandPublishingException() {
+	}
+
+	public CommandPublishingException(String message) {
+		super(message);
+	}
+
+	public CommandPublishingException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public CommandPublishingException(Throwable cause) {
+		super(cause);
+	}
+
+	public CommandPublishingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public CommandPublishingException(String message, IntegrationCommand command, Throwable ex) {
+		super("%s Command=%s AggregateId=%s".formatted(message, command.getClass().getSimpleName(), command.getAggregateId()), ex);
+		this.command = command;
+	}
+}

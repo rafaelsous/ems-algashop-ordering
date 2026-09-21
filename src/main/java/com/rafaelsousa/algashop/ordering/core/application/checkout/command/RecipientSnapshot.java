@@ -1,3 +1,3 @@
-package com.rafaelsousa.algashop.ordering.core.application.order.event;
+package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
 
 public record RecipientSnapshot(String firstName, String lastName, String document, String phone) {}

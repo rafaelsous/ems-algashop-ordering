@@ -18,6 +18,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 	private static final String DLT_PREFIX = "ordering.dlt.";
+	public static final String MIN_INSYNC_REPLICAS_CONFIG = "min.insync.replicas";
 
 	@Bean
 	public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recoverer) {
@@ -64,7 +65,16 @@ public class KafkaConfig {
         return TopicBuilder.name(properties.getOrderEventTopicName())
                 .partitions(3)
                 .replicas(3)
-                .configs(Map.of("min.insync.replicas", "2"))
+                .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
+                .build();
+	}
+
+	@Bean
+	public NewTopic ordersCommandsTopic(AlgaShopMessagingKafkaProperties properties) {
+        return TopicBuilder.name(properties.getOrderCommandTopicName())
+                .partitions(3)
+                .replicas(3)
+                .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
                 .build();
 	}
 
@@ -73,7 +83,7 @@ public class KafkaConfig {
 			.partitions(3)
 			.replicas(3)
 			.configs(Map.of(
-				"min.insync.replicas", "2",
+				MIN_INSYNC_REPLICAS_CONFIG, "2",
 				"retention.ms", String.valueOf(Duration.ofDays(30).toMillis())
 			))
 			.build();

@@ -1,6 +1,6 @@
-package com.rafaelsousa.algashop.ordering.core.application.order.event;
+package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.IntegrationCommand;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckoutAcceptedIntegrationEvent implements IntegrationEvent {
+public class ProcessAcceptedCheckoutIntegrationCommand implements IntegrationCommand {
 
 	private OrderSnapshot order;
 

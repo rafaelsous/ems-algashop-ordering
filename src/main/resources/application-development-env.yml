@@ -74,7 +74,7 @@ spring:
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
-        Ordering.CheckoutAcceptedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.CheckoutAcceptedIntegrationEvent
+        Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -119,6 +119,7 @@ algashop:
     kafka:
       product-event-topic-name: product-catalog.product.events
       order-event-topic-name: ordering.order.events
+      order-command-topic-name: ordering.order.commands
 
 management:
   info:

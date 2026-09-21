@@ -1,8 +1,8 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
-import com.rafaelsousa.algashop.ordering.core.application.order.event.CheckoutAcceptedIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderSnapshot;
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderSnapshotAssembler;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.command.OrderSnapshot;
+import com.rafaelsousa.algashop.ordering.core.application.checkout.command.OrderSnapshotAssembler;
 import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
@@ -21,7 +21,7 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.shoppingcart.Shopping
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ForBuyingWithShoppingCartAsync;
 import com.rafaelsousa.algashop.ordering.core.ports.in.checkout.ShippingInput;
-import com.rafaelsousa.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
+import com.rafaelsousa.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationCommands;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.BillingInputDisassembler;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.checkout.ShippingInputDisassembler;
 
@@ -48,7 +48,7 @@ public class CheckoutAsyncApplicationService implements ForBuyingWithShoppingCar
     private final ShippingInputDisassembler shippingInputDisassembler;
     private final SecurityChecks securityChecks;
     private final OrderSnapshotAssembler orderSnapshotAssembler;
-    private final ForPublishingOrderIntegrationEvents forPublishingOrderIntegrationEvents;
+    private final ForPublishingOrderIntegrationCommands forPublishingOrderIntegrationCommands;
 
     @Transactional
     @Override
@@ -88,8 +88,8 @@ public class CheckoutAsyncApplicationService implements ForBuyingWithShoppingCar
 
         OrderSnapshot snapshot = orderSnapshotAssembler.toSnapshot(order, shoppingCart.id().value());
 
-        CheckoutAcceptedIntegrationEvent integrationEvent = new CheckoutAcceptedIntegrationEvent(snapshot);
-        forPublishingOrderIntegrationEvents.send(integrationEvent);
+        ProcessAcceptedCheckoutIntegrationCommand integrationEvent = new ProcessAcceptedCheckoutIntegrationCommand(snapshot);
+        forPublishingOrderIntegrationCommands.send(integrationEvent);
 
         return order.id().toString();
     }

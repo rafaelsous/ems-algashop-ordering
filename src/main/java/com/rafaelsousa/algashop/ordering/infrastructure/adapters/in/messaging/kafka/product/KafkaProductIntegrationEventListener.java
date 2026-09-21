@@ -29,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @KafkaListener(
     id = "ordering.product-events",
-    idIsGroup = false,
     concurrency = "3",
     topics = "#{algaShopMessagingKafkaProperties.productEventTopicName}"
 )

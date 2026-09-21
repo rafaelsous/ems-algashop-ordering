@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.core.application.order.event;
+package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
 
 public record BillingSnapshot(
         String firstName,

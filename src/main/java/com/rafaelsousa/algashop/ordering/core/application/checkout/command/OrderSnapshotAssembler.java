@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.core.application.order.event;
+package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
