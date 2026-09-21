@@ -120,6 +120,10 @@ algashop:
       product-event-topic-name: product-catalog.product.events
       order-event-topic-name: ordering.order.events
       order-command-topic-name: ordering.order.commands
+    outbox:
+      enabled: true
+      dispatcher:
+        enabled: false
 
 management:
   info:
