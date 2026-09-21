@@ -35,6 +35,10 @@ public class KafkaOrderIntegrationCommandPublisher implements ForPublishingOrder
 		try {
 			ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(properties.getOrderCommandTopicName(), command.getAggregateId(), command);
 
+			if (command.getIdempotencyKey() != null) {
+				producerRecord.headers().add("idempotency-key", command.getIdempotencyKey().toString().getBytes());
+			}
+
 			result = kafkaTemplate.send(producerRecord).get(40, TimeUnit.SECONDS);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();

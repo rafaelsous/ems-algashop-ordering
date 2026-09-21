@@ -30,7 +30,7 @@ public class KafkaConfig {
 		exponentialBackOff.setMaxAttempts(maxRetries);
 
 		DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(recoverer, exponentialBackOff);
-		defaultErrorHandler.addNotRetryableExceptions(DomainException.class);
+		defaultErrorHandler.addNotRetryableExceptions(DomainException.class, IllegalArgumentException.class);
 
 		return defaultErrorHandler;
 	}

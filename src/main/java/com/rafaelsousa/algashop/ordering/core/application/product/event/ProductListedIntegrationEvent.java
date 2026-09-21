@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class ProductListedIntegrationEvent implements IntegrationEvent {
     private UUID productId;
     private OffsetDateTime listedAt;
+    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
 
     @Override
     public String getAggregateId() {
