@@ -128,6 +128,7 @@ algashop:
       poll-interval: PT5S # suggested production value: PT5S
       max-attempts: 10
       backoff: PT5S
+      batch-deadline: PT2M # PT3M
       dispatcher:
         enabled: true
 
@@ -153,3 +154,8 @@ eureka:
   instance:
     instance-id: ${random.uuid}
     prefer-ip-address: true
+
+#logging:
+#  level:
+#    org.springframework.kafka: OFF
+#    org.apache.kafka: OFF
