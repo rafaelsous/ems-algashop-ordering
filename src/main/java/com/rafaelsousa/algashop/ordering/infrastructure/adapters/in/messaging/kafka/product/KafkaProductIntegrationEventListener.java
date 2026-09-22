@@ -9,6 +9,7 @@ import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShopp
 
 import com.rafaelsousa.algashop.ordering.core.ports.out.idempotency.ForGuardingIdempotency;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.cache.ProductCacheManager;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,7 +83,7 @@ public class KafkaProductIntegrationEventListener {
             @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
             @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
             @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset,
-            @Header(value = "idempotency-key", required = false) byte[] rawIdempotencyKey) {
+            @Header(value = KafkaConfig.IDEMPOTENCY_KEY_HEADER, required = false) byte[] rawIdempotencyKey) {
         log(event, messageKey, partition, offset);
 
         UUID idempotencyKey = UUID.fromString(new String(rawIdempotencyKey, StandardCharsets.UTF_8));

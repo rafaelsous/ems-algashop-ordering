@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.messaging.
 
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.outbox.OutboxMessageRepository;
 
+import com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,38 +21,41 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "algashop.messaging.outbox.enabled", havingValue = "true")
 public class OutboxRecorder {
-	static final String TYPE_ID_HEADER = "__TypeId__";
+    private final OutboxMessageRepository outboxMessageRepository;
+    private final JacksonJsonSerializer<Object> outboxJsonSerializer;
 
-	private final OutboxMessageRepository outboxMessageRepository;
-	private final JacksonJsonSerializer<Object> outboxJsonSerializer;
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void record(String channelName, String aggregateId, Object message) {
+        RecordHeaders headers = new RecordHeaders();
+        byte[] payload = outboxJsonSerializer.serialize(channelName, headers, message);
 
-	@Transactional(propagation = Propagation.MANDATORY)
-	public void record(String channelName, String aggregateId, Object message) {
-		RecordHeaders headers = new RecordHeaders();
-		byte[] payload = outboxJsonSerializer.serialize(channelName, headers, message);
+        String eventType = readEventType(headers, message);
 
-		String eventType = readEventType(headers, message);
+        if (payload != null) {
+            OutboxMessage outboxMessage =
+                    OutboxMessage.builder()
+                            .channelName(channelName)
+                            .aggregateId(aggregateId)
+                            .payload(new String(payload, StandardCharsets.UTF_8))
+                            .eventType(eventType)
+                            .build();
 
-		if (payload != null) {
-			OutboxMessage outboxMessage = OutboxMessage.builder()
-					.channelName(channelName)
-					.aggregateId(aggregateId)
-					.payload(new String(payload, StandardCharsets.UTF_8))
-					.eventType(eventType)
-					.build();
+            outboxMessageRepository.save(outboxMessage);
 
-			outboxMessageRepository.save(outboxMessage);
+            log.info(
+                    "Recorder {} on outbox: channel={} | aggregateId={} | id={}",
+                    message.getClass().getSimpleName(),
+                    channelName,
+                    aggregateId,
+                    outboxMessage.getId());
+        }
+    }
 
-            log.info("Recorder {} on outbox: channel={} | aggregateId={} | id={}",
-	            message.getClass().getSimpleName(), channelName, aggregateId, outboxMessage.getId());
-		}
-	}
+    private String readEventType(RecordHeaders headers, Object message) {
+        Header typeId = headers.lastHeader(KafkaConfig.TYPE_ID_HEADER);
 
-	private String readEventType(RecordHeaders headers, Object message) {
-		Header typeId = headers.lastHeader(TYPE_ID_HEADER);
+        if (typeId == null) return message.getClass().getName();
 
-		if (typeId == null) return message.getClass().getName();
-
-		return new String(typeId.value(), StandardCharsets.UTF_8);
-	}
+        return new String(typeId.value(), StandardCharsets.UTF_8);
+    }
 }

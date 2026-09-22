@@ -40,7 +40,7 @@ public class KafkaConsumerTypeIdIdentifier {
             return genericJsonType;
         }
 
-        Header typeId = headers.lastHeader("__TypeId__");
+        Header typeId = headers.lastHeader(KafkaConfig.TYPE_ID_HEADER);
 
         if (typeId == null) {
             return genericJsonType;

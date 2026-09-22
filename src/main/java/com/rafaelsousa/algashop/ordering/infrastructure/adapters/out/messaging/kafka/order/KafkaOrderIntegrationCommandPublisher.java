@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.core.application.CommandPublishingExcep
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationCommands;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.AlgaShopMessagingKafkaProperties;
+import com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.KafkaConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.utility.BeanValidationUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class KafkaOrderIntegrationCommandPublisher implements ForPublishingOrder
 			ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(properties.getOrderCommandTopicName(), command.getAggregateId(), command);
 
 			if (command.getIdempotencyKey() != null) {
-				producerRecord.headers().add("idempotency-key", command.getIdempotencyKey().toString().getBytes());
+				producerRecord.headers().add(KafkaConfig.IDEMPOTENCY_KEY_HEADER, command.getIdempotencyKey().toString().getBytes());
 			}
 
 			result = kafkaTemplate.send(producerRecord).get(40, TimeUnit.SECONDS);
