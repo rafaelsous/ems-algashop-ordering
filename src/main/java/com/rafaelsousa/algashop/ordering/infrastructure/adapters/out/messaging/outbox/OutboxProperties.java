@@ -29,6 +29,13 @@ public class OutboxProperties {
     @NotNull
     private Duration pollInterval;
 
+    @Min(1)
+    @NotNull
+    private Integer maxAttempts;
+
+    @NotNull
+    private Duration backoff;
+
     @NotNull
     private Dispatcher dispatcher = new Dispatcher();
 
