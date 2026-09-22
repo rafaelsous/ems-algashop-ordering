@@ -19,11 +19,11 @@ import java.util.concurrent.TimeoutException;
 @Slf4j
 @Component
 @ConditionalOnProperty(name = "algashop.messaging.outbox.dispatcher.enabled", havingValue = "true")
-public class KafkaOutboxSender {
+public class OutboxKafkaSender {
     private final OutboxProperties outboxProperties;
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
-    public KafkaOutboxSender(
+    public OutboxKafkaSender(
             OutboxProperties outboxProperties,
             @Qualifier("outboxKafkaTemplate") KafkaTemplate<String, byte[]> kafkaTemplate) {
         this.outboxProperties = outboxProperties;

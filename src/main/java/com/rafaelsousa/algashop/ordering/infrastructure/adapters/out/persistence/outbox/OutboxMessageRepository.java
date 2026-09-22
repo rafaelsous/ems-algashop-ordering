@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistenc
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.messaging.outbox.OutboxMessage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -12,4 +13,8 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, UU
 
 	@Query("SELECT om FROM OutboxMessage om ORDER BY om.id")
 	List<OutboxMessage> findBatch(Pageable pageable);
+
+	@Modifying
+	@Query("DELETE from OutboxMessage om WHERE om.id = :messageId")
+	void deleteMessage(UUID messageId);
 }
