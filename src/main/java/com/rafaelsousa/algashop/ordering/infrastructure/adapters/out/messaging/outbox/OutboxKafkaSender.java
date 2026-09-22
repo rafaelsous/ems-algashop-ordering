@@ -12,7 +12,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -32,13 +31,7 @@ public class OutboxKafkaSender {
     }
 
     public void send(OutboxMessage message) {
-	    try {
-		    Thread.sleep(Duration.ofSeconds(40));
-	    } catch (InterruptedException _) {
-		    Thread.currentThread().interrupt();
-	    }
-
-	    ProducerRecord<String, byte[]> record =
+        ProducerRecord<String, byte[]> record =
                 new ProducerRecord<>(
                         message.getChannelName(),
                         message.getAggregateId(),
@@ -67,13 +60,15 @@ public class OutboxKafkaSender {
     }
 
     private SendResult<String, byte[]> doSend(ProducerRecord<String, byte[]> record) {
-	    try {
-		    return kafkaTemplate.send(record).get(outboxProperties.getSendTimeout().toMillis(), TimeUnit.MILLISECONDS);
-	    } catch (InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		    throw new OutboxSendException("Interrupted while publishing", ex);
-	    } catch (ExecutionException | TimeoutException | KafkaException ex) {
-		    throw new OutboxSendException("Failed to publish", ex);
-	    }
+        try {
+            return kafkaTemplate
+                    .send(record)
+                    .get(outboxProperties.getSendTimeout().toMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new OutboxSendException("Interrupted while publishing", ex);
+        } catch (ExecutionException | TimeoutException | KafkaException ex) {
+            throw new OutboxSendException("Failed to publish", ex);
+        }
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -28,28 +30,40 @@ public class OutboxDispatcher {
     public void dispatch() {
         OffsetDateTime deadLine = OffsetDateTime.now().plus(outboxProperties.getBatchDeadLine());
 
+        Set<String> blockedAggregates = new HashSet<>();
+
         List<OutboxMessage> batch =
                 outboxMessageRepository.findBatch(
                         PageRequest.of(0, outboxProperties.getBatchSize()));
 
-        if (!batch.isEmpty()) {
-            for (OutboxMessage message : batch) {
-                if (OffsetDateTime.now().isAfter(deadLine)) {
-                    log.warn(
-                            "Outbox dispatcher reached deadline of {}. Stopping processing batch.",
-                            outboxProperties.getBatchDeadLine());
-                    break;
-                }
+        for (OutboxMessage message : batch) {
+            if (OffsetDateTime.now().isAfter(deadLine)) {
+                log.warn(
+                        "Outbox dispatcher reached deadline of {}. Stopping processing batch.",
+                        outboxProperties.getBatchDeadLine());
+                break;
+            }
 
-                if (!isEligible(message)) continue;
+            if (!isEligible(message)) {
+                blockedAggregates.add(message.getAggregateId());
+                continue;
+            }
 
-                try {
-                    outboxKafkaSender.send(message);
-                    transactionTemplate.executeWithoutResult(
-                            _ -> outboxMessageRepository.deleteMessage(message.getId()));
-                } catch (Exception ex) {
-                    transactionTemplate.executeWithoutResult(_ -> registerFailed(message, ex));
-                }
+            if (blockedAggregates.contains(message.getAggregateId())) {
+                log.warn(
+                        "Skipping message {} from outbox because aggregate {} is blocked due to previous failures.",
+                        message.getId(),
+                        message.getAggregateId());
+                continue;
+            }
+
+            try {
+                outboxKafkaSender.send(message);
+                transactionTemplate.executeWithoutResult(
+                        _ -> outboxMessageRepository.deleteMessage(message.getId()));
+            } catch (Exception ex) {
+                transactionTemplate.executeWithoutResult(_ -> registerFailed(message, ex));
+                blockedAggregates.add(message.getAggregateId());
             }
         }
     }
@@ -80,7 +94,9 @@ public class OutboxDispatcher {
     private String extractError(Exception ex) {
         String description;
         if (ex.getCause() != null) {
-            description = "Error: %s\n Cause:\n %s".formatted(ex.getMessage(), ex.getCause().getMessage());
+            description =
+                    "Error: %s\n Cause:\n %s"
+                            .formatted(ex.getMessage(), ex.getCause().getMessage());
         } else {
             description = "Error: %s".formatted(ex.getMessage());
         }
