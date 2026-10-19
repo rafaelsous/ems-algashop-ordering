@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
 
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationCommand;
+import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
 import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

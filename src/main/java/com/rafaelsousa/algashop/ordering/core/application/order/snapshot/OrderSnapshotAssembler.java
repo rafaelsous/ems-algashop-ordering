@@ -1,4 +1,4 @@
-package com.rafaelsousa.algashop.ordering.core.application.checkout.command;
+package com.rafaelsousa.algashop.ordering.core.application.order.snapshot;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.*;
@@ -32,14 +32,16 @@ public class OrderSnapshotAssembler {
                 order.totalAmount().value(),
                 order.totalItems().value(),
                 order.items().stream().map(this::toSnapshot).collect(Collectors.toSet()),
-                shoppingCartId
-        );
+                shoppingCartId);
     }
 
     public Order toDomain(OrderSnapshot snapshot) {
-        CreditCardId creditCardId = snapshot.creditCardId() == null ? null : new CreditCardId(snapshot.creditCardId());
-        Set<OrderItem> items = snapshot.items().stream().map(item -> toDomain(snapshot.orderId(), item))
-                .collect(Collectors.toSet());
+        CreditCardId creditCardId =
+                snapshot.creditCardId() == null ? null : new CreditCardId(snapshot.creditCardId());
+        Set<OrderItem> items =
+                snapshot.items().stream()
+                        .map(item -> toDomain(snapshot.orderId(), item))
+                        .collect(Collectors.toSet());
 
         return Order.existing()
                 .id(new OrderId(snapshot.orderId()))
@@ -62,30 +64,45 @@ public class OrderSnapshotAssembler {
 
     private BillingSnapshot toSnapshot(Billing billing) {
         return new BillingSnapshot(
-                billing.fullName().firstName(), billing.fullName().lastName(), billing.document().value(),
-                billing.phone().value(), billing.email().value(), toSnapshot(billing.address())
-        );
+                billing.fullName().firstName(),
+                billing.fullName().lastName(),
+                billing.document().value(),
+                billing.phone().value(),
+                billing.email().value(),
+                toSnapshot(billing.address()));
     }
 
     private ShippingSnapshot toSnapshot(Shipping shipping) {
         var recipient = shipping.recipient();
         return new ShippingSnapshot(
-                shipping.cost().value(), shipping.expectedDate(),
+                shipping.cost().value(),
+                shipping.expectedDate(),
                 new RecipientSnapshot(
                         recipient.fullName().firstName(), recipient.fullName().lastName(),
                         recipient.document().value(), recipient.phone().value()),
-                toSnapshot(shipping.address())
-        );
+                toSnapshot(shipping.address()));
     }
 
     private AddressSnapshot toSnapshot(Address address) {
-        return new AddressSnapshot(address.street(), address.complement(), address.neighborhood(),
-                address.number(), address.city(), address.state(), address.zipCode().value());
+        return new AddressSnapshot(
+                address.street(),
+                address.complement(),
+                address.neighborhood(),
+                address.number(),
+                address.city(),
+                address.state(),
+                address.zipCode().value());
     }
 
     private OrderItemSnapshot toSnapshot(OrderItem item) {
-        return new OrderItemSnapshot(item.id().toString(), item.productId().value(), item.productName().value(),
-                item.price().value(), item.quantity().value(), item.totalAmount().value());
+        return new OrderItemSnapshot(
+                item.orderId().toString(),
+                item.id().toString(),
+                item.productId().value(),
+                item.productName().value(),
+                item.price().value(),
+                item.quantity().value(),
+                item.totalAmount().value());
     }
 
     private Billing toDomain(BillingSnapshot billing) {
@@ -103,11 +120,12 @@ public class OrderSnapshotAssembler {
         return Shipping.builder()
                 .cost(new Money(shipping.cost()))
                 .expectedDate(shipping.expectedDate())
-                .recipient(Recipient.builder()
-                        .fullName(new FullName(recipient.firstName(), recipient.lastName()))
-                        .document(new Document(recipient.document()))
-                        .phone(new Phone(recipient.phone()))
-                        .build())
+                .recipient(
+                        Recipient.builder()
+                                .fullName(new FullName(recipient.firstName(), recipient.lastName()))
+                                .document(new Document(recipient.document()))
+                                .phone(new Phone(recipient.phone()))
+                                .build())
                 .address(toDomain(shipping.address()))
                 .build();
     }

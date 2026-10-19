@@ -1,0 +1,9 @@
+package com.rafaelsousa.algashop.ordering.core.application.order.snapshot;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record RecipientSnapshot(
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        @NotBlank String document,
+        @NotBlank String phone) {}

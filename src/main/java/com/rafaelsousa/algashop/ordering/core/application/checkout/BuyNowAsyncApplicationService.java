@@ -1,8 +1,8 @@
 package com.rafaelsousa.algashop.ordering.core.application.checkout;
 
 import com.rafaelsousa.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand;
-import com.rafaelsousa.algashop.ordering.core.application.checkout.command.OrderSnapshot;
-import com.rafaelsousa.algashop.ordering.core.application.checkout.command.OrderSnapshotAssembler;
+import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
+import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshotAssembler;
 import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.core.domain.model.CreditCardId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
