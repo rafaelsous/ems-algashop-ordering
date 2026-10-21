@@ -35,7 +35,6 @@ public class OrderPlacedIntegrationEventAssembler {
 
     private OrderItemSnapshot toOrderItemData(OrderItem item) {
         return new OrderItemSnapshot(
-                item.id().toString(),
                 item.orderId().toString(),
                 item.productId().value(),
                 item.productName().value(),
@@ -65,8 +64,8 @@ public class OrderPlacedIntegrationEventAssembler {
                 billing.fullName().firstName(),
                 billing.fullName().lastName(),
                 billing.document().value(),
-                billing.email().value(),
                 billing.phone().value(),
+                billing.email().value(),
                 toAddressData(billing.address()));
     }
 

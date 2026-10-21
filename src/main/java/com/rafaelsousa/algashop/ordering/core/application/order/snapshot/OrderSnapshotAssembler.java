@@ -97,7 +97,6 @@ public class OrderSnapshotAssembler {
     private OrderItemSnapshot toSnapshot(OrderItem item) {
         return new OrderItemSnapshot(
                 item.orderId().toString(),
-                item.id().toString(),
                 item.productId().value(),
                 item.productName().value(),
                 item.price().value(),
