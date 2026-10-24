@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.ports.in.order;
 
 public interface ForManagingOrders {
-    void cancel(Long rawOrderId);
-    void markAsPaid(Long rawOrderId);
-    void markAsReady(Long rawOrderId);
+    void cancel(String rawOrderId);
+    void markAsPaid(String rawOrderId);
+    void markAsReady(String rawOrderId);
 }

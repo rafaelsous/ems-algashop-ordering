@@ -1,5 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.order;
 
+import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEventAssembler;
 import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEventAssembler;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
@@ -18,6 +20,7 @@ public class OrderEventListener {
     private final Orders orders;
     private final ForPublishingOrderIntegrationEvents forPublishingOrderIntegrationEvents;
     private final OrderPlacedIntegrationEventAssembler orderPlacedIntegrationEventAssembler;
+    private final OrderPaidIntegrationEventAssembler orderPaidIntegrationEventAssembler;
 
     @EventListener
     public void listen(OrderPlacedEvent event) {
@@ -29,7 +32,10 @@ public class OrderEventListener {
 
     @EventListener
     public void listen(OrderPaidEvent event) {
-        log.info("OrderPaidEvent listen. Event={}", event);
+        Order order = orders.ofId(event.orderId()).orElseThrow(OrderNotFoundException::new);
+        OrderPaidIntegrationEvent integrationEvent = orderPaidIntegrationEventAssembler.toIntegrationEvent(order);
+
+        forPublishingOrderIntegrationEvents.send(integrationEvent);
     }
 
     @EventListener

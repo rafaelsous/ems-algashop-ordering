@@ -18,7 +18,7 @@ public class OrderManagementApplicationService implements ForManagingOrders {
 
     @Override
     @Transactional
-    public void cancel(Long rawOrderId) {
+    public void cancel(String rawOrderId) {
         Objects.requireNonNull(rawOrderId);
 
         Order order = orders.ofId(new OrderId(rawOrderId))
@@ -31,7 +31,7 @@ public class OrderManagementApplicationService implements ForManagingOrders {
 
     @Override
     @Transactional
-    public void markAsPaid(Long rawOrderId) {
+    public void markAsPaid(String rawOrderId) {
         Objects.requireNonNull(rawOrderId);
 
         Order order = orders.ofId(new OrderId(rawOrderId))
@@ -44,7 +44,7 @@ public class OrderManagementApplicationService implements ForManagingOrders {
 
     @Override
     @Transactional
-    public void markAsReady(Long rawOrderId) {
+    public void markAsReady(String rawOrderId) {
         Objects.requireNonNull(rawOrderId);
 
         Order order = orders.ofId(new OrderId(rawOrderId))

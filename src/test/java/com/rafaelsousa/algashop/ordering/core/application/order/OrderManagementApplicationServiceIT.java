@@ -49,7 +49,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
         Order order = OrderTestDataBuilder.anOrder().customerId(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
         orderManagementApplicationService.cancel(rawOrderId);
 
         Order updatedOrder = orders.ofId(order.id()).orElseThrow();
@@ -65,7 +65,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
     @Test
     void shouldThrowExceptionWhenTryingToCancelNonExistentOrder() {
         OrderId nonExistentOrderId = new OrderId();
-        long rawOrderId = nonExistentOrderId.value().toLong();
+        String rawOrderId = nonExistentOrderId.value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.cancel(rawOrderId))
                 .isInstanceOf(OrderNotFoundException.class)
@@ -79,7 +79,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(canceledStatus).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.cancel(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -95,7 +95,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
         orderManagementApplicationService.markAsPaid(rawOrderId);
 
         Order updatedOrder = orders.ofId(order.id()).orElseThrow();
@@ -111,7 +111,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
     @Test
     void shouldThrowExceptionWhenTryingToMarkNonExistentOrderAsPaid() {
         OrderId nonExistentOrderId = new OrderId();
-        long rawOrderId = nonExistentOrderId.value().toLong();
+        String rawOrderId = nonExistentOrderId.value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
                 .isInstanceOf(OrderNotFoundException.class)
@@ -124,7 +124,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.CANCELED).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -145,7 +145,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.DRAFT).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -167,7 +167,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.PAID).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsPaid(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -182,7 +182,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.PAID).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
         orderManagementApplicationService.markAsReady(rawOrderId);
 
         Order updatedOrder = orders.ofId(order.id()).orElseThrow();
@@ -200,7 +200,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
     @Test
     void shouldThrowExceptionWhenTryingToMarkNonExistentOrderAsReady() {
         OrderId nonExistentOrderId = new OrderId();
-        long rawOrderId = nonExistentOrderId.value().toLong();
+        String rawOrderId = nonExistentOrderId.value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
                 .isInstanceOf(OrderNotFoundException.class)
@@ -214,7 +214,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.CANCELED).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -235,7 +235,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.READY).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
@@ -249,7 +249,7 @@ class OrderManagementApplicationServiceIT extends AbstractApplicationIT {
                 .status(OrderStatus.PLACED).build();
         orders.add(order);
 
-        long rawOrderId = order.id().value().toLong();
+        String rawOrderId = order.id().value().toString();
 
         assertThatThrownBy(() -> orderManagementApplicationService.markAsReady(rawOrderId))
                 .isInstanceOf(OrderStatusCannotBeChangedException.class)
