@@ -1,11 +1,14 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.kafka;
 
+import com.rafaelsousa.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 
+import jakarta.validation.ConstraintViolationException;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
@@ -22,20 +25,29 @@ public class KafkaConfig {
     public static final String IDEMPOTENCY_KEY_HEADER = "idempotency-key";
 
     private static final String DLT_PREFIX = "ordering.dlt.";
+    public static final int TOPIC_REPLICAS = 3;
+    public static final int TOPIC_PARTITIONS = 3;
+    private static final String RETENTION_30_DAYS = String.valueOf(Duration.ofDays(30).toMillis());
 
     @Bean
     public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recoverer) {
         long interval = 2000L; // 2s entre as tentativas
         double multiplier = 2;
         long maxRetries = 3L; // máximo de 2 tentativas
+        long maxInterval = 8000L;
 
         ExponentialBackOff exponentialBackOff = new ExponentialBackOff(interval, multiplier);
+        exponentialBackOff.setMaxInterval(maxInterval);
         exponentialBackOff.setMaxAttempts(maxRetries);
 
         DefaultErrorHandler defaultErrorHandler =
                 new DefaultErrorHandler(recoverer, exponentialBackOff);
         defaultErrorHandler.addNotRetryableExceptions(
-                DomainException.class, IllegalArgumentException.class);
+                DomainException.class,
+                DomainEntityNotFoundException.class,
+                ConstraintViolationException.class,
+                DataIntegrityViolationException.class,
+                IllegalArgumentException.class);
 
         return defaultErrorHandler;
     }
@@ -69,10 +81,15 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic invoiceEventsDlt(AlgaShopMessagingKafkaProperties properties) {
+        return createDeadLetterTopic(properties.getInvoiceEventTopicName());
+    }
+
+    @Bean
     public NewTopic ordersEventsTopic(AlgaShopMessagingKafkaProperties properties) {
         return TopicBuilder.name(properties.getOrderEventTopicName())
-                .partitions(3)
-                .replicas(3)
+                .partitions(TOPIC_PARTITIONS)
+                .replicas(TOPIC_REPLICAS)
                 .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
                 .build();
     }
@@ -80,22 +97,17 @@ public class KafkaConfig {
     @Bean
     public NewTopic ordersCommandsTopic(AlgaShopMessagingKafkaProperties properties) {
         return TopicBuilder.name(properties.getOrderCommandTopicName())
-                .partitions(3)
-                .replicas(3)
+                .partitions(TOPIC_PARTITIONS)
+                .replicas(TOPIC_REPLICAS)
                 .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
                 .build();
     }
 
     private NewTopic createDeadLetterTopic(String originTopicName) {
         return TopicBuilder.name(DLT_PREFIX + originTopicName)
-                .partitions(3)
-                .replicas(3)
-                .configs(
-                        Map.of(
-                                MIN_INSYNC_REPLICAS_CONFIG,
-                                "2",
-                                "retention.ms",
-                                String.valueOf(Duration.ofDays(30).toMillis())))
+                .partitions(TOPIC_PARTITIONS)
+                .replicas(TOPIC_REPLICAS)
+                .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2", "retention.ms", RETENTION_30_DAYS))
                 .build();
     }
 }
