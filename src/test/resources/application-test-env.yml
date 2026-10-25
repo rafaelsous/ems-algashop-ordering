@@ -120,4 +120,4 @@ algashop:
       backoff: PT5S
       batch-deadline: PT2M # PT3M
       dispatcher:
-        enabled: true
+        enabled: false

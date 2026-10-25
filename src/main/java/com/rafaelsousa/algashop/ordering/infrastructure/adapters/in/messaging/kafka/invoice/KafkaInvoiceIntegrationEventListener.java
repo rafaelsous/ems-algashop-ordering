@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.kafka.invoice;
 
+import com.rafaelsousa.algashop.ordering.core.application.invoice.event.InvoiceCanceledIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.ForManagingOrders;
 import jakarta.validation.Valid;
@@ -24,6 +25,18 @@ import org.springframework.stereotype.Component;
 public class KafkaInvoiceIntegrationEventListener {
     private final ForManagingOrders forManagingOrders;
 
+    @KafkaHandler(isDefault = true)
+    public void handle(
+            @Payload Object event,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Long offset) {
+        log.info(
+                "Event ignored: type={} key={} offset={}",
+                event.getClass().getSimpleName(),
+                messageKey,
+                offset);
+    }
+
     @KafkaHandler
     public void handle(
             @Payload @Valid InvoicePaidIntegrationEvent event,
@@ -35,16 +48,15 @@ public class KafkaInvoiceIntegrationEventListener {
         forManagingOrders.markAsPaid(event.getOrderId());
     }
 
-    @KafkaHandler(isDefault = true)
+    @KafkaHandler
     public void handle(
-            @Payload Object event,
+            @Payload @Valid InvoiceCanceledIntegrationEvent event,
             @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
             @Header(value = KafkaHeaders.OFFSET, required = false) Long offset) {
-        log.info(
-                "Event ignored: type={} key={} offset={}",
-                event.getClass().getSimpleName(),
-                messageKey,
-                offset);
+        logReceived(event, messageKey, partition, offset);
+
+        forManagingOrders.cancel(event.getOrderId());
     }
 
     private void logReceived(Object event, String messageKey, Integer partition, Long offset) {

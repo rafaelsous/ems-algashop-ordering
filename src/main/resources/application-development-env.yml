@@ -76,7 +76,9 @@ spring:
         Ordering.OrderPlacedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
         Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand,
         Ordering.OrderPaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
-        Billing.InvoicePaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent
+        Ordering.OrderCanceledIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderCanceledIntegrationEvent,
+        Billing.InvoicePaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.invoice.event.InvoicePaidIntegrationEvent,
+        Billing.InvoiceCanceledIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.invoice.event.InvoiceCanceledIntegrationEvent
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -136,7 +138,7 @@ algashop:
       backoff: PT5S
       batch-deadline: PT2M # PT3M
       dispatcher:
-        enabled: false
+        enabled: true
 
 management:
   info:

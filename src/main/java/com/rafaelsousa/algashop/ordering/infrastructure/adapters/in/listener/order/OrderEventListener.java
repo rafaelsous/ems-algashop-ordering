@@ -1,9 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.listener.order;
 
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEventAssembler;
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEventAssembler;
+import com.rafaelsousa.algashop.ordering.core.application.order.event.*;
+import com.rafaelsousa.algashop.ordering.core.application.utility.Mapper;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.*;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.ForPublishingOrderIntegrationEvents;
 
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderEventListener {
     private final Orders orders;
+    private final Mapper mapper;
     private final ForPublishingOrderIntegrationEvents forPublishingOrderIntegrationEvents;
     private final OrderPlacedIntegrationEventAssembler orderPlacedIntegrationEventAssembler;
     private final OrderPaidIntegrationEventAssembler orderPaidIntegrationEventAssembler;
@@ -45,6 +44,7 @@ public class OrderEventListener {
 
     @EventListener
     public void listen(OrderCanceledEvent event) {
-        log.info("OrderCanceledEvent listen. Event={}", event);
+        OrderCanceledIntegrationEvent integrationEvent = mapper.convert(event, OrderCanceledIntegrationEvent.class);
+        forPublishingOrderIntegrationEvents.send(integrationEvent);
     }
 }
