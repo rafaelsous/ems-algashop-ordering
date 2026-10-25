@@ -2,23 +2,28 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.web;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.restassured.config.JsonConfig.jsonConfig;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.MockJwtDecoderConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
+import com.rafaelsousa.algashop.ordering.utils.CacheTestConfig;
 import com.rafaelsousa.algashop.ordering.utils.MockJwtFactory;
 import io.restassured.RestAssured;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpHeaders;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.security.oauth2.client.web.client.OAuth2ClientHttpRequestInterceptor;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
-@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class, CacheTestConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(
         scripts = "classpath:db/testdata/afterMigrate.sql",
@@ -37,6 +42,17 @@ public abstract class AbstractPresentationIT {
     protected OAuth2ClientHttpRequestInterceptor productCatalogApiClientInterceptor;
 
     protected void beforeEach() {
+        try {
+            Mockito.doAnswer(invocation -> {
+                HttpRequest request = invocation.getArgument(0);
+                byte[] body = invocation.getArgument(1);
+                ClientHttpRequestExecution execution = invocation.getArgument(2);
+                return execution.execute(request, body); // segue sem token
+            }).when(productCatalogApiClientInterceptor).intercept(any(), any(), any());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
 

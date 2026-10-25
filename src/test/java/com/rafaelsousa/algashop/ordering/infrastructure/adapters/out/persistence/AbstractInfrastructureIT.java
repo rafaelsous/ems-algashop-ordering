@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistenc
 import com.rafaelsousa.algashop.ordering.core.application.security.SecurityChecks;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.MockJwtDecoderConfig;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.TestcontainerPostgreSQLConfig;
+import com.rafaelsousa.algashop.ordering.utils.CacheTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class, CacheTestConfig.class})
 public abstract class AbstractInfrastructureIT {
 
 	@MockitoBean
