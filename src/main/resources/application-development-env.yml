@@ -74,6 +74,8 @@ spring:
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent,
         ProductCatalog.StockReservationConfirmedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.stock.event.StockReservationConfirmedIntegrationEvent,
+        ProductCatalog.ProductRestockedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductRestockedIntegrationEvent,
+        ProductCatalog.ProductSoldOutIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductSoldOutIntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
         Ordering.ProcessAcceptedCheckoutIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.checkout.command.ProcessAcceptedCheckoutIntegrationCommand,
         Ordering.OrderPaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,

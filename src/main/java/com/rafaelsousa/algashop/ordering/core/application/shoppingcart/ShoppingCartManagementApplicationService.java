@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +26,7 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
     private final ShoppingCarts shoppingCarts;
     private final ProductCatalogService productCatalogService;
     private final ShoppingService shoppingService;
+    private final ShoppingCartProductAdjustmentService shoppingCartProductAdjustmentService;
 
     @Override
     @Transactional
@@ -103,30 +103,11 @@ public class ShoppingCartManagementApplicationService implements ForManagingShop
 
     @Override
     public void changeProductAvailability(UUID productId, boolean available) {
-        List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(new ProductId(productId));
-
-        if (affectedShoppingCarts.isEmpty()) {
-            return;
-        }
-
-        affectedShoppingCarts.forEach(shoppingCart -> {
-            shoppingCart.changeItemAvailability(new ProductId(productId), available);
-            shoppingCarts.add(shoppingCart);
-        });
+        shoppingCartProductAdjustmentService.changeAvailability(new ProductId(productId), available);
     }
 
     @Override
     public void refreshProductPrice(UUID rawProductId, BigDecimal newSalePrice) {
-        ProductId productId = new ProductId(rawProductId);
-        List<ShoppingCart> affectedShoppingCarts = shoppingCarts.findAllContainingItem(productId);
-
-        if (affectedShoppingCarts.isEmpty()) {
-            return;
-        }
-
-        affectedShoppingCarts.forEach(shoppingCart -> {
-            shoppingCart.changeItemPrice(productId, Money.of(newSalePrice));
-            shoppingCarts.add(shoppingCart);
-        });
+        shoppingCartProductAdjustmentService.adjustPrice(new ProductId(rawProductId), Money.of(newSalePrice));
     }
 }

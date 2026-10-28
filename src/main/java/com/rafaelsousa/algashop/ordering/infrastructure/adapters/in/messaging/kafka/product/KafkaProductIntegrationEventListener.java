@@ -1,9 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.kafka.product;
 
 import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductDelistedIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductListedIntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.application.product.event.ProductPriceChangedV2IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.product.event.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
 
@@ -57,8 +55,6 @@ public class KafkaProductIntegrationEventListener {
             @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset) {
         log(event, messageKey, partition, offset);
 
-//        simulateProcessing();
-
         productCacheManager.evict(event.getProductId());
         forManagingShoppingCarts.changeProductAvailability(event.getProductId(), true);
     }
@@ -71,7 +67,29 @@ public class KafkaProductIntegrationEventListener {
             @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset) {
         log(event, messageKey, partition, offset);
 
-//        simulateProcessing();
+        productCacheManager.evict(event.getProductId());
+        forManagingShoppingCarts.changeProductAvailability(event.getProductId(), false);
+    }
+
+    @KafkaHandler
+    public void handle(
+            ProductRestockedIntegrationEvent event,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset) {
+        log(event, messageKey, partition, offset);
+
+        productCacheManager.evict(event.getProductId());
+        forManagingShoppingCarts.changeProductAvailability(event.getProductId(), true);
+    }
+
+    @KafkaHandler
+    public void handle(
+            ProductSoldOutIntegrationEvent event,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Integer offset) {
+        log(event, messageKey, partition, offset);
 
         productCacheManager.evict(event.getProductId());
         forManagingShoppingCarts.changeProductAvailability(event.getProductId(), false);
