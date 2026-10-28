@@ -99,15 +99,6 @@ public class KafkaConfig {
                 .build();
     }
 
-    @Bean
-    public NewTopic ordersCommandsTopic(AlgaShopMessagingKafkaProperties properties) {
-        return TopicBuilder.name(properties.getOrderCommandTopicName())
-                .partitions(TOPIC_PARTITIONS)
-                .replicas(TOPIC_REPLICAS)
-                .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
-                .build();
-    }
-
     private NewTopic createDeadLetterTopic(String originTopicName) {
         return TopicBuilder.name(DLT_PREFIX + originTopicName)
                 .partitions(TOPIC_PARTITIONS)
