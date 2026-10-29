@@ -81,16 +81,6 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic invoiceEventsDlt(AlgaShopMessagingKafkaProperties properties) {
-        return createDeadLetterTopic(properties.getInvoiceEventTopicName());
-    }
-
-    @Bean
-    public NewTopic stockEventsDlt(AlgaShopMessagingKafkaProperties properties) {
-        return createDeadLetterTopic(properties.getStockEventTopicName());
-    }
-
-    @Bean
     public NewTopic ordersEventsTopic(AlgaShopMessagingKafkaProperties properties) {
         return TopicBuilder.name(properties.getOrderEventTopicName())
                 .partitions(TOPIC_PARTITIONS)
