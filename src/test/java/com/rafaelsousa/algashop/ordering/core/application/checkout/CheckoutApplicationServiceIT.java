@@ -99,7 +99,7 @@ class CheckoutApplicationServiceIT extends AbstractApplicationIT {
 
         assertThat(updatedShoppingCart.isEmpty()).isTrue();
 
-        verify(orderEventListener).listen(any(OrderPlacedEvent.class));
+        verify(orderEventListener).onOrderPlacedPublishIntegrationEvent(any(OrderPlacedEvent.class));
     }
 
     @Test
