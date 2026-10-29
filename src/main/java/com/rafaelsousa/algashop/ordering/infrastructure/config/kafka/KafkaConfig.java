@@ -71,22 +71,36 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic productEventsDlt(AlgaShopMessagingKafkaProperties properties) {
-        return createDeadLetterTopic(properties.getProductEventTopicName());
-    }
-
-    @Bean
-    public NewTopic orderEventsDlt(AlgaShopMessagingKafkaProperties properties) {
-        return createDeadLetterTopic(properties.getOrderEventTopicName());
-    }
-
-    @Bean
     public NewTopic ordersEventsTopic(AlgaShopMessagingKafkaProperties properties) {
-        return TopicBuilder.name(properties.getOrderEventTopicName())
+        return TopicBuilder.name(properties.getOrderEventsTopicName())
                 .partitions(TOPIC_PARTITIONS)
                 .replicas(TOPIC_REPLICAS)
                 .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
                 .build();
+    }
+
+    @Bean
+    public NewTopic sagaRepliesTopic(AlgaShopMessagingKafkaProperties properties) {
+        return TopicBuilder.name(properties.getSagaRepliesTopicName())
+                .partitions(TOPIC_PARTITIONS)
+                .replicas(TOPIC_REPLICAS)
+                .configs(Map.of(MIN_INSYNC_REPLICAS_CONFIG, "2"))
+                .build();
+    }
+
+    @Bean
+    public NewTopic productEventsDlt(AlgaShopMessagingKafkaProperties properties) {
+        return createDeadLetterTopic(properties.getProductEventsTopicName());
+    }
+
+    @Bean
+    public NewTopic orderEventsDlt(AlgaShopMessagingKafkaProperties properties) {
+        return createDeadLetterTopic(properties.getOrderEventsTopicName());
+    }
+
+    @Bean
+    public NewTopic sagaRepliesDlt(AlgaShopMessagingKafkaProperties properties) {
+        return createDeadLetterTopic(properties.getSagaRepliesTopicName());
     }
 
     private NewTopic createDeadLetterTopic(String originTopicName) {

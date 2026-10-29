@@ -29,7 +29,7 @@ import java.util.UUID;
 @KafkaListener(
     id = "#{algaShopMessagingKafkaProperties.productEventsConsumerGroup}",
     concurrency = "3",
-    topics = "#{algaShopMessagingKafkaProperties.productEventTopicName}"
+    topics = "#{algaShopMessagingKafkaProperties.productEventsTopicName}"
 )
 public class KafkaProductIntegrationEventListener {
     private final ProductCacheManager productCacheManager;

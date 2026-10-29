@@ -34,7 +34,7 @@ public class KafkaOrderIntegrationEventPublisher implements ForPublishingOrderIn
 
 		SendResult<String, Object> result;
 		try {
-			ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(properties.getOrderEventTopicName(), event.getAggregateId(), event);
+			ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(properties.getOrderEventsTopicName(), event.getAggregateId(), event);
 
 			if (event.getIdempotencyKey() != null) {
 				producerRecord.headers().add(KafkaConfig.IDEMPOTENCY_KEY_HEADER, event.getIdempotencyKey().toString().getBytes());

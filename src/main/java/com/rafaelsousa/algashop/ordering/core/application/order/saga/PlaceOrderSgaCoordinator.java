@@ -1,7 +1,14 @@
 package com.rafaelsousa.algashop.ordering.core.application.order.saga;
 
+import com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand;
+import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
+import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshotAssembler;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.Order;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderNotFoundException;
+import com.rafaelsousa.algashop.ordering.core.domain.model.order.Orders;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.saga.ForCoordinatingPlaceOrderSaga;
+import com.rafaelsousa.algashop.ordering.core.ports.out.order.saga.ForPublishingPlaceOrderSagaIntegrationCommands;
 import com.rafaelsousa.algashop.ordering.core.ports.out.order.saga.ForStoringPlaceOrderSagas;
 
 import lombok.RequiredArgsConstructor;
@@ -14,15 +21,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
-	private final ForStoringPlaceOrderSagas sagas;
+    private final Orders orders;
+    private final ForStoringPlaceOrderSagas sagas;
+    private final OrderSnapshotAssembler orderSnapshotAssembler;
+    private final ForPublishingPlaceOrderSagaIntegrationCommands commands;
 
-	@Override
+    @Override
     @Transactional
-	public void start(String rawOrderId) {
-		OrderId orderId = new OrderId(rawOrderId);
-		PlaceOrderSaga saga = PlaceOrderSaga.start(orderId);
-		sagas.add(saga);
+    public void start(String rawOrderId) {
+        OrderId orderId = new OrderId(rawOrderId);
+        Order order = findOrder(orderId);
+
+	    OrderSnapshot snapshot = orderSnapshotAssembler.toSnapshot(order);
+	    IssueInvoiceIntegrationCommand command = IssueInvoiceIntegrationCommand.from(snapshot);
+
+	    PlaceOrderSaga saga = PlaceOrderSaga.start(orderId);
+		saga.moveToInvoicing();
+	    sagas.add(saga);
+
+	    commands.send(saga.sagaId().toString(), command);
 
         log.info("Place order saga started: saga={} order={}", saga.sagaId(), saga.orderId());
-	}
+    }
+
+    private Order findOrder(OrderId orderId) {
+        return orders.ofId(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
 }

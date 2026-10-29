@@ -74,7 +74,8 @@ spring:
         Ordering.OrderPlacedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
         Ordering.OrderPaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
         Ordering.OrderCanceledIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderCanceledIntegrationEvent,
-        Ordering.OrderReadyIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent
+        Ordering.OrderReadyIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent,
+        Billing.IssueInvoiceIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -118,9 +119,11 @@ algashop:
         min-points: ${ordering.params.shipping.have-free-shipping.rule2.min-points}
   messaging:
     kafka:
-      product-event-topic-name: product-catalog.product.events
-      order-event-topic-name: ordering.order.events
+      product-events-topic-name: product-catalog.product.events
+      order-events-topic-name: ordering.order.events
       product-events-consumer-group: ordering.product-events
+      invoice-commands-topic-name: billing.invoice.commands
+      saga-replies-topic-name: ordering.saga.replies
     outbox:
       enabled: true
       send-timeout: PT5S
