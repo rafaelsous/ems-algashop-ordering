@@ -1,7 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
-import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
+import com.rafaelsousa.algashop.ordering.core.application.InboundIntegrationEvent;
+
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -12,17 +12,7 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDelistedIntegrationEvent implements IntegrationEvent {
+public class ProductDelistedIntegrationEvent implements InboundIntegrationEvent {
     private UUID productId;
     private OffsetDateTime delistedAt;
-    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
-
-    @Override
-    public String getAggregateId() {
-        if (productId == null) {
-            return null;
-        }
-
-        return productId.toString();
-    }
 }

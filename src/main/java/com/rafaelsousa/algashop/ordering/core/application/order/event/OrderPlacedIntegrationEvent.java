@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.order.event;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.OutboundIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.BillingSnapshot;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderItemSnapshot;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.PaymentSnapshot;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPlacedIntegrationEvent implements IntegrationEvent {
+public class OrderPlacedIntegrationEvent implements OutboundIntegrationEvent {
 
 	@NotBlank
     private String orderId;

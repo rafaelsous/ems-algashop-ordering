@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class EventPublishingException extends RuntimeException {
-	private IntegrationEvent event;
+	private OutboundIntegrationEvent event;
 
 	public EventPublishingException() {
 	}
@@ -25,7 +25,7 @@ public class EventPublishingException extends RuntimeException {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public EventPublishingException(String message, IntegrationEvent event, Throwable ex) {
+	public EventPublishingException(String message, OutboundIntegrationEvent event, Throwable ex) {
 		super("%s Event=%s AggregateId=%s".formatted(message, event.getClass().getSimpleName(), event.getAggregateId()), ex);
 		this.event = event;
 	}

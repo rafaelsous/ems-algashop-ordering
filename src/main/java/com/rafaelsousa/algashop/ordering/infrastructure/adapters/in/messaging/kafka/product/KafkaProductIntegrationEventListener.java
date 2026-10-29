@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.kafka.product;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.OutboundIntegrationEvent;
 import com.rafaelsousa.algashop.ordering.core.application.product.event.*;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 import com.rafaelsousa.algashop.ordering.core.ports.in.shopping.ForManagingShoppingCarts;
@@ -134,7 +134,7 @@ public class KafkaProductIntegrationEventListener {
         }
     }
 
-    private static void log(IntegrationEvent event, String messageKey, Integer partition, Integer offset) {
+    private static void log(OutboundIntegrationEvent event, String messageKey, Integer partition, Integer offset) {
         log.info("Received event: {} with key: {}, partition: {}, offset: {}, and thread: {}",
             event.getClass().getSimpleName(), messageKey, partition, offset, Thread.currentThread().getName());
     }

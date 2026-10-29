@@ -1,9 +1,9 @@
 package com.rafaelsousa.algashop.ordering.core.application.product.event;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.InboundIntegrationEvent;
 
-import com.rafaelsousa.algashop.ordering.core.domain.model.IdGenerator;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -15,8 +15,7 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
-	private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
+public class ProductPriceChangedV2IntegrationEvent implements InboundIntegrationEvent {
 
 	@NotNull
 	private UUID productId;
@@ -35,13 +34,4 @@ public class ProductPriceChangedV2IntegrationEvent implements IntegrationEvent {
 
 	@NotNull
 	private BigDecimal newSalePrice;
-
-	@Override
-	public String getAggregateId() {
-		if (productId == null) {
-			return null;
-		}
-
-		return productId.toString();
-	}
 }

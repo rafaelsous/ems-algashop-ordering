@@ -1,6 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.order.event;
 
-import com.rafaelsousa.algashop.ordering.core.application.IntegrationEvent;
+import com.rafaelsousa.algashop.ordering.core.application.OutboundIntegrationEvent;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCanceledIntegrationEvent implements IntegrationEvent {
+public class OrderCanceledIntegrationEvent implements OutboundIntegrationEvent {
 
     @NotBlank
     private String orderId;
