@@ -1,0 +1,1 @@
+ALTER TABLE public.outbox RENAME COLUMN event_type to message_type;

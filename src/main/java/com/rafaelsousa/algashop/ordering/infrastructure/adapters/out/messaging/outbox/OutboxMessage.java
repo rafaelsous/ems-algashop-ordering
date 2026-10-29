@@ -21,12 +21,13 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OutboxMessage implements Persistable<UUID> {
 
-    @Id
-    private UUID id;
+    @Id private UUID id;
 
     private String channelName;
+    private String replyTopic;
     private String aggregateId;
-    private String eventType;
+    private String correlationId;
+    private String messageType;
 
     @JdbcType(PostgreSQLJsonPGObjectJsonType.class)
     private String payload;
@@ -37,19 +38,27 @@ public class OutboxMessage implements Persistable<UUID> {
     private String lastError;
     private OffsetDateTime failedAt;
 
-	@Builder
-	public OutboxMessage(String channelName, String aggregateId, String eventType, String payload) {
-		this.id = IdGenerator.generateTimeBasedUUID();
-		this.createdAt = OffsetDateTime.now();
-		this.nextAttemptAt = OffsetDateTime.now();
+    @Builder
+    public OutboxMessage(
+            String channelName,
+            String aggregateId,
+            String messageType,
+            String payload,
+            String correlationId,
+            String replyTopic) {
+        this.id = IdGenerator.generateTimeBasedUUID();
+        this.createdAt = OffsetDateTime.now();
+        this.nextAttemptAt = OffsetDateTime.now();
 
-		this.channelName = channelName;
-		this.aggregateId = aggregateId;
-		this.eventType = eventType;
-		this.payload = payload;
-	}
+        this.channelName = channelName;
+        this.aggregateId = aggregateId;
+        this.messageType = messageType;
+        this.payload = payload;
+		this.correlationId = correlationId;
+		this.replyTopic = replyTopic;
+    }
 
-	@Override
+    @Override
     public boolean isNew() {
         return true;
     }
