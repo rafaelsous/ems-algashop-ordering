@@ -7,7 +7,6 @@ import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
 import com.rafaelsousa.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.infrastructure.config.utility.ClockUtil;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -128,7 +127,7 @@ public class Order
         this.verifyCanChangeToPlaced();
 
         this.changeStatus(OrderStatus.PLACED);
-        this.setPlacedAt(OffsetDateTime.now(ClockUtil.getDefaultTimeZone()));
+        this.setPlacedAt(OffsetDateTime.now());
 
         this.publishDomainEvent(OrderPlacedEvent.builder()
                 .orderId(this.id())
@@ -139,7 +138,7 @@ public class Order
 
     public void markAsPaid() {
         this.changeStatus(OrderStatus.PAID);
-        this.setPaidAt(OffsetDateTime.now(ClockUtil.getDefaultTimeZone()));
+        this.setPaidAt(OffsetDateTime.now());
 
         this.publishDomainEvent(OrderPaidEvent.builder()
                 .orderId(this.id())
@@ -150,7 +149,7 @@ public class Order
 
     public void markAsReady() {
         this.changeStatus(OrderStatus.READY);
-        this.setReadyAt(OffsetDateTime.now(ClockUtil.getDefaultTimeZone()));
+        this.setReadyAt(OffsetDateTime.now());
 
         this.publishDomainEvent(OrderReadyEvent.builder()
                 .orderId(this.id())
@@ -161,7 +160,7 @@ public class Order
 
     public void cancel() {
         this.changeStatus(OrderStatus.CANCELED);
-        this.setCanceledAt(OffsetDateTime.now(ClockUtil.getDefaultTimeZone()));
+        this.setCanceledAt(OffsetDateTime.now());
 
         this.publishDomainEvent(OrderCanceledEvent.builder()
                 .orderId(this.id())
@@ -197,7 +196,7 @@ public class Order
 
         this.verifyChangeable();
 
-        if (newShipping.expectedDate().isBefore(LocalDate.now(ClockUtil.getDefaultTimeZone()))) {
+        if (newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
         }
 
