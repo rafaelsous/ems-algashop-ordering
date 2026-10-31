@@ -56,6 +56,15 @@ public class PlaceOrderSaga {
         changeStepTo(PlaceOrderSagaStep.RESERVING_STOCK);
     }
 
+    public void moveToApprovingOrder() {
+        require(isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK));
+        changeStepTo(PlaceOrderSagaStep.APPROVING_ORDER);
+    }
+
+    public boolean hasSucceeded() {
+        return this.status == SagaStatus.SUCCEEDED;
+    }
+
     public boolean isReservingStock() {
         return isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK);
     }
@@ -70,6 +79,11 @@ public class PlaceOrderSaga {
 
     public boolean isActive() {
         return this.status == SagaStatus.RUNNING || this.status == SagaStatus.COMPENSATING;
+    }
+
+    public void endSucceeded() {
+        require(canEndSucceeded());
+        changeStatusTo(SagaStatus.SUCCEEDED);
     }
 
     public UUID sagaId() {
@@ -112,6 +126,10 @@ public class PlaceOrderSaga {
         }
 
         this.step = newStep;
+    }
+
+    private boolean canEndSucceeded() {
+        return isRunningAt(PlaceOrderSagaStep.APPROVING_ORDER);
     }
 
     @Override
