@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.messaging.
 
 import com.rafaelsousa.algashop.ordering.core.application.OutboundIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand;
+import com.rafaelsousa.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.infrastructure.config.kafka.AlgaShopMessagingKafkaProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,8 @@ public class PlaceOrderSagaCommandTopics {
 
 	public String of(OutboundIntegrationCommand command) {
 		return switch (command) {
-			case IssueInvoiceIntegrationCommand ignored -> properties.getInvoiceCommandsTopicName();
+			case IssueInvoiceIntegrationCommand ignored -> properties.getBillingInvoiceCommandsTopicName();
+			case ReserveStockIntegrationCommand ignored -> properties.getProductCatalogStockCommandsTopicName();
 			default -> throw new IllegalArgumentException("Unsupported saga command " + command.getClass().getSimpleName());
 		};
 	}

@@ -3,6 +3,7 @@ package com.rafaelsousa.algashop.ordering.core.application.order.saga;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshotAssembler;
+import com.rafaelsousa.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.Order;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderId;
 import com.rafaelsousa.algashop.ordering.core.domain.model.order.OrderNotFoundException;
@@ -51,11 +52,19 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
     public void onInvoicePaid(UUID sagaId) {
         PlaceOrderSaga saga = findSaga(sagaId);
 
+		if (saga.isReservingStock()) {
+			logIgnored(saga);
+			return;
+		}
+
 	    Order order = findOrder(saga.orderId());
 	    order.markAsPaid();
 		orders.add(order);
 
-		// TODO: Add more logic here
+		saga.moveToReservingStock();
+		sagas.add(saga);
+
+		commands.send(saga.sagaId().toString(), reserveStockIntegrationCommand(order));
     }
 
     private Order findOrder(OrderId orderId) {
@@ -66,5 +75,19 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
 	private PlaceOrderSaga findSaga(UUID sagaId) {
 		return sagas.ofId(sagaId)
 				.orElseThrow(() -> new PlaceOrderSagaNotFoundException(sagaId));
+	}
+
+	private ReserveStockIntegrationCommand reserveStockIntegrationCommand(Order order) {
+		return new ReserveStockIntegrationCommand(
+			order.id().toString(),
+			order.items().stream().map(item -> new ReserveStockIntegrationCommand.Item(
+				item.productId().value(), item.quantity().value())
+			).toList()
+		);
+	}
+
+	private void logIgnored(PlaceOrderSaga saga) {
+		log.info("Ignoring saga reply: saga={} order={} status={} step={}"
+			, saga.sagaId(), saga.orderId(), saga.status(), saga.step());
 	}
 }

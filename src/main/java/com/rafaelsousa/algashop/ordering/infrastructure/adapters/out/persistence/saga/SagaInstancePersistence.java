@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString(of = {"sagaId", "status"})
 @EntityListeners(AuditingEntityListener.class)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "saga_instance")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "saga_type", length = 50)
@@ -32,6 +32,7 @@ public abstract class SagaInstancePersistence {
 	private SagaStatus status;
 
 	@CreatedDate
+	@Column(updatable = false)
 	private OffsetDateTime createdAt;
 
 	@LastModifiedDate
@@ -39,4 +40,16 @@ public abstract class SagaInstancePersistence {
 
 	@Version
 	private long version;
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == null || getClass() != object.getClass()) return false;
+		SagaInstancePersistence that = (SagaInstancePersistence) object;
+		return Objects.equals(sagaId, that.sagaId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(sagaId);
+	}
 }

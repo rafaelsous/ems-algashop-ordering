@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.config.kafka;
 
+import com.rafaelsousa.algashop.ordering.core.application.saga.SagaTransitionException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainEntityNotFoundException;
 import com.rafaelsousa.algashop.ordering.core.domain.model.DomainException;
 
@@ -47,7 +48,8 @@ public class KafkaConfig {
                 DomainEntityNotFoundException.class,
                 ConstraintViolationException.class,
                 DataIntegrityViolationException.class,
-                IllegalArgumentException.class);
+                IllegalArgumentException.class,
+                SagaTransitionException.class);
 
         return defaultErrorHandler;
     }
