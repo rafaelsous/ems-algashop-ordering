@@ -54,7 +54,14 @@ spring:
         ProductCatalog.ProductRestockedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductRestockedIntegrationEvent,
         ProductCatalog.ProductSoldOutIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.product.event.ProductSoldOutIntegrationEvent,
         Ordering.OrderPlacedIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPlacedIntegrationEvent,
-        Ordering.OrderPaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent
+        Ordering.OrderPaidIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderPaidIntegrationEvent,
+        Ordering.OrderCanceledIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderCanceledIntegrationEvent,
+        Ordering.OrderReadyIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent,
+        Billing.IssueInvoiceIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand,
+        Billing.InvoicePaidIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply,
+        Billing.InvoiceCanceledIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply,
+        Stock.ReserveStockIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand,
+        Stock.StockReservationConfirmedIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -104,9 +111,13 @@ algashop:
         min-points: 2000
   messaging:
     kafka:
-      product-event-topic-name: product-catalog.product.events
-      order-event-topic-name: ordering.order.events
+      product-events-topic-name: product-catalog.product.events
+      order-events-topic-name: ordering.order.events
       product-events-consumer-group: ordering.product-events
+      billing-invoice-commands-topic-name: billing.invoice.commands
+      product-catalog-stock-commands-topic-name: product-catalog.stock.commands
+      saga-replies-topic-name: ordering.saga.replies
+      saga-replies-consumer-group: ordering.saga-replies
     outbox:
       enabled: true
       send-timeout: PT5S

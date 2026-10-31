@@ -84,9 +84,29 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
 		saga.moveToApprovingOrder();
 		saga.endSucceeded();
 		sagas.add(saga);
-
-//		commands.send(saga.sagaId().toString(), reserveStockIntegrationCommand(order));
     }
+
+	@Override
+	public void onInvoiceCanceled(UUID sagaId) {
+			PlaceOrderSaga saga = findSaga(sagaId);
+
+			if (saga.isCompensated()) {
+				logIgnored(saga);
+				return;
+			}
+
+			if (!saga.hasFailed()) {
+				saga.failWithPaymentRefused();
+			}
+
+			Order order = findOrder(saga.orderId());
+			order.cancel();
+			orders.add(order);
+
+			saga.compensateOrder();
+			saga.endCompensated();
+			sagas.add(saga);
+	}
 
     private Order findOrder(OrderId orderId) {
         return orders.ofId(orderId)

@@ -1,6 +1,7 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.in.messaging.kafka.saga;
 
 import com.rafaelsousa.algashop.ordering.core.application.InboundIntegrationReply;
+import com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.saga.ForCoordinatingPlaceOrderSaga;
@@ -49,6 +50,19 @@ public class KafkaPlaceOrderSagaReplyListener {
         logReceived(reply, sagaId, messageKey, partition, offset);
 
         sagaCoordinator.onInvoicePaid(sagaId);
+    }
+
+    @KafkaHandler
+    public void handle(
+            @Payload @Valid InvoiceCanceledIntegrationReply reply,
+            @Header(value = KafkaHeaders.CORRELATION_ID, required = false) byte[] correlationId,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Long offset) {
+        UUID sagaId = requireSagaId(correlationId);
+        logReceived(reply, sagaId, messageKey, partition, offset);
+
+        sagaCoordinator.onInvoiceCanceled(sagaId);
     }
 
     @KafkaHandler

@@ -77,6 +77,7 @@ spring:
         Ordering.OrderReadyIntegrationEvent:com.rafaelsousa.algashop.ordering.core.application.order.event.OrderReadyIntegrationEvent,
         Billing.IssueInvoiceIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand,
         Billing.InvoicePaidIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply,
+        Billing.InvoiceCanceledIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply,
         Stock.ReserveStockIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand,
         Stock.StockReservationConfirmedIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply
     producer:

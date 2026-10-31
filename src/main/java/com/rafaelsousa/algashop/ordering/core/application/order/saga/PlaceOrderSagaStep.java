@@ -9,7 +9,7 @@ public enum PlaceOrderSagaStep {
 	RESERVING_STOCK(INVOICING),
 	APPROVING_ORDER(RESERVING_STOCK),
 	REFUNDING_INVOICE(RESERVING_STOCK),
-	CANCELING_ORDER(INVOICING, REFUNDING_INVOICE);
+	CANCELLING_ORDER(INVOICING, REFUNDING_INVOICE);
 
 	PlaceOrderSagaStep(PlaceOrderSagaStep... previousStatuses) {
 		this.previousStatuses = Arrays.asList(previousStatuses);

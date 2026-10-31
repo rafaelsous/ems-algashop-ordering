@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.order.saga;
 
+import com.rafaelsousa.algashop.ordering.core.application.order.saga.PlaceOrderSagaFailure;
 import com.rafaelsousa.algashop.ordering.core.application.order.saga.PlaceOrderSagaStep;
 import com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistence.saga.SagaInstancePersistence;
 
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-@ToString(callSuper = true, of = "step")
+@ToString(callSuper = true, of = {"step", "failure"})
 @DiscriminatorValue(PlaceOrderSagaPersistence.SAGA_TYPE)
 public class PlaceOrderSagaPersistence extends SagaInstancePersistence {
 
@@ -21,4 +22,7 @@ public class PlaceOrderSagaPersistence extends SagaInstancePersistence {
 
 	@Enumerated(EnumType.STRING)
 	private PlaceOrderSagaStep step;
+
+	@Enumerated(EnumType.STRING)
+	private PlaceOrderSagaFailure failure;
 }
