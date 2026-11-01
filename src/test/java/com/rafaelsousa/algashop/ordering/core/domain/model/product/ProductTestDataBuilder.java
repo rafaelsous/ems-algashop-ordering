@@ -1,9 +1,7 @@
 package com.rafaelsousa.algashop.ordering.core.domain.model.product;
 
 import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Money;
-import com.rafaelsousa.algashop.ordering.core.domain.model.product.Product;
-import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductId;
-import com.rafaelsousa.algashop.ordering.core.domain.model.product.ProductName;
+import com.rafaelsousa.algashop.ordering.core.domain.model.commons.Quantity;
 
 public class ProductTestDataBuilder {
     public static final ProductId DEFAULT_PRODUCT_ID = new ProductId();
@@ -18,6 +16,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(DEFAULT_PRODUCT_ID)
                 .name(ProductName.of("Macbook M4"))
+                .quantityInStock(Quantity.of(100))
                 .price(Money.of("15000.00"));
     }
 
@@ -25,6 +24,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(UNAVAILABLE_PRODUCT_ID)
                 .name(ProductName.of("Monitor 31 inch"))
+                .quantityInStock(Quantity.ZERO)
                 .price(Money.of("2500.00"))
                 .inStock(false);
     }
@@ -33,6 +33,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(ALT_RAM_MEMORY_PRODUCT_ID)
                 .name(ProductName.of("4G RAM"))
+                .quantityInStock(Quantity.of(70))
                 .price(Money.of("150.00"));
     }
 
@@ -40,6 +41,7 @@ public class ProductTestDataBuilder {
         return Product.builder()
                 .id(ALT_MOUSE_PAD_PRODUCT_ID)
                 .name(ProductName.of("Mouse pad"))
+                .quantityInStock(Quantity.of(40))
                 .price(Money.of("100.00"));
     }
 }

@@ -18,4 +18,5 @@ public class ProductResponse implements Serializable {
     private String name;
     private BigDecimal salePrice;
     private boolean inStock;
+    private Integer quantityInStock;
 }

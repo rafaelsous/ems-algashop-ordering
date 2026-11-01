@@ -27,7 +27,7 @@ public class RedisCacheConfig {
 				.withCacheConfiguration(
 					PRODUCT_CATALOG_REDIS_CACHE_NAME,
 						redisCacheConfiguration.disableCachingNullValues()
-								.entryTtl(Duration.ofMinutes(5))
+								.entryTtl(Duration.ofMinutes(1))
 				);
 	}
 }

@@ -15,7 +15,7 @@ public class BuyNowService {
 
     public Order buyNow(Product product, Customer customer, Billing billing, Shipping shipping,
                         Quantity quantity, PaymentMethod paymentMethod, CreditCardId creditCardId) {
-        product.checkOutOfStock();
+        product.checkForQuantity(quantity);
 
         Order order = Order.draft(customer.id());
         order.changeBilling(billing);
