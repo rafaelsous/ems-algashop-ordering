@@ -4,6 +4,7 @@ import com.rafaelsousa.algashop.ordering.core.application.InboundIntegrationRepl
 import com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply;
+import com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationRejectedIntegrationReply;
 import com.rafaelsousa.algashop.ordering.core.ports.in.order.saga.ForCoordinatingPlaceOrderSaga;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,19 @@ public class KafkaPlaceOrderSagaReplyListener {
         logReceived(reply, sagaId, messageKey, partition, offset);
 
         sagaCoordinator.onStockReservationConfirmed(sagaId);
+    }
+
+    @KafkaHandler
+    public void handle(
+            @Payload @Valid StockReservationRejectedIntegrationReply reply,
+            @Header(value = KafkaHeaders.CORRELATION_ID, required = false) byte[] correlationId,
+            @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) String messageKey,
+            @Header(value = KafkaHeaders.RECEIVED_PARTITION, required = false) Integer partition,
+            @Header(value = KafkaHeaders.OFFSET, required = false) Long offset) {
+        UUID sagaId = requireSagaId(correlationId);
+        logReceived(reply, sagaId, messageKey, partition, offset);
+
+        sagaCoordinator.onStockReservationRejected(sagaId);
     }
 
     private UUID requireSagaId(byte[] correlationId) {

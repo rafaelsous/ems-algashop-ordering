@@ -1,5 +1,6 @@
 package com.rafaelsousa.algashop.ordering.core.application.order.saga;
 
+import com.rafaelsousa.algashop.ordering.core.application.invoice.command.CancelInvoiceIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshot;
 import com.rafaelsousa.algashop.ordering.core.application.order.snapshot.OrderSnapshotAssembler;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
     private final Orders orders;
@@ -30,7 +32,6 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
     private final ForPublishingPlaceOrderSagaIntegrationCommands commands;
 
     @Override
-    @Transactional
     public void start(String rawOrderId) {
         OrderId orderId = new OrderId(rawOrderId);
         Order order = findOrder(orderId);
@@ -48,7 +49,6 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
     }
 
     @Override
-    @Transactional
     public void onInvoicePaid(UUID sagaId) {
         PlaceOrderSaga saga = findSaga(sagaId);
 
@@ -68,7 +68,6 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
     }
 
     @Override
-    @Transactional
     public void onStockReservationConfirmed(UUID sagaId) {
         PlaceOrderSaga saga = findSaga(sagaId);
 
@@ -106,6 +105,23 @@ public class PlaceOrderSgaCoordinator implements ForCoordinatingPlaceOrderSaga {
 			saga.compensateOrder();
 			saga.endCompensated();
 			sagas.add(saga);
+	}
+
+	@Override
+	public void onStockReservationRejected(UUID sagaId) {
+		PlaceOrderSaga saga = findSaga(sagaId);
+		findOrder(saga.orderId());
+
+		if (saga.wasStockRejected()) {
+			logIgnored(saga);
+			return;
+		}
+
+		saga.failWithOutOfStock();
+		saga.compensateInvoice();
+		sagas.add(saga);
+
+		commands.send(saga.sagaId().toString(), new CancelInvoiceIntegrationCommand(saga.orderId().toString()));
 	}
 
     private Order findOrder(OrderId orderId) {

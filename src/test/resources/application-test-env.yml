@@ -60,8 +60,10 @@ spring:
         Billing.IssueInvoiceIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.invoice.command.IssueInvoiceIntegrationCommand,
         Billing.InvoicePaidIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoicePaidIntegrationReply,
         Billing.InvoiceCanceledIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.invoice.reply.InvoiceCanceledIntegrationReply,
+        Billing.CancelInvoiceIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.invoice.command.CancelInvoiceIntegrationCommand,
         Stock.ReserveStockIntegrationCommand:com.rafaelsousa.algashop.ordering.core.application.stock.command.ReserveStockIntegrationCommand,
-        Stock.StockReservationConfirmedIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply
+        Stock.StockReservationConfirmedIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationConfirmedIntegrationReply,
+        Stock.StockReservationRejectedIntegrationReply:com.rafaelsousa.algashop.ordering.core.application.stock.reply.StockReservationRejectedIntegrationReply
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

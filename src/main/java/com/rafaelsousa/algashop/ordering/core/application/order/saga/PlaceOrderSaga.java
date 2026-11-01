@@ -94,14 +94,28 @@ public class PlaceOrderSaga {
         return this.failure != null;
     }
 
+    public boolean wasStockRejected() {
+        return this.failure == PlaceOrderSagaFailure.OUT_OF_STOCK;
+    }
+
     public void failWithPaymentRefused() {
         require(isRunningAt(PlaceOrderSagaStep.INVOICING));
         startCompensation(PlaceOrderSagaFailure.PAYMENT_REFUSED);
     }
 
+    public void failWithOutOfStock() {
+        require(isRunningAt(PlaceOrderSagaStep.RESERVING_STOCK));
+        startCompensation(PlaceOrderSagaFailure.OUT_OF_STOCK);
+    }
+
     public void compensateOrder() {
         require(canCompensateOrder());
         changeStepTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+    }
+
+    public void compensateInvoice() {
+        require(canCompensateInvoice());
+        changeStepTo(PlaceOrderSagaStep.CANCELLING_INVOICE);
     }
 
     public void endCompensated() {
@@ -171,6 +185,10 @@ public class PlaceOrderSaga {
 
     private boolean canCompensateOrder() {
         return this.status == SagaStatus.COMPENSATING && this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_ORDER);
+    }
+
+    private boolean canCompensateInvoice() {
+        return this.status == SagaStatus.COMPENSATING && this.step.canChangeTo(PlaceOrderSagaStep.CANCELLING_INVOICE);
     }
 
     private boolean canEndCompensated() {
