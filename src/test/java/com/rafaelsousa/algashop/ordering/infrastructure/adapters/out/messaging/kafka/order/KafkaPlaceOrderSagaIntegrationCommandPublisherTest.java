@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class KafkaPlaceOrderSagaIntegrationCommandPublisherTest {
@@ -160,7 +159,7 @@ class KafkaPlaceOrderSagaIntegrationCommandPublisherTest {
 		} finally{
 			// Limpa o status de interrupção para não afetar outros testes
 			boolean interrupted = Thread.interrupted();
-			assertTrue(interrupted);
+			assertThat(interrupted).isTrue();
 		}
 	}
 
