@@ -34,4 +34,7 @@ public class AlgaShopMessagingKafkaProperties {
 
     @NotBlank
     private String sagaRepliesConsumerGroup;
+
+    @NotBlank
+    private String notificationsEmailCommandsTopicName;
 }
