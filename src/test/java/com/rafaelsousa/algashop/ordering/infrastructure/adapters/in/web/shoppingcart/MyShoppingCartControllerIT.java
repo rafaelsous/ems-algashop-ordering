@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Sql(
-        scripts = "classpath:db/testdata/afterMigrate.sql",
+        scripts = "classpath:db/testdata/afterMigrate_reports.sql",
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class MyShoppingCartControllerIT extends AbstractPresentationIT {
 

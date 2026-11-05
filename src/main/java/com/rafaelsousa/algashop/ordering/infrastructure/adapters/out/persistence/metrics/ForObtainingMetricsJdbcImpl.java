@@ -2,6 +2,7 @@ package com.rafaelsousa.algashop.ordering.infrastructure.adapters.out.persistenc
 
 import com.rafaelsousa.algashop.ordering.core.ports.out.metrics.ForObtainingMetrics;
 import com.rafaelsousa.algashop.ordering.core.ports.out.metrics.SalesOverviewOutput;
+import com.rafaelsousa.algashop.ordering.core.ports.out.metrics.TotalOverviewOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,17 @@ public class ForObtainingMetricsJdbcImpl implements ForObtainingMetrics {
 		      1
 		""";
 
+	private static final String TOTAL_OVERVIEW_SQL = """
+		SELECT
+			COUNT(c.id) AS active_customers,
+			COUNT(sc.id) AS active_shopping_carts
+		FROM customer c
+		LEFT JOIN shopping_cart sc
+			ON sc.customer_id = c.id
+			AND sc.total_items > 0
+		WHERE c.archived IS FALSE
+		""";
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Override
@@ -48,5 +60,15 @@ public class ForObtainingMetricsJdbcImpl implements ForObtainingMetrics {
 					rs.getBigDecimal("revenue")
 				)
 			);
+	}
+
+	@Override
+	public TotalOverviewOutput getTotalOverview() {
+		return jdbcTemplate.queryForObject(TOTAL_OVERVIEW_SQL,
+			Map.of(), (rs, _) -> new TotalOverviewOutput(
+				rs.getInt("active_customers"),
+				rs.getInt("active_shopping_carts")
+			)
+		);
 	}
 }
